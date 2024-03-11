@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="207.0" prefWidth="301.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.LoginOrNewOrderController">
+   <children>
+      <Button fx:id="LoginBtn" layoutX="52.0" layoutY="79.0" mnemonicParsing="false" onAction="#LoginBtnAction" text="Login" />
+      <Button fx:id="NewReservationBtn" layoutX="160.0" layoutY="79.0" mnemonicParsing="false" onAction="#NewReservationBtnAction" text="New Reservation" />
+      <Button layoutX="108.0" layoutY="143.0" mnemonicParsing="false" text="Button" />
+   </children>
+</Pane>

@@ -1,0 +1,45 @@
+/* Base application styling with a consistent background */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Styling for text fields with clear visibility and aesthetic appeal */
+.text-field {
+    -fx-font-size: 13px;
+    -fx-border-color: #74a662;
+    -fx-border-width: 1px;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #000000;
+}
+.label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #005b2e; /* Light color for contrast against the dark background */
+}
+.text-field:focused {
+    -fx-border-color: #508860;
+}
+
+/* Generic button styling */
+.button {
+    -fx-background-color: #507856; /* Deep green */
+    -fx-text-fill: white;
+    -fx-border-radius: 1px;
+    -fx-background-radius:1px;
+    -fx-padding: 5px 15px;
+}
+
+.button:hover {
+    -fx-background-color: #3e6147;
+}
+
+/* Specific styling for the OK and exit buttons */
+#OKbtn, #exitButton {
+    -fx-background-color: #74a662; /* Lighter green variation */
+}
+
+#OKbtn:hover, #exitButton:hover {
+    -fx-background-color: #5d8a4b;
+}

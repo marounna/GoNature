@@ -1,0 +1,50 @@
+/* Base application styling with a consistent background */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Styling for text fields with clear visibility and aesthetic appeal */
+.text-field {
+    -fx-font-size: 13px;
+    -fx-border-color: #74a662;
+    -fx-border-width: 1px;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #000000;
+}
+
+.text-field:focused {
+    -fx-border-color: #508860;
+}
+
+/* Specific style for the enterHostIP TextField */
+#enterHostIP {
+    -fx-font-size: 14px;
+    -fx-border-color: #508860;
+    -fx-border-width: 2px;
+}
+
+/* Generic button styling */
+.button {
+    -fx-background-color: #507856; /* Deep green */
+    -fx-text-fill: white;
+    -fx-border-radius: 1px;
+    -fx-background-radius:1px;
+    -fx-padding: 5px 15px;
+}
+
+.button:hover {
+    -fx-background-color: #3e6147;
+}
+
+/* Specific style for the okBtn Button */
+#okBtn {
+    -fx-background-color: #74a662; /* Lighter green variation */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#okBtn:hover {
+    -fx-background-color: #5d8a4b;
+}
