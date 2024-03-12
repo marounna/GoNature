@@ -34,6 +34,8 @@ public class LoginController {
 
     @FXML
     private Button LoginBtn;
+    
+    public static boolean flag =false;
 
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
@@ -49,7 +51,6 @@ public class LoginController {
 			  } catch (Exception e) {
 			      e.printStackTrace();}
     }
-
     @FXML
     void ClickOnLoginBtn(ActionEvent event) throws IOException {
     	String userId=userID.getText();
@@ -62,7 +63,27 @@ public class LoginController {
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		if (flag) {
+			flag=false;
+			try {
+				String loginMessage= 2+" login " + userId +" "+ pass ;
+			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
+			System.out.println("LoginController> request Sent to server");
+			}catch(Exception e) {
+				System.out.println("LoginController> Login Failed");
+			}
+			if (flag) {
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+			Pane root = loader.load();
+	        Scene scene = new Scene(root);
+	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+	        stage.setScene(scene);
+	        stage.show();
+			}
+		}
+		else {userNotExist.setText("User details are not valid");}
+        /*Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
 		try {
 			String loginMessage= 2+" login " + userId ;
@@ -76,7 +97,7 @@ public class LoginController {
         Scene scene = new Scene(root);
         //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
         stage.setScene(scene);
-        stage.show();
+        stage.show();*/
 		
 	
     }
