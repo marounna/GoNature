@@ -5,6 +5,7 @@
 package client;
 
 import client.*;
+import clientGUI.LoginController;
 import common.ChatIF;
 import logic.Order;
 import ocsf.client.AbstractClient;
@@ -61,17 +62,30 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromServer(Object msg) 
   {
 	  System.out.println("--> handleMessageFromServer");
-     
+      System.out.println("ChatClient> Message received: " + (String)msg);
+      String message = (String) msg.toString();
+      System.out.println("EchoServer> " + message);
+      String[] result = message.split(" ");
 	  awaitResponse = false;
-	  String st;
-	  st=(String)msg.toString();
-	  String[] result = st.split(" ");
-	  o1.setParkName(result[0]);
-	  o1.setOrderNumber(result[1]);
-	  o1.setTimeOfVisit(result[2]);
-	  o1.setNumberOfVisitors(result[3]);
-	  o1.setTelephoneNumber(result[4]);
-	  o1.setEmail(result[5]);
+	  switch (result[0]) {
+	  case "loadOrder":
+		  o1.setParkName(result[0]);
+		  o1.setOrderNumber(result[1]);
+		  o1.setTimeOfVisit(result[2]);
+		  o1.setNumberOfVisitors(result[3]);
+		  o1.setTelephoneNumber(result[4]);
+		  o1.setEmail(result[5]);
+		  break;
+	  case "userExist":
+		  if(result[1].equals("succeed")) 
+			  LoginController.flag=true;
+		  else LoginController.flag=false;
+	  case "login":
+		  if(result[1].equals("succeed")) 
+			  LoginController.flag=true;
+		  else LoginController.flag=false;
+	  }
+	  
   }
 
   /**

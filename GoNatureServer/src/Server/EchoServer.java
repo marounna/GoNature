@@ -40,6 +40,7 @@ public class EchoServer extends AbstractServer {
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
         String message = (String) msg.toString();
+        String returnmsg="";
         System.out.println("EchoServer> " + message);
         String[] result = message.split(" ");
        // System.out.println(result[0]);
@@ -49,7 +50,7 @@ public class EchoServer extends AbstractServer {
         	String hostIp= getHostIp();
         	ClientConnectionStatus thisClient=clientConnection(clientIp[0],hostIp);
         	updateClientConnect(thisClient);
-        	sendToClient(client,"Connected successfully");
+        	sendToClient(client,"Connected succeed");
         	return;
         }
         else if (result[0].equals("100")) {
@@ -58,7 +59,7 @@ public class EchoServer extends AbstractServer {
         	String hostIp= getHostIp();
         	ClientConnectionStatus thisClient=clientDisconnection(clientIp[0],hostIp);
         	updateClientConnect(thisClient);
-        	sendToClient(client,"Disconnected successfully");
+        	sendToClient(client,"Disconnected succeed");
         	return;
         }
         String [] details=new String[result.length-1];
@@ -70,13 +71,12 @@ public class EchoServer extends AbstractServer {
             handleErrorMessage(client, "Invalid message format");
             return;
         }
-        //System.out.println(details[1]);
         switch (details[0]) {
             case "updateOrderDetails":
                 if (updateOrderDetails(details) == 1) {
-                    sendToClient(client, "Order was successfully updated into the database!");
+                    sendToClient(client, "updateOrderDetails succeed");
                 } else {
-                    sendToClient(client, "Order failed to be updated into the database!");
+                    sendToClient(client, "updateOrderDetails failed");
                 }
                 break;
             case "orderExist":
@@ -85,9 +85,9 @@ public class EchoServer extends AbstractServer {
                     return;
                 }
                 if (orderExist(details[1]) == 1) {
-                    sendToClient(client, "Order exists");
+                    sendToClient(client, "orderExist succeed");
                 } else {
-                    sendToClient(client, "Order does not exist");
+                    sendToClient(client, "OrderExist failed");
                 }
                 break;
             case "loadOrder":
@@ -98,10 +98,11 @@ public class EchoServer extends AbstractServer {
                 Connection conn = DbController.createDbConnection();
                 Order order = DbController.loadOrder(conn, details[1]);
                 if(order!=null) {
-                	sendToClient(client,order.toString());
+                	returnmsg="loadOrder "+order.toString();
+                	sendToClient(client,returnmsg);
                 	return;}
                 else {
-                sendToClient(client, "Failed to load order");
+                sendToClient(client, "loadOrder failed");
                 break;
                 }
             case "userExist":
@@ -110,30 +111,30 @@ public class EchoServer extends AbstractServer {
                     return;
                 }
                 if (userExist(details[1],details[2]) == 1) {
-                    sendToClient(client, "User exists");
+                    sendToClient(client, "userExist succeed");
                 } else {
-                    sendToClient(client, "User does not exist");
+                    sendToClient(client, "userExist failed");
                 }
                 break;
                 
             case "login":
-                if (userLogin(details[1]) == 1) {
-                    sendToClient(client, "User login successfully");
+                if (userLogin(details[1],details[2]) == 1) {
+                    sendToClient(client, "login succeed");
                 } else {
-                    sendToClient(client, "User login failed");
+                    sendToClient(client, "login failed");
                 }
                 break;
             	
             default:
-                handleErrorMessage(client, "Unknown command");
+                handleErrorMessage(client, "Invalid command");
         }
     }
     
     
 
-	private int userLogin(String userID) {
+	private int userLogin(String username,String password) {
 		Connection conn = DbController.createDbConnection();
-		int login=DbController.userLogin(conn,userID);
+		int login=DbController.userLogin(conn,username,password);
 		return login;
 	}
 

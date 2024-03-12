@@ -16,6 +16,35 @@ import java.sql.SQLException;
 
 public class DbController {
     public static Order order;
+    
+    
+    
+    @SuppressWarnings("unused")
+	public static Connection createDbConnection() {
+  	  try 
+  		{
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+
+            System.out.println("EchoServer> Driver definition succeed");
+        } catch (Exception ex) {
+        	/* handle the error*/
+        	System.out.println("EchoServer> Driver definition failed ");
+        	 }
+        try 
+        {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/gonaturedb?serverTimezone=IST","root","Aa123456");
+          
+            System.out.println("SQL connection succeed");
+            return conn;
+            //createTableCourses(conn);
+     	} catch (SQLException ex) 
+     	    {/* handle any errors*/
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            }
+        return null;
+    }
 
     // Method to load an order from the database
     public static Order loadOrder(Connection conn, String order_number) {
@@ -118,32 +147,6 @@ public class DbController {
         return 0;
     }
     
-    @SuppressWarnings("unused")
-	public static Connection createDbConnection() {
-  	  try 
-  		{
-            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-
-            System.out.println("EchoServer> Driver definition succeed");
-        } catch (Exception ex) {
-        	/* handle the error*/
-        	System.out.println("EchoServer> Driver definition failed ");
-        	 }
-        try 
-        {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/gonaturedb?serverTimezone=IST","root","Aa123456");
-          
-            System.out.println("SQL connection succeed");
-            return conn;
-            //createTableCourses(conn);
-     	} catch (SQLException ex) 
-     	    {/* handle any errors*/
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            }
-        return null;
-    }
 
 	public static int searchUser(Connection conn, String username, String password) {
 		String sql = "SELECT * FROM users WHERE Username = ? AND Password = ?";
@@ -162,31 +165,31 @@ public class DbController {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("dbController> Error searching for order: " + e.getMessage());
+            System.out.println("dbController> Error searching for user: " + e.getMessage());
         }
         return 0; // Return 0 or appropriate error code/value in case of exception
     }
 
-	public static int userLogin(Connection conn, String userID) {
-        String sql = "UPDATE users SET IsLogged = 1 WHERE UserId = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, userID);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    System.out.println("dbController> login succeed,");
-                    pstmt.close();
-
-                    return 1; 
-                } else {
-                    System.out.println("dbController> login failed.");
-                    pstmt.close();
-                    return 0;      
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("dbController> Error searching for order: " + e.getMessage());
-        }
-		return 0;
+	public static int userLogin(Connection conn, String username, String password) {
+		String sql = "UPDATE users SET IsLogged = ? WHERE Username = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        System.out.println("test");
+	        pstmt.setString(1, "1");
+	        pstmt.setString(2, username);
+	        
+	        int rowsAffected = pstmt.executeUpdate();
+	        
+	        if (rowsAffected > 0) {
+	            System.out.println("dbController> login succeed, rows affected: " + rowsAffected);
+	            return 1;
+	        } else {
+	            System.out.println("dbController> login failed. No rows affected.");
+	            return 0;
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("dbController> Error updating user login status: " + e.getMessage());
+	    }
+	    return 0;
 	}
 	
     
