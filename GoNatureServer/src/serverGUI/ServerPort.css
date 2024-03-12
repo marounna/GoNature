@@ -48,5 +48,5 @@
 
 .table-cell {
     -fx-text-fill: #000000; /* Dark text color for visibility */
-    -fx-padding: 5px; /* Add padding for better readability */
+    -fx-padding: 7px; /* Add padding for better readability */
 }

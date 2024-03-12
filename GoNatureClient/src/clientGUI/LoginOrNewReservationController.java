@@ -35,12 +35,12 @@ public class LoginOrNewReservationController {
         stage.show();
     }
     
-    //move to new reservation screen
+    //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/clientGUI/NewReservationController.fxml"));
+		loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservatiovController.fxml"));
 		Pane root = loader.load();
         Scene scene = new Scene(root);
         //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());

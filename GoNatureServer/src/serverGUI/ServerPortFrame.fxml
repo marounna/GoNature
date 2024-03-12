@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="812.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="serverGUI.ServerPortFrameController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="463.0" prefWidth="873.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="serverGUI.ServerPortFrameController">
    <children>
       <Label layoutX="59.0" layoutY="108.0" text="IP Address" />
       <Label layoutX="59.0" layoutY="148.0" text="Port" />
@@ -22,12 +22,12 @@
       <TextField fx:id="dbUserNameField" layoutX="164.0" layoutY="219.0" prefHeight="25.0" prefWidth="149.0" />
       <Button fx:id="startServer1" layoutX="438.0" layoutY="368.0" mnemonicParsing="false" onAction="#handleStartServerAction" text="Start Server" />
       <Button fx:id="stopServer1" layoutX="586.0" layoutY="368.0" mnemonicParsing="false" onAction="#stopServerAction" text="Stop Server" />
-      <TableView fx:id="tableField" layoutX="409.0" layoutY="69.0" prefHeight="226.0" prefWidth="303.0">
+      <TableView fx:id="tableField" layoutX="409.0" layoutY="69.0" prefHeight="226.0" prefWidth="397.0">
         <columns>
-          <TableColumn fx:id="ipColumn" prefWidth="75.0" text="Ip" />
-          <TableColumn fx:id="hostColumn" prefWidth="75.0" text="Host" />
-            <TableColumn fx:id="statusColumn" prefWidth="75.0" text="Status" />
-            <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
+          <TableColumn fx:id="ipColumn" prefWidth="92.0" text="Ip" />
+          <TableColumn fx:id="hostColumn" prefWidth="101.0" text="Host" />
+            <TableColumn fx:id="statusColumn" prefWidth="96.0" text="Status" />
+            <TableColumn fx:id="startTimeColumn" prefWidth="102.0" text="Start Time" />
         </columns>
       </TableView>
       <Label layoutX="313.0" layoutY="20.0" text="Server Connection">

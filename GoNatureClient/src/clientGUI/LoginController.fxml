@@ -15,5 +15,6 @@
       <Button fx:id="LoginBtn" layoutX="121.0" layoutY="230.0" mnemonicParsing="false" onAction="#ClickOnLoginBtn" text="Login" />
       <Button fx:id="BackBtn" layoutX="229.0" layoutY="230.0" mnemonicParsing="false" onAction="#ClickOnBackBtn" text="Back" />
       <Label layoutX="34.0" layoutY="41.0" text="Please enter username and password:" />
+      <Label fx:id="userNotExist" layoutX="144.0" layoutY="286.0" />
    </children>
 </Pane>

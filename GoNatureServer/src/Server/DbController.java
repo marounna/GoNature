@@ -144,5 +144,50 @@ public class DbController {
             }
         return null;
     }
+
+	public static int searchUser(Connection conn, String username, String password) {
+		String sql = "SELECT * FROM users WHERE Username = ? AND Password = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("dbController> user exists.");
+                    pstmt.close();
+                    return 1; 
+                } else {
+                    System.out.println("dbController> user does not exist.");
+                    pstmt.close();
+                    return 0;     
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("dbController> Error searching for order: " + e.getMessage());
+        }
+        return 0; // Return 0 or appropriate error code/value in case of exception
+    }
+
+	public static int userLogin(Connection conn, String userID) {
+        String sql = "UPDATE users SET IsLogged = 1 WHERE UserId = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userID);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    System.out.println("dbController> login succeed,");
+                    pstmt.close();
+
+                    return 1; 
+                } else {
+                    System.out.println("dbController> login failed.");
+                    pstmt.close();
+                    return 0;      
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("dbController> Error searching for order: " + e.getMessage());
+        }
+		return 0;
+	}
+	
     
 }

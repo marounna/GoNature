@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import Server.DbController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.ClientConnectionStatus;
@@ -104,12 +104,45 @@ public class EchoServer extends AbstractServer {
                 sendToClient(client, "Failed to load order");
                 break;
                 }
+            case "userExist":
+                if (details.length < 2) {
+                    handleErrorMessage(client, "Invalid message format");
+                    return;
+                }
+                if (userExist(details[1],details[2]) == 1) {
+                    sendToClient(client, "User exists");
+                } else {
+                    sendToClient(client, "User does not exist");
+                }
+                break;
+                
+            case "login":
+                if (userLogin(details[1]) == 1) {
+                    sendToClient(client, "User login successfully");
+                } else {
+                    sendToClient(client, "User login failed");
+                }
+                break;
+            	
             default:
                 handleErrorMessage(client, "Unknown command");
         }
     }
     
     
+
+	private int userLogin(String userID) {
+		Connection conn = DbController.createDbConnection();
+		int login=DbController.userLogin(conn,userID);
+		return login;
+	}
+
+	private int userExist(String username, String password) {
+		  Connection conn = DbController.createDbConnection();
+		  int exist=DbController.searchUser(conn,username,password);
+		  if (exist==1) {return 1;} 
+		  else {return 0;}
+	}
 
 	public void updateClientConnect(ClientConnectionStatus thisClient) {
 		ClientConnectionStatus client = new ClientConnectionStatus(thisClient.ip, thisClient.host, thisClient.status);
