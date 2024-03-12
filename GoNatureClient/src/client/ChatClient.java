@@ -78,12 +78,12 @@ public class ChatClient extends AbstractClient
 		  break;
 	  case "userExist":
 		  if(result[1].equals("succeed")) 
-			  LoginController.flag=true;
-		  else LoginController.flag=false;
+			  LoginController.isUserExist=true;
+		  else LoginController.isUserExist=false;
 	  case "login":
 		  if(result[1].equals("succeed")) 
-			  LoginController.flag=true;
-		  else LoginController.flag=false;
+			  LoginController.isUserExist=true;//I think isUserExist Should be replaced with isUserLogedin and add the boolean type isUserLogedin to LoginController  
+		  else LoginController.isUserExist=false;//same here
 	  }
 	  
   }

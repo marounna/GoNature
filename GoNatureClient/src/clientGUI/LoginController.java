@@ -35,7 +35,7 @@ public class LoginController {
     @FXML
     private Button LoginBtn;
     
-    public static boolean flag =false;
+    public static boolean isUserExist =false;
 
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
@@ -63,8 +63,8 @@ public class LoginController {
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
-		if (flag) {
-			flag=false;
+		if (isUserExist) {
+			isUserExist=false;
 			try {
 				String loginMessage= 2+" login " + userId +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
@@ -72,7 +72,7 @@ public class LoginController {
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
-			if (flag) {
+			if (isUserExist) {
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
 			Pane root = loader.load();
