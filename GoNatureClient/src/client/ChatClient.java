@@ -79,8 +79,9 @@ public class ChatClient extends AbstractClient
 		  break;
 	  case "userExist":
 		  if(result[1].equals("succeed")) {
+			  LoginController.typeacc=result[3];
 			  if(result[2].equals("1"))
-				  LoginController.isLogged=true;
+				  LoginController.islogged=true;
 			  LoginController.flag=true;}
 		  else LoginController.flag=false;
 		  break;

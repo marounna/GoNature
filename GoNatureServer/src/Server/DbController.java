@@ -155,6 +155,7 @@ public class DbController {
                 if (rs.next()) {
                     System.out.println("dbController> user exists.");
                     EchoServer.is_logged = rs.getString("isLogged");
+                    EchoServer.type=rs.getString("TypeUser");
                     pstmt.close();
                     return 1; 
                 } else {
