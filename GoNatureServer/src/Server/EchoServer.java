@@ -24,6 +24,8 @@ public class EchoServer extends AbstractServer {
     //static DbController dbcontroller = new DbController();
     public static ObservableList<ClientConnectionStatus> clientsList = FXCollections.observableArrayList();
 
+	public static String is_logged;
+
     public  String dbCMessage="";
     // Constructor
     public EchoServer(int port) {
@@ -111,7 +113,7 @@ public class EchoServer extends AbstractServer {
                     return;
                 }
                 if (userExist(details[1],details[2]) == 1) {
-                    sendToClient(client, "userExist succeed");
+                    sendToClient(client, "userExist succeed "+is_logged);
                 } else {
                     sendToClient(client, "userExist failed");
                 }
@@ -119,11 +121,18 @@ public class EchoServer extends AbstractServer {
                 
             case "login":
                 if (userLogin(details[1],details[2]) == 1) {
-                    sendToClient(client, "login succeed");
+                    sendToClient(client, "login succeed "+ details[1]);
                 } else {
                     sendToClient(client, "login failed");
                 }
                 break;
+            case "logout":
+            	  if (userLogout(details[1]) == 1) {
+                      sendToClient(client, "logout succeed");
+                  } else {
+                      sendToClient(client, "logout failed");
+                  }
+                  break;
             	
             default:
                 handleErrorMessage(client, "Invalid command");
@@ -132,9 +141,15 @@ public class EchoServer extends AbstractServer {
     
     
 
+	private int userLogout(String username) {
+		Connection conn = DbController.createDbConnection();
+		int logout=DbController.userLogout(conn,username);
+		return logout;
+	}
+
 	private int userLogin(String username,String password) {
 		Connection conn = DbController.createDbConnection();
-		int login=DbController.userLogin(conn,username,password);
+		int login=DbController.userLogin(conn,username);
 		return login;
 	}
 
@@ -154,7 +169,6 @@ public class EchoServer extends AbstractServer {
 			clientsList.remove(clientsList.indexOf(client));
 			clientsList.add(client);
 		}
-		//ClientConnectionStatus.WriteToFile(client.ip+ " " +client.host+" "+client.status+ " "+ client.startTime+ " "  );
 		System.out.println(client.ip +" Connected succsessfully!");
 	}
 	
@@ -163,10 +177,7 @@ public class EchoServer extends AbstractServer {
 		return clientStatus;	
 	}
 
-	
-
 	private ClientConnectionStatus clientConnection(String clientIp, String hostIp) {
-		//System.out.println("test from client connection");
 		ClientConnectionStatus clientStatus = new ClientConnectionStatus(clientIp,hostIp,"Connected");
 		return clientStatus;	
 	}
@@ -184,21 +195,21 @@ public class EchoServer extends AbstractServer {
     }
 
 
-public static int orderExist(String order) {
-	  Connection conn = DbController.createDbConnection();
-	  int exist=DbController.searchOrder(conn,order);
+	public static int orderExist(String order) {
+		  Connection conn = DbController.createDbConnection();
+		  int exist=DbController.searchOrder(conn,order);
+	
+		  if (exist==1) {return 1;} 
+		  else {return 0;}
+	}
 
-	  if (exist==1) {return 1;} 
-	  else {return 0;}
-}
-
-public static int updateOrderDetails(String[] orderdetails) {
-	int update=0;
-	Connection conn = DbController.createDbConnection();
-	System.out.println("EchoServer> Sending the data to dbc ");
-	update=DbController.updateOrder(conn,orderdetails);
-	return update;
-}
+	public static int updateOrderDetails(String[] orderdetails) {
+		int update=0;
+		Connection conn = DbController.createDbConnection();
+		System.out.println("EchoServer> Sending the data to dbc ");
+		update=DbController.updateOrder(conn,orderdetails);
+		return update;
+	}
 
     protected void serverStarted() {
         System.out.println("EchoServer> Server listening for connections on port " + getPort());

@@ -18,7 +18,7 @@ public class DbController {
     public static Order order;
     
     
-    
+    //connect to MySQL
     @SuppressWarnings("unused")
 	public static Connection createDbConnection() {
   	  try 
@@ -73,9 +73,6 @@ public class DbController {
 
         
         try {
-            /*for (String detail : orderDetails) {
-                System.out.println(detail);
-            }*/
             // Ensure orderDetails has all necessary elements
             if (orderDetails.size() == 6) {
                 order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5));
@@ -99,13 +96,14 @@ public class DbController {
                 // Check if the order exists
                 if (rs.next()) {
                     System.out.println("dbController> Order exists.");
+                    pstmt.close();
                     return 1; // Order found
                 } else {
                     System.out.println("dbController> Order does not exist.");
                     pstmt.close();
                     return 0; // Order not found     
                 }
-                //pstmt.close();
+                
             }
         } catch (SQLException e) {
             System.out.println("dbController> Error searching for order: " + e.getMessage());
@@ -156,6 +154,7 @@ public class DbController {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     System.out.println("dbController> user exists.");
+                    EchoServer.is_logged = rs.getString("isLogged");
                     pstmt.close();
                     return 1; 
                 } else {
@@ -170,10 +169,9 @@ public class DbController {
         return 0; // Return 0 or appropriate error code/value in case of exception
     }
 
-	public static int userLogin(Connection conn, String username, String password) {
+	public static int userLogin(Connection conn, String username) {
 		String sql = "UPDATE users SET IsLogged = ? WHERE Username = ?";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	        System.out.println("test");
 	        pstmt.setString(1, "1");
 	        pstmt.setString(2, username);
 	        
@@ -188,6 +186,26 @@ public class DbController {
 	        }
 	    } catch (SQLException e) {
 	        System.out.println("dbController> Error updating user login status: " + e.getMessage());
+	    }
+	    return 0;
+	}
+
+	public static int userLogout(Connection conn, String username) {
+		String sql = "UPDATE users SET IsLogged = ? WHERE Username = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, "0");
+	        pstmt.setString(2, username);
+	        int rowsAffected = pstmt.executeUpdate();
+	        
+	        if (rowsAffected > 0) {
+	            System.out.println("dbController> logout succeed, rows affected: " + rowsAffected);
+	            return 1;
+	        } else {
+	            System.out.println("dbController> logout failed. No rows affected.");
+	            return 0;
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("dbController> Error updating user logout status: " + e.getMessage());
 	    }
 	    return 0;
 	}

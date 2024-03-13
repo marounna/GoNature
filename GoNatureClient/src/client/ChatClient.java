@@ -6,6 +6,7 @@ package client;
 
 import client.*;
 import clientGUI.LoginController;
+import clientGUI.UserMenuController;
 import common.ChatIF;
 import logic.Order;
 import ocsf.client.AbstractClient;
@@ -77,13 +78,23 @@ public class ChatClient extends AbstractClient
 		  o1.setEmail(result[5]);
 		  break;
 	  case "userExist":
-		  if(result[1].equals("succeed")) 
-			  LoginController.flag=true;
+		  if(result[1].equals("succeed")) {
+			  if(result[2].equals("1"))
+				  LoginController.isLogged=true;
+			  LoginController.flag=true;}
 		  else LoginController.flag=false;
+		  break;
 	  case "login":
-		  if(result[1].equals("succeed")) 
-			  LoginController.flag=true;
+		  if(result[1].equals("succeed")) {
+			  System.out.println("charclient "+ result[2]);
+			  UserMenuController.username=result[2];
+			  LoginController.flag=true;}
 		  else LoginController.flag=false;
+		  break;
+	  case "logout":
+		  if(result[1].equals("succeed"))
+			  UserMenuController.flag=true;
+		  else UserMenuController.flag=false;
 	  }
 	  
   }

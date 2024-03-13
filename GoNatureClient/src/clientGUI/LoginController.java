@@ -36,6 +36,7 @@ public class LoginController {
     private Button LoginBtn;
     
     public static boolean flag =false;
+    public static boolean isLogged =false;
 
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
@@ -72,34 +73,28 @@ public class LoginController {
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
-			if (flag) {
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
-			Pane root = loader.load();
-	        Scene scene = new Scene(root);
-	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-	        stage.setScene(scene);
-	        stage.show();
+		}	
+		System.out.println(flag);
+		if(!isLogged) {
+			if (flag){
+				flag=false;
+		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+				Pane root = loader.load();
+		        Scene scene = new Scene(root);
+		        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+		        stage.setScene(scene);
+		        stage.show();
 			}
 		}
-		else {userNotExist.setText("User details are not valid");}
-        /*Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
-		try {
-			String loginMessage= 2+" login " + userId ;
-		ClientUI.chat.accept(loginMessage);//Send Msg TO Server
-		System.out.println("LoginController> request Sent to server");
-		}catch(Exception e) {
-			System.out.println("LoginController> Login Failed");
-			userNotExist.setText("User details are not valid");
-		}
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();*/
-		
-	
-    }
+		else {
+			if(isLogged) { 
+				isLogged=false;
+				userNotExist.setText("Already logged in");}
+			else 
+				userNotExist.setText("User details are not valid");
 
+		}
+    }
 }
+
