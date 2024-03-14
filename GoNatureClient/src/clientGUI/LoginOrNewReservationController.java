@@ -3,6 +3,7 @@ package clientGUI;
 import java.io.IOException;
 
 import client.ClientUI;
+import common.ScreenSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,27 +26,16 @@ public class LoginOrNewReservationController {
     //move to login screen
     @FXML
     void LoginBtnAction(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/clientGUI/LoginController.fxml"));
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    	String newScreenPath="/clientGUI/LoginController.fxml";
+    	new ScreenSwitcher().changeScreen(event, newScreenPath);
     }
     
     //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservatiovController.fxml"));
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    	String newScreenPath="/clientGUI/EnterIDForReservatiovController.fxml";
+    	new ScreenSwitcher().changeScreen(event, newScreenPath);
+
     }
     
     @FXML
