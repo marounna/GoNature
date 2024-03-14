@@ -69,7 +69,6 @@ public class ChatClient extends AbstractClient
       String[] result = message.split(" ");
 	  awaitResponse = false;
 	  switch (result[0]) {
-<<<<<<< HEAD
 		  case "loadOrder":
 			  o1.setParkName(result[0]);
 			  o1.setOrderNumber(result[1]);
@@ -100,24 +99,6 @@ public class ChatClient extends AbstractClient
 				  UserMenuController.flag=true;
 			  else UserMenuController.flag=false;
 			  break;
-=======
-	  case "loadOrder":
-		  o1.setParkName(result[0]);
-		  o1.setOrderNumber(result[1]);
-		  o1.setTimeOfVisit(result[2]);
-		  o1.setNumberOfVisitors(result[3]);
-		  o1.setTelephoneNumber(result[4]);
-		  o1.setEmail(result[5]);
-		  break;
-	  case "userExist":
-		  if(result[1].equals("succeed")) 
-			  LoginController.isUserExist=true;
-		  else LoginController.isUserExist=false;
-	  case "login":
-		  if(result[1].equals("succeed")) 
-			  LoginController.isUserExist=true;//I think isUserExist Should be replaced with isUserLogedin and add the boolean type isUserLogedin to LoginController  
-		  else LoginController.isUserExist=false;//same here
->>>>>>> branch 'master' of https://github.com/AdarCohen1/GoNature.git
 	  }
 	  
   }
