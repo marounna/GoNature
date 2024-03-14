@@ -35,9 +35,14 @@ public class LoginController {
     @FXML
     private Button LoginBtn;
     
+<<<<<<< HEAD
     public static boolean isexist =false;
     public static boolean islogged =false;
     public static String typeacc="";
+=======
+    public static boolean isUserExist =false;
+
+>>>>>>> branch 'master' of https://github.com/AdarCohen1/GoNature.git
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
@@ -64,10 +69,15 @@ public class LoginController {
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
+<<<<<<< HEAD
 		System.out.println("test if");
 		if (isexist) {
 			System.out.println("test inside if");
 			isexist=false;
+=======
+		if (isUserExist) {
+			isUserExist=false;
+>>>>>>> branch 'master' of https://github.com/AdarCohen1/GoNature.git
 			try {
 				String loginMessage= 2+" login " + username +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
@@ -75,6 +85,7 @@ public class LoginController {
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
+<<<<<<< HEAD
 		}	
 		//System.out.println();
 		if(!islogged) {
@@ -99,6 +110,16 @@ public class LoginController {
 		        stage.setScene(scene);
 		        stage.show();
 		        }
+=======
+			if (isUserExist) {
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+			Pane root = loader.load();
+	        Scene scene = new Scene(root);
+	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+	        stage.setScene(scene);
+	        stage.show();
+>>>>>>> branch 'master' of https://github.com/AdarCohen1/GoNature.git
 			}
 		}
 		else {

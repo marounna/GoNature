@@ -50,13 +50,17 @@ public class NewReservationController {
 	    void ClickOnNext(ActionEvent event) {
 	    	
 	    	
-	    	
+	    	System.out.println(" Next button is under devlopments!");
 	    	
 
 	    }
 	    
 	    @FXML
 	    private void initialize() {
+	    	
+	    	//maroun requests: 
+	    		//array of parks name parksName=getParks()
+	    	
 	        TimeCombo.getItems().addAll("8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00",
 	        		"17:00","18:00","19:00");
 	        ParkNameCombo.getItems().addAll("Safari", "Gan-Tanahi", "Ya'ar-Hakofim", "Hay-Park","Mitspe-Tat-Yami");
