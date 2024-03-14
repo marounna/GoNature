@@ -26,7 +26,7 @@ public class ClientUI extends Application {
     @FXML
     private TextField enterHostIP;
 
-    public static void main(String args[]) throws Exception { 
+    public static void main(String args[]) throws Exception {  
         launch(args);  
     } // end main
 

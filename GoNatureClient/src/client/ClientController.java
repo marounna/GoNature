@@ -13,7 +13,7 @@ import common.ChatIF;
  * Warning: Some of the code here is cloned in ServerConsole 
  *
  * @author Fran&ccedil;ois B&eacute;langer
- * @author Dr Timothy C. Lethbridge  
+ * @author Dr Timothy C. Lethbridge   
  * @author Dr Robert Lagani&egrave;re
  * @version July 2000
  */

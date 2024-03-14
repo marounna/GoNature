@@ -34,7 +34,7 @@ public class LoginOrNewReservationController {
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
     	String newScreenPath="/clientGUI/EnterIDForReservatiovController.fxml";
-    	new ScreenSwitcher().changeScreen(event, newScreenPath);
+    	new ScreenSwitcher().changeScreen(event, newScreenPath); 
 
     }
     

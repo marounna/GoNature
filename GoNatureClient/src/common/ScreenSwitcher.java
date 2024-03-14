@@ -37,7 +37,7 @@ public class ScreenSwitcher {
 		alert.setTitle(Title);
 		alert.setAlertType(AlertType.INFORMATION);
 		alert.setHeaderText(HeaderText);
-		alert.setContentText(ContentText);
+		alert.setContentText(ContentText); 
 		alert.showAndWait();
 	}
 }

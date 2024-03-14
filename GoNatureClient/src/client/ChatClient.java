@@ -18,7 +18,7 @@ import java.io.*;
  *
  * @author Dr Timothy C. Lethbridge
  * @author Dr Robert Lagani&egrave;
- * @author Fran&ccedil;ois B&eacute;langer
+ * @author Fran&ccedil;ois B&eacute;langer 
  * @version July 2000
  */
 @SuppressWarnings("unused")
