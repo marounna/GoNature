@@ -24,8 +24,8 @@ public class EchoServer extends AbstractServer {
     //static DbController dbcontroller = new DbController();
     public static ObservableList<ClientConnectionStatus> clientsList = FXCollections.observableArrayList();
 
-	public static String is_logged;
-	public static String type;
+	public static String is_logged="";
+	public static String type="";
     public  String dbCMessage="";
     // Constructor
     public EchoServer(int port) {
@@ -113,7 +113,7 @@ public class EchoServer extends AbstractServer {
                     return;
                 }
                 if (userExist(details[1],details[2]) == 1) {
-                    sendToClient(client, "userExist succeed "+is_logged+" "+ type);
+                    sendToClient(client, "userExist succeed "+is_logged+" " );
                 } else {
                     sendToClient(client, "userExist failed");
                 }

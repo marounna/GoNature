@@ -35,9 +35,9 @@ public class LoginController {
     @FXML
     private Button LoginBtn;
     
-    public static boolean flag =false;
+    public static boolean isexist =false;
     public static boolean islogged =false;
-    public static String typeacc;
+    public static String typeacc="";
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
@@ -60,25 +60,28 @@ public class LoginController {
     	String message="2 userExist "+username + " " + pass;
 		try {
 			ClientUI.chat.accept(message);
-			System.out.println("LoginController> request Sent to server");
+			System.out.println("LoginController> userExist request Sent to server");
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
-		if (flag) {
-			flag=false;
+		System.out.println("test if");
+		if (isexist) {
+			System.out.println("test inside if");
+			isexist=false;
 			try {
 				String loginMessage= 2+" login " + username +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
-			System.out.println("LoginController> request Sent to server");
+			System.out.println("LoginController> login request Sent to server");
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		System.out.println(flag);
+		//System.out.println();
 		if(!islogged) {
-			if (flag){
-				flag=false;
+			if (isexist){
+				isexist=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		        System.out.println(typeacc);
 		        switch(typeacc) {
 		        	case "customer":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
@@ -90,7 +93,6 @@ public class LoginController {
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/GuideMenuController.fxml"));
 		        	case "service employee":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeController.fxml"));
-
 				Pane root = loader.load();
 		        Scene scene = new Scene(root);
 		        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
@@ -102,10 +104,9 @@ public class LoginController {
 		else {
 			if(islogged) { 
 				islogged=false;
-				userNotExist.setText("Already logged in");}
+				userNotExist.setText("User already logged in");}
 			else 
 				userNotExist.setText("User details are not valid");
-
 		}
     }
 }

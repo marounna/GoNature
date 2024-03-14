@@ -153,9 +153,9 @@ public class DbController {
             pstmt.setString(2, password);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("dbController> user exists.");
-                    EchoServer.is_logged = rs.getString("isLogged");
-                    EchoServer.type=rs.getString("TypeUser");
+                    System.out.println("DbController> user exists.");
+                	EchoServer.is_logged = rs.getString("IsLogged");
+                    EchoServer.type = rs.getString("TypeUser");
                     pstmt.close();
                     return 1; 
                 } else {

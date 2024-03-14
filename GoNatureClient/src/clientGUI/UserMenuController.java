@@ -44,9 +44,7 @@ public class UserMenuController {
 			}
 			if(flag) {
 				flag=false;
-		        System.out.println("test1");
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		        System.out.println("test2");
 		        loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); 
 			    Parent previousScreen = loader.load();
 			    Scene scene = new Scene(previousScreen);
