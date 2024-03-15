@@ -6,6 +6,7 @@ package client;
 
 import client.*;
 import clientGUI.LoginController;
+import clientGUI.UserMenuController;
 import common.ChatIF;
 import logic.Order;
 import ocsf.client.AbstractClient;
@@ -68,22 +69,36 @@ public class ChatClient extends AbstractClient
       String[] result = message.split(" ");
 	  awaitResponse = false;
 	  switch (result[0]) {
-	  case "loadOrder":
-		  o1.setParkName(result[0]);
-		  o1.setOrderNumber(result[1]);
-		  o1.setTimeOfVisit(result[2]);
-		  o1.setNumberOfVisitors(result[3]);
-		  o1.setTelephoneNumber(result[4]);
-		  o1.setEmail(result[5]);
-		  break;
-	  case "userExist":
-		  if(result[1].equals("succeed")) 
-			  LoginController.isUserExist=true;
-		  else LoginController.isUserExist=false;
-	  case "login":
-		  if(result[1].equals("succeed")) 
-			  LoginController.isUserExist=true;//I think isUserExist Should be replaced with isUserLogedin and add the boolean type isUserLogedin to LoginController  
-		  else LoginController.isUserExist=false;//same here
+		  case "loadOrder":
+			  o1.setParkName(result[0]);
+			  o1.setOrderNumber(result[1]);
+			  o1.setTimeOfVisit(result[2]);
+			  o1.setNumberOfVisitors(result[3]);
+			  o1.setTelephoneNumber(result[4]);
+			  o1.setEmail(result[5]);
+			  break;
+		  case "userExist":
+			  if(result[1].equals("succeed")) {
+				  System.out.println("test userExist1");
+				  LoginController.typeacc=result[3];
+				  LoginController.isexist=true;
+				  System.out.println("isExist: " );
+				  if(result[2].equals("1"))
+					  LoginController.islogged=true;}
+			  else LoginController.isexist=false;
+			  break;
+		  case "login":
+			  if(result[1].equals("succeed")) {
+				  System.out.println("charclient "+ result[2]);
+				  UserMenuController.username=result[2];
+				  LoginController.isexist=true;}
+			  else LoginController.isexist=false;
+			  break;
+		  case "logout":
+			  if(result[1].equals("succeed"))
+				  UserMenuController.flag=true;
+			  else UserMenuController.flag=false;
+			  break;
 	  }
 	  
   }

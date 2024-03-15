@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="901.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.UserMenuController">
    <children>
       <Button fx:id="logoutBtn" layoutX="64.0" layoutY="469.0" mnemonicParsing="false" onAction="#ClickOnLogOut" text="Logout" />
-      <Button fx:id="ordersWaitingListBtn" layoutX="423.0" layoutY="380.0" mnemonicParsing="false" onAction="#ClickOnOrdersOnWaitingList" text="Orders on waiting list" />
-      <Button fx:id="newReservationBtn" layoutX="651.0" layoutY="380.0" mnemonicParsing="false" onAction="#ClickOnNewReservation" text="New reservation" />
-      <TableView fx:id="TableField" layoutX="189.0" layoutY="28.0" prefHeight="297.0" prefWidth="648.0">
+      <Button fx:id="ordersWaitingListBtn" layoutX="423.0" layoutY="405.0" mnemonicParsing="false" onAction="#ClickOnOrdersOnWaitingList" text="Orders on waiting list" />
+      <Button fx:id="newReservationBtn" layoutX="651.0" layoutY="405.0" mnemonicParsing="false" onAction="#ClickOnNewReservation" text="New reservation" />
+      <TableView fx:id="TableField" layoutX="193.0" layoutY="71.0" prefHeight="297.0" prefWidth="648.0">
         <columns>
           <TableColumn prefWidth="75.0" />
             <TableColumn prefWidth="110.0" text="OrderID" />
@@ -21,5 +21,6 @@
             <TableColumn minWidth="0.0" prefWidth="102.0" text="Time" />
         </columns>
       </TableView>
+      <Label layoutX="463.0" layoutY="28.0" text="Orders details" />
    </children>
 </Pane>
