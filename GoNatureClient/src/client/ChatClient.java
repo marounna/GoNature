@@ -6,6 +6,7 @@ package client;
 
 import client.*;
 import clientGUI.LoginController;
+import clientGUI.NewReservationForGuideController;
 import clientGUI.NewReservationForUserController;
 import clientGUI.UserMenuController;
 import common.ChatIF;
@@ -61,6 +62,7 @@ public class ChatClient extends AbstractClient
    *
    * @param msg The message from the server.
    */
+  public int type=0;
   public void handleMessageFromServer(Object msg) 
   {
 	  System.out.println("--> handleMessageFromServer");
@@ -81,6 +83,7 @@ public class ChatClient extends AbstractClient
 		  case "userExist":
 			  if(result[1].equals("succeed")) {
 				  LoginController.typeacc=result[3];
+				  UserMenuController.type=result[3];
 				  LoginController.isexist=true;
 				  if(result[2].equals("1"))
 					  LoginController.islogged=true;}
@@ -88,24 +91,29 @@ public class ChatClient extends AbstractClient
 			  break;
 		  case "login":
 			  if(result[1].equals("succeed")) {
-				  //System.out.println("charclient "+ result[2]);
+				  if (result[2].equals("guide"))
+					  type=1;
 				  UserMenuController.username=result[2];
 				  LoginController.isexist=true;}
 			  else LoginController.isexist=false;
 			  break;
 		  case "logout":
-			  if(result[1].equals("succeed"))
-				  UserMenuController.flag=true;
-			  else UserMenuController.flag=false;
+			  if(result[1].equals("succeed")) {
+				  UserMenuController.islogout=true;
+			  	  if(type==1) type=0;}
+			  else UserMenuController.islogout=false;
 			  break;
 		  case "parkNames":
-			  String parks="";
-			  for(int i=0; i<Integer.parseInt(result[1]);i++)
-				  NewReservationForUserController.parknames.add(result[i+2]);
-			  break;
-				  
-				 
-		  
+			  if (type==1) {
+				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
+					  System.out.println("chatClient> guide park names");
+					  NewReservationForGuideController.parknames.add(result[i+2]);}
+			  }
+			  else {	  
+				  System.out.println("chatClient> user park names");
+				  for(int i=0; i<Integer.parseInt(result[1]);i++)
+					  NewReservationForUserController.parknames.add(result[i+2]);}
+			  break;  
 	  }
 	  
   }
