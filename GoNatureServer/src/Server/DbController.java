@@ -45,6 +45,33 @@ public class DbController {
             }
         return null;
     }
+    
+    
+    public static int dbCommands(Connection conn, String command, String sql) {
+        String[] result = command.split(" ");
+    	switch(result[0]) {
+    		case "searchOrder":
+    			  try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    		            pstmt.setString(1, result[1]);
+    		            try (ResultSet rs = pstmt.executeQuery()) {
+    		                // Check if the order exists
+    		                if (rs.next()) {
+    		                    System.out.println("dbController> Order exists.");
+    		                    return 1;
+
+    		                } else {
+    		                    System.out.println("dbController> Order does not exist.");
+    		                    return 0; // Order not found     
+    		                }
+    		            }
+    		        } catch (SQLException e) {
+    		            System.out.println("dbController> Error searching for order: " + e.getMessage());
+    		        }
+    		case "updateOrder":
+    			
+    	}
+    	return 0;
+    }
 
     // Method to load an order from the database
     public static Order loadOrder(Connection conn, String order_number) {
@@ -155,8 +182,6 @@ public class DbController {
                     System.out.println("DbController> User exists.");
                     EchoServer.is_logged = rs.getString("IsLogged");
                     EchoServer.type = rs.getString("TypeUser");
-                    // Debugging output
-                    System.out.println("Logged: " + EchoServer.is_logged + ", Type: " + EchoServer.type);
                     return 1;
                 } else {
                     System.out.println("DbController> User does not exist.");
