@@ -11,7 +11,8 @@ INSERT INTO gonaturedb.user_types (TypeUser) VALUES
 ('department manager'), 
 ('park manager'), 
 ('guide'), 
-('service employee');
+('service employee'),
+('park employee');
 
 CREATE TABLE gonaturedb.users (
     UserId VARCHAR(255) PRIMARY KEY,
