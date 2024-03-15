@@ -37,7 +37,7 @@ public class LoginController {
     
     public static boolean isexist =false;
     public static boolean islogged =false;
-    public static String typeacc="";
+    public static String typeacc;
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
@@ -75,7 +75,8 @@ public class LoginController {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		//System.out.println();
+		System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);
+		
 		if(!islogged) {
 			if (isexist){
 				isexist=false;
@@ -84,22 +85,27 @@ public class LoginController {
 		        switch(typeacc) {
 		        	case "customer":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+		        		break;
 		        	case "park manager" :
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/ParkManagerMenuController.fxml"));
+		        		break;
 		        	case "department manager":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/DepartmentManagerMenuController.fxml"));
+		        		break;
 		        	case "guide":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/GuideMenuController.fxml"));
+		        		break;
 		        	case "service employee":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeController.fxml"));
+		        		break;
+		        }
 				Pane root = loader.load();
 		        Scene scene = new Scene(root);
 		        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
 		        stage.setScene(scene);
 		        stage.show();
 		        }
-			}
-		}
+			}		
 		else {
 			if(islogged) { 
 				islogged=false;

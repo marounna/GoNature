@@ -79,17 +79,15 @@ public class ChatClient extends AbstractClient
 			  break;
 		  case "userExist":
 			  if(result[1].equals("succeed")) {
-				  System.out.println("test userExist1");
 				  LoginController.typeacc=result[3];
 				  LoginController.isexist=true;
-				  System.out.println("isExist: " );
 				  if(result[2].equals("1"))
 					  LoginController.islogged=true;}
 			  else LoginController.isexist=false;
 			  break;
 		  case "login":
 			  if(result[1].equals("succeed")) {
-				  System.out.println("charclient "+ result[2]);
+				  //System.out.println("charclient "+ result[2]);
 				  UserMenuController.username=result[2];
 				  LoginController.isexist=true;}
 			  else LoginController.isexist=false;
