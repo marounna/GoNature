@@ -2,6 +2,7 @@ package clientGUI;
 
 import java.io.IOException;
 
+import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class NewReservationController {
+public class NewReservationForUserController {
 
 	    @FXML
 	    private Button BackBtn;
@@ -33,12 +34,18 @@ public class NewReservationController {
 
 	    @FXML
 	    private ComboBox<String> ParkNameCombo;
+	    public static int len;
+	    
+	    public static String[] parknames= new String[len];
 
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
 			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservatiovController.fxml"));
+	        if (LoginController.typeacc.equals("customer"))
+	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+	        else
+	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
 			Pane root = loader.load();
 	        Scene scene = new Scene(root);
 	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
@@ -57,13 +64,10 @@ public class NewReservationController {
 	    
 	    @FXML
 	    private void initialize() {
+	    	ClientUI.chat.accept("654654654 parkNames ");
 	    	
-	    	//maroun requests: 
-	    		//array of parks name parksName=getParks()
-	    	
-	        TimeCombo.getItems().addAll("8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00",
-	        		"17:00","18:00","19:00");
-	        ParkNameCombo.getItems().addAll("Safari", "Gan-Tanahi", "Ya'ar-Hakofim", "Hay-Park","Mitspe-Tat-Yami");
+	        TimeCombo.getItems().addAll("8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00");
+	        ParkNameCombo.getItems().addAll(parknames);
 	    }
 	
 	

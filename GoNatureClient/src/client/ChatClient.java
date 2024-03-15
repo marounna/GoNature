@@ -6,6 +6,7 @@ package client;
 
 import client.*;
 import clientGUI.LoginController;
+import clientGUI.NewReservationForUserController;
 import clientGUI.UserMenuController;
 import common.ChatIF;
 import logic.Order;
@@ -65,7 +66,7 @@ public class ChatClient extends AbstractClient
 	  System.out.println("--> handleMessageFromServer");
       System.out.println("ChatClient> Message received: " + (String)msg);
       String message = (String) msg.toString();
-      System.out.println("EchoServer> " + message);
+      System.out.println("chatClient> " + message);
       String[] result = message.split(" ");
 	  awaitResponse = false;
 	  switch (result[0]) {
@@ -97,6 +98,11 @@ public class ChatClient extends AbstractClient
 				  UserMenuController.flag=true;
 			  else UserMenuController.flag=false;
 			  break;
+		  case "parkNames":
+			  NewReservationForUserController.len=Integer.parseInt(result[1])-2;
+			  for(int i=2; i<Integer.parseInt(result[1]);i++)
+				  NewReservationForUserController.parknames[i-2]=result[i];
+		  
 	  }
 	  
   }

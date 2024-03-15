@@ -41,11 +41,11 @@ public class EchoServer extends AbstractServer {
      */
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
-        String message = (String) msg.toString();
         String returnmsg="";
+        String message = (String) msg.toString();
         System.out.println("EchoServer> " + message);
         String[] result = message.split(" ");
-       // System.out.println(result[0]);
+        System.out.println(result[0]);
         if (result[0].equals("1")) {
         	String Ip = client.toString() + " " ;
         	String[] clientIp=Ip.split(" ");
@@ -73,9 +73,10 @@ public class EchoServer extends AbstractServer {
             handleErrorMessage(client, "Invalid message format");
             return;
         }
+        Connection conn = DbController.createDbConnection();
         switch (details[0]) {
             case "updateOrderDetails":
-                if (updateOrderDetails(details) == 1) {
+                if (updateOrderDetails(details,conn) == 1) {
                     sendToClient(client, "updateOrderDetails succeed");
                 } else {
                     sendToClient(client, "updateOrderDetails failed");
@@ -86,7 +87,7 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                if (orderExist(details[1]) == 1) {
+                if (orderExist(details[1],conn) == 1) {
                     sendToClient(client, "orderExist succeed");
                 } else {
                     sendToClient(client, "OrderExist failed");
@@ -97,7 +98,6 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                Connection conn = DbController.createDbConnection();
                 Order order = DbController.loadOrder(conn, details[1]);
                 if(order!=null) {
                 	returnmsg="loadOrder "+order.toString();
@@ -112,27 +112,35 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                if (userExist(details[1],details[2]) == 1) {
+                if (userExist(details[1],details[2],conn) == 1) {
                     sendToClient(client, "userExist succeed "+ is_logged + " " + type);//-----------------------------------------------
                 } else {
                     sendToClient(client, "userExist failed");
                 }
                 break;     
             case "login":
-                if (userLogin(details[1],details[2]) == 1) {
+                if (userLogin(details[1],details[2],conn) == 1) {
                     sendToClient(client, "login succeed "+ details[1]);
                 } else {
                     sendToClient(client, "login failed");
                 }
                 break;
             case "logout":
-            	  if (userLogout(details[1]) == 1) {
+            	  if (userLogout(details[1],conn) == 1) {
                       sendToClient(client, "logout succeed");
                   } else {
                       sendToClient(client, "logout failed");
                   }
                   break;
-            	
+            case "parkNames":
+			String parknames="";
+			try {
+				parknames = DbController.getParkNames(conn);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            	sendToClient(client,"parkNames " +  parknames);
             default:
                 handleErrorMessage(client, "Invalid command");
         }
@@ -140,20 +148,22 @@ public class EchoServer extends AbstractServer {
     
     
 
-	private int userLogout(String username) {
-		Connection conn = DbController.createDbConnection();
+	private int updateOrderDetails(String[] details, Connection conn) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private int userLogout(String username, Connection conn) {
 		int logout=DbController.userLogout(conn,username);
 		return logout;
 	}
 
-	private int userLogin(String username,String password) {
-		Connection conn = DbController.createDbConnection();
+	private int userLogin(String username,String password, Connection conn) {
 		int login=DbController.userLogin(conn,username);
 		return login;
 	}
 
-	private int userExist(String username, String password) {
-		  Connection conn = DbController.createDbConnection();
+	private int userExist(String username, String password, Connection conn) {
 		  System.out.println("echo server userExist method");
 		  int exist=DbController.searchUser(conn,username,password);
 		  if (exist==1) {return 1;} 
@@ -195,8 +205,7 @@ public class EchoServer extends AbstractServer {
     }
 
 
-	public static int orderExist(String order) {
-		  Connection conn = DbController.createDbConnection();
+	public static int orderExist(String order, Connection conn) {
 		  int exist=DbController.searchOrder(conn,order);
 	
 		  if (exist==1) {return 1;} 

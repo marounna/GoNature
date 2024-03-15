@@ -75,8 +75,7 @@ public class LoginController {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);
-		
+		System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);	
 		if(!islogged) {
 			if (isexist){
 				isexist=false;

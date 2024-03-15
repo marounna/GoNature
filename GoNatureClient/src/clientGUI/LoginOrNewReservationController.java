@@ -40,7 +40,7 @@ public class LoginOrNewReservationController {
     void NewReservationBtnAction(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservatiovController.fxml"));
+		loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservationController.fxml"));
 		Pane root = loader.load();
         Scene scene = new Scene(root);
         //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());

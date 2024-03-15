@@ -8,9 +8,10 @@ public class Order {
 	    private String telephoneNumber;
 	    private String email;
 
-	    public Order(String parkName, String orderNumber2, String timeOfVisit, String numberOfVisitors2, String telephoneNumber,String Email) {
-	        this.parkName = parkName;
-	        this.orderNumber = orderNumber2;
+	    public Order(String parkName, String orderNumber, String timeOfVisit, String numberOfVisitors2, String telephoneNumber,String Email) {
+	        
+	    	this.parkName = parkName;
+	        this.orderNumber = orderNumber;
 	        this.timeOfVisit = timeOfVisit;
 	        this.numberOfVisitors = numberOfVisitors2;
 	        this.telephoneNumber = telephoneNumber;

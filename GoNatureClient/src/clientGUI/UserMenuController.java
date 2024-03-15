@@ -52,32 +52,19 @@ public class UserMenuController {
 			    // Show the updated stage
 			    stage.show();
 			}
-				  
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	/*FXMLLoader loader = new FXMLLoader();
-		          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				  loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); // Update the path to your FXML
-				  Parent previousScreen = loader.load();
-				  Scene scene = new Scene(previousScreen);
-				  stage.setScene(scene);
-				  // Show the updated stage
-				  stage.show();*/
-
-	    	
-	    	
+				    	
 	    }
 
 	    @FXML
-	    void ClickOnNewReservation(ActionEvent event) {
-
-	    	
+	    void ClickOnNewReservation(ActionEvent event) throws IOException {
+			FXMLLoader loader = new FXMLLoader();
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForUserController.fxml")); 
+		    Parent previousScreen = loader.load();
+		    Scene scene = new Scene(previousScreen);
+		    stage.setScene(scene);
+		    // Show the updated stage
+		    stage.show();
 	    	
 	    }
 

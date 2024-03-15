@@ -44,7 +44,7 @@ public class EnterIDForReservationController {
     	try {
 			  FXMLLoader loader = new FXMLLoader();
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			  loader.setLocation(getClass().getResource("/clientGUI/NewReservationController.fxml")); // Update the path to your FXML
+			  loader.setLocation(getClass().getResource("/clientGUI/NewReservationForGuestController.fxml")); // Update the path to your FXML
 			  Parent previousScreen = loader.load();
 			  Scene scene = new Scene(previousScreen);
 			  stage.setScene(scene);
