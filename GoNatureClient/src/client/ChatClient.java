@@ -99,9 +99,12 @@ public class ChatClient extends AbstractClient
 			  else UserMenuController.flag=false;
 			  break;
 		  case "parkNames":
-			  NewReservationForUserController.len=Integer.parseInt(result[1])-2;
-			  for(int i=2; i<Integer.parseInt(result[1]);i++)
-				  NewReservationForUserController.parknames[i-2]=result[i];
+			  String parks="";
+			  for(int i=0; i<Integer.parseInt(result[1]);i++)
+				  NewReservationForUserController.parknames.add(result[i+2]);
+			  break;
+				  
+				 
 		  
 	  }
 	  

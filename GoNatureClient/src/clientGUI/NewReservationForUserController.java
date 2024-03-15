@@ -1,6 +1,7 @@
 package clientGUI;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import client.ClientUI;
 import javafx.event.ActionEvent;
@@ -36,7 +37,8 @@ public class NewReservationForUserController {
 	    private ComboBox<String> ParkNameCombo;
 	    public static int len;
 	    
-	    public static String[] parknames= new String[len];
+	    public static ArrayList<String> parknames = new ArrayList<>();
+
 
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
@@ -55,7 +57,7 @@ public class NewReservationForUserController {
 
 	    @FXML
 	    void ClickOnNext(ActionEvent event) {
-	    	
+
 	    	
 	    	System.out.println(" Next button is under devlopments!");
 	    	
@@ -65,7 +67,6 @@ public class NewReservationForUserController {
 	    @FXML
 	    private void initialize() {
 	    	ClientUI.chat.accept("654654654 parkNames ");
-	    	
 	        TimeCombo.getItems().addAll("8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00");
 	        ParkNameCombo.getItems().addAll(parknames);
 	    }
