@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class NewReservationForUserController {
+public class NewReservationForGuideController {
 
     @FXML
     private Button backBtn;
@@ -28,7 +28,7 @@ public class NewReservationForUserController {
     private Button nextBtn;
 
     @FXML
-    private TextField numberOfVisitors;
+    private ComboBox<String> numberVisitorsCombo;
 
     @FXML
     private ComboBox<String> parkNameCombo;
@@ -53,9 +53,12 @@ public class NewReservationForUserController {
 
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
-	    	FXMLLoader loader = new FXMLLoader();
+			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+	        if (LoginController.typeacc.equals("customer"))
+	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+	        else
+	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
 			Pane root = loader.load();
 	        Scene scene = new Scene(root);
 	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
@@ -78,8 +81,7 @@ public class NewReservationForUserController {
 	    	ClientUI.chat.accept("parkNames ");
         	parkNameCombo.getItems().addAll(parknames);
         	parknames.clear();
-        }
-	    
+	    }
 	
 	
 	

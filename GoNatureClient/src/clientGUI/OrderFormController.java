@@ -78,7 +78,7 @@ public class OrderFormController  {
     @FXML
     void SaveAction(ActionEvent event) {
     	System.out.println("OrderFormCtl> Trying to Save");
-		String message="3 updateOrderDetails ";//used to help the server to handle message
+		String message="updateOrderDetails ";//used to help the server to handle message
 		message += parkNameField.getValue() + " ";
 		message += orderNumberField.getText()+ " ";
 		message += timeOfVisitField.getText() + " ";

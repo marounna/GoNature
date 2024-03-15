@@ -30,20 +30,21 @@ public class UserMenuController {
 	    @FXML
 	    private Button ordersWaitingListBtn;
 	    
-	    public static boolean flag =false;
+	    public static boolean islogout =false;
+	    public static String type;
 
 	    @FXML
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
 			FXMLLoader loader = new FXMLLoader();
-	    	String message="2 logout "+username;
+	    	String message="logout "+username;
 			try {
 				ClientUI.chat.accept(message);
 				System.out.println("UserMenuController> request Sent to server");
 			}catch (Exception e){
 				System.out.println("UserMenuController> Logout failed");
 			}
-			if(flag) {
-				flag=false;
+			if(islogout) {
+				islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		        loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); 
 			    Parent previousScreen = loader.load();
@@ -52,14 +53,20 @@ public class UserMenuController {
 			    // Show the updated stage
 			    stage.show();
 			}
-				    	
 	    }
 
 	    @FXML
 	    void ClickOnNewReservation(ActionEvent event) throws IOException {
 			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForUserController.fxml")); 
+	        switch (type) {
+	        	case "customer":
+	    	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForUserController.fxml")); 
+	    	        break;
+	        	case "guide":
+	    	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForGuideController.fxml")); 
+	    	        break;
+	        }
 		    Parent previousScreen = loader.load();
 		    Scene scene = new Scene(previousScreen);
 		    stage.setScene(scene);

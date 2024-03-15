@@ -50,7 +50,7 @@ public class LoginOrNewReservationController {
     
     @FXML
     void ClickOnExitButton(ActionEvent event) {
-    	ClientUI.chat.accept("100");
+    	ClientUI.chat.accept("disconnect");
     	System.exit(0);
     }
 

@@ -154,11 +154,11 @@ public class DbController {
             pstmt.setString(2, password);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("DbController> User exists.");
+                    //System.out.println("DbController> User exists.");
                     EchoServer.is_logged = rs.getString("IsLogged");
                     EchoServer.type = rs.getString("TypeUser");
                     // Debugging output
-                    System.out.println("Logged: " + EchoServer.is_logged + ", Type: " + EchoServer.type);
+                    //System.out.println("Logged: " + EchoServer.is_logged + ", Type: " + EchoServer.type);
                     return 1;
                 } else {
                     System.out.println("DbController> User does not exist.");
@@ -213,26 +213,23 @@ public class DbController {
 	    return 0;
 	}
 
-	public static String getParkNames(Connection conn) throws SQLException {
+	public static String getParkNames(Connection conn, String names) {
 		String sql="SELECT Parkname FROM park";
 		String parks ="";
 		int i=0;
-		System.out.println("------------------------------------------------------------1");
-        try (Statement statement = conn.createStatement()) {
-        	ResultSet rs = statement.executeQuery(sql);
-        	System.out.println("------------------------------------------------------------2");
-                while(rs.next()) {
-                	i++;
-                    parks+=rs.getString("Parkname");
-                    System.out.println(parks+"000000000000");
-                    
-            }
-        } catch (SQLException e) {
-            System.out.println("DbController> Error searching for user: " + e.getMessage());
-        }
-            return i+" "+ parks.toString().trim(); 
-        }
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql);
+	           ResultSet rs = pstmt.executeQuery()) {
+	           while (rs.next()) {
+	        	   	i++;	
+        		    parks += rs.getString("Parkname")+" ";
+        		    //System.out.println(parks);
+	           }
+	    }catch (SQLException e) {
+	        System.out.println("DbController> Error fetching park names: " + e.getMessage());}    
+        return i+" "+ parks; 
+    }
 }
+
 
 	
 	

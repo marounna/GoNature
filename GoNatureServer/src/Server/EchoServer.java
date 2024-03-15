@@ -46,59 +46,53 @@ public class EchoServer extends AbstractServer {
         System.out.println("EchoServer> " + message);
         String[] result = message.split(" ");
         System.out.println(result[0]);
-        if (result[0].equals("1")) {
-        	String Ip = client.toString() + " " ;
-        	String[] clientIp=Ip.split(" ");
-        	String hostIp= getHostIp();
-        	ClientConnectionStatus thisClient=clientConnection(clientIp[0],hostIp);
-        	updateClientConnect(thisClient);
-        	sendToClient(client,"Connected succeed");
-        	return;
-        }
-        else if (result[0].equals("100")) {
-        	String Ip = client.toString() + " " ;
-        	String[] clientIp=Ip.split(" ");
-        	String hostIp= getHostIp();
-        	ClientConnectionStatus thisClient=clientDisconnection(clientIp[0],hostIp);
-        	updateClientConnect(thisClient);
-        	sendToClient(client,"Disconnected succeed");
-        	return;
-        }
-        String [] details=new String[result.length-1];
-        for(int i=0; i<details.length;i++) {
-        	details[i]=result[i+1];
-
-        }   
-        if (details.length < 1) {
+        if (result.length < 1) {
             handleErrorMessage(client, "Invalid message format");
             return;
         }
         Connection conn = DbController.createDbConnection();
-        switch (details[0]) {
+        switch (result[0]) {
+        	case "connect":
+            	String Ip = client.toString() + " " ;
+            	String[] clientIp=Ip.split(" ");
+            	String hostIp= getHostIp();
+            	ClientConnectionStatus thisClient=clientConnection(clientIp[0],hostIp);
+            	updateClientConnect(thisClient);
+            	sendToClient(client,"Connected succeed");
+            	break;
+        	case "disconnect":
+            	String Ip1 = client.toString() + " " ;
+            	String[] clientIp1=Ip1.split(" ");
+            	String hostIp1= getHostIp();
+            	ClientConnectionStatus thisClient1=clientDisconnection(clientIp1[0],hostIp1);
+            	updateClientConnect(thisClient1);
+            	sendToClient(client,"Disconnected succeed");
+            	break;
+        		
             case "updateOrderDetails":
-                if (updateOrderDetails(details,conn) == 1) {
+                if (updateOrderDetails(result,conn) == 1) {
                     sendToClient(client, "updateOrderDetails succeed");
                 } else {
                     sendToClient(client, "updateOrderDetails failed");
                 }
                 break;
             case "orderExist":
-                if (details.length < 2) {
+                if (result.length < 2) {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                if (orderExist(details[1],conn) == 1) {
+                if (orderExist(result[1],conn) == 1) {
                     sendToClient(client, "orderExist succeed");
                 } else {
                     sendToClient(client, "OrderExist failed");
                 }
                 break;
             case "loadOrder":
-                if (details.length < 2) {
+                if (result.length < 2) {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                Order order = DbController.loadOrder(conn, details[1]);
+                Order order = DbController.loadOrder(conn, result[1]);
                 if(order!=null) {
                 	returnmsg="loadOrder "+order.toString();
                 	sendToClient(client,returnmsg);
@@ -108,45 +102,47 @@ public class EchoServer extends AbstractServer {
                 break;
                 }
             case "userExist":
-                if (details.length < 2) {
+                if (result.length < 2) {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                if (userExist(details[1],details[2],conn) == 1) {
+                if (userExist(result[1],result[2],conn) == 1) {
                     sendToClient(client, "userExist succeed "+ is_logged + " " + type);//-----------------------------------------------
                 } else {
                     sendToClient(client, "userExist failed");
                 }
                 break;     
             case "login":
-                if (userLogin(details[1],details[2],conn) == 1) {
-                    sendToClient(client, "login succeed "+ details[1]);
+                if (userLogin(result[1],result[2],conn) == 1) {
+                    sendToClient(client, "login succeed "+ result[1]);
                 } else {
                     sendToClient(client, "login failed");
                 }
                 break;
             case "logout":
-            	  if (userLogout(details[1],conn) == 1) {
+            	  if (userLogout(result[1],conn) == 1) {
                       sendToClient(client, "logout succeed");
                   } else {
                       sendToClient(client, "logout failed");
                   }
                   break;
             case "parkNames":
-			String parknames="";
-			try {
-				parknames = DbController.getParkNames(conn);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				String parknames="";
+				parknames = getParks(conn,"parkNames");
             	sendToClient(client,"parkNames " +  parknames);
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }
     }
     
     
+
+	private String getParks(Connection conn, String names) {
+		String parknames="";
+		parknames=DbController.getParkNames(conn,names);
+		return parknames;
+	}
 
 	private int updateOrderDetails(String[] details, Connection conn) {
 		// TODO Auto-generated method stub

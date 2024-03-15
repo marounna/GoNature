@@ -57,7 +57,7 @@ public class LoginController {
     	String username=userID.getText();
     	String pass=password.getText();
 		FXMLLoader loader = new FXMLLoader();
-    	String message="2 userExist "+username + " " + pass;
+    	String message="userExist "+username + " " + pass;
 		try {
 			ClientUI.chat.accept(message);
 			System.out.println("LoginController> userExist request Sent to server");
@@ -65,17 +65,17 @@ public class LoginController {
 			System.out.println("LoginController> User does not exist");
 		}
 		if (isexist) {
-			System.out.println("test inside if");
+
 			isexist=false;
 			try {
-				String loginMessage= 2+" login " + username +" "+ pass ;
+				String loginMessage= "login " + username +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
 			System.out.println("LoginController> login request Sent to server");
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);	
+		//System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);	
 		if(!islogged) {
 			if (isexist){
 				isexist=false;
@@ -83,6 +83,7 @@ public class LoginController {
 		        System.out.println(typeacc);
 		        switch(typeacc) {
 		        	case "customer":
+		        	case "guide":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
 		        		break;
 		        	case "park manager" :
@@ -90,9 +91,6 @@ public class LoginController {
 		        		break;
 		        	case "department manager":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/DepartmentManagerMenuController.fxml"));
-		        		break;
-		        	case "guide":
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/GuideMenuController.fxml"));
 		        		break;
 		        	case "service employee":
 		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeController.fxml"));
@@ -113,5 +111,6 @@ public class LoginController {
 				userNotExist.setText("User details are not valid");
 		}
     }
+    
 }
 
