@@ -3,9 +3,11 @@ package clientGUI;
 import java.io.IOException;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import client.ChatClient;
 import client.ClientUI;
+import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,17 +40,16 @@ public class LoginController {
     public static boolean isexist =false;
     public static boolean islogged =false;
     public static String typeacc;
+    public static ArrayList<Park> parks = new ArrayList<>();
+
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
-			  FXMLLoader loader = new FXMLLoader();
+
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			  loader.setLocation(getClass().getResource("/clientGUI/LoginOrNewReservation.fxml")); // Update the path to your FXML
-			  Parent previousScreen = loader.load();
-			  Scene scene = new Scene(previousScreen);
-			  //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-			  stage.setScene(scene);
-			  stage.show();
+      		  SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
+      				  ,"/clientGUI/LoginOrNewReservation.css");
+
 			  } catch (Exception e) {
 			      e.printStackTrace();}
     }//login into the user and move to the user menu screen
@@ -56,56 +57,55 @@ public class LoginController {
     void ClickOnLoginBtn(ActionEvent event) throws IOException {
     	String username=userID.getText();
     	String pass=password.getText();
-		FXMLLoader loader = new FXMLLoader();
-    	String message="2 userExist "+username + " " + pass;
+    	String message="userExist "+username + " " + pass;
 		try {
 			ClientUI.chat.accept(message);
 			System.out.println("LoginController> userExist request Sent to server");
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
+		System.out.println("check before ifexist login controller");
 		if (isexist) {
-			System.out.println("test inside if");
+
 			isexist=false;
 			try {
-				String loginMessage= 2+" login " + username +" "+ pass ;
+				String loginMessage= "login " + username +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
 			System.out.println("LoginController> login request Sent to server");
 			}catch(Exception e) {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		System.out.println("TEST LOGIN CONTROLLER " + isexist +" "+ islogged);
-		
 		if(!islogged) {
 			if (isexist){
 				isexist=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		        System.out.println(typeacc);
-		        switch(typeacc) {
+		        switch(ChatClient.typeacc) {
 		        	case "customer":
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
+		        	case "guide":
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+		        				,"/clientGUI/UserMenuController.css");
 		        		break;
 		        	case "park manager" :
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/ParkManagerMenuController.fxml"));
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/ParkManagerMenuController.fxml"
+		        				,"/clientGUI/ParkManagerMenuController.css");
 		        		break;
 		        	case "department manager":
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/DepartmentManagerMenuController.fxml"));
-		        		break;
-		        	case "guide":
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/GuideMenuController.fxml"));
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/DepartmentManagerMenuController.fxml"
+		        				,"/clientGUI/DepartmentManagerMenuController.css");
 		        		break;
 		        	case "service employee":
-		        		loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeController.fxml"));
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/ServiceEmployeeMenuController.fxml"
+		        				,"/clientGUI/ServiceEmployeeMenuController.css");
+		        		break;
+		        	case "park employee":
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/EmployeeMenuController.fxml"
+		        				,"/clientGUI/EmployeeMenuController.css");
 		        		break;
 		        }
-				Pane root = loader.load();
-		        Scene scene = new Scene(root);
-		        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-		        stage.setScene(scene);
-		        stage.show();
-		        }
-			}		
+	        }
+		}		
 		else {
 			if(islogged) { 
 				islogged=false;
@@ -114,5 +114,6 @@ public class LoginController {
 				userNotExist.setText("User details are not valid");
 		}
     }
+    
 }
 

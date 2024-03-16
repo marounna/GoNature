@@ -1,5 +1,6 @@
 package clientGUI;
 
+import client.ChatClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,14 +27,10 @@ public class EnterIDForReservationController {
     @FXML
     void ClickBackBtn(ActionEvent event) {
 		try {
-			  FXMLLoader loader = new FXMLLoader();
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			  loader.setLocation(getClass().getResource("/clientGUI/LoginOrNewReservation.fxml")); // Update the path to your FXML
-			  Parent previousScreen = loader.load();
-			  Scene scene = new Scene(previousScreen);
-			  stage.setScene(scene);
-			  // Show the updated stage
-			  stage.show();
+	          SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
+	        		  ,"/clientGUI/LoginOrNewReservation.css");
+
 			  } catch (Exception e) {
 			      e.printStackTrace();}
     }
@@ -42,16 +39,12 @@ public class EnterIDForReservationController {
     void ClickNextBtn(ActionEvent event) {
     	String userId=idField.getText();
     	try {
-			  FXMLLoader loader = new FXMLLoader();
-	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-			  loader.setLocation(getClass().getResource("/clientGUI/NewReservationController.fxml")); // Update the path to your FXML
-			  Parent previousScreen = loader.load();
-			  Scene scene = new Scene(previousScreen);
-			  stage.setScene(scene);
-			  // Show the updated stage
-			  stage.show();
-			  } catch (Exception e) {
-			      e.printStackTrace();}
+		  ChatClient.typeacc="guest";
+          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		  SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+				  ,"/clientGUI/NewReservationForUserController.fxml");
+	  	  } catch (Exception e) {
+		      e.printStackTrace();}
     	
     }
 	

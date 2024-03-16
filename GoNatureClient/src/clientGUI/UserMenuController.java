@@ -2,6 +2,7 @@ package clientGUI;
 
 import java.io.IOException;
 
+import client.ChatClient;
 import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,55 +31,39 @@ public class UserMenuController {
 	    @FXML
 	    private Button ordersWaitingListBtn;
 	    
-	    public static boolean flag =false;
+	    public static boolean islogout =false;
 
-	    @FXML
+	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader();
-	    	String message="2 logout "+username;
+	    	String message="logout "+username;
 			try {
 				ClientUI.chat.accept(message);
 				System.out.println("UserMenuController> request Sent to server");
 			}catch (Exception e){
 				System.out.println("UserMenuController> Logout failed");
 			}
-			if(flag) {
-				flag=false;
+			if(islogout) {
+				islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		        loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); 
-			    Parent previousScreen = loader.load();
-			    Scene scene = new Scene(previousScreen);
-			    stage.setScene(scene);
-			    // Show the updated stage
-			    stage.show();
+        		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml"
+        				,"/clientGUI/LoginController.css");
 			}
-				  
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	
-	    	/*FXMLLoader loader = new FXMLLoader();
-		          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				  loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); // Update the path to your FXML
-				  Parent previousScreen = loader.load();
-				  Scene scene = new Scene(previousScreen);
-				  stage.setScene(scene);
-				  // Show the updated stage
-				  stage.show();*/
-
-	    	
-	    	
 	    }
 
-	    @FXML
-	    void ClickOnNewReservation(ActionEvent event) {
-
-	    	
-	    	
+	    @FXML //moving to new reservation screen
+	    void ClickOnNewReservation(ActionEvent event) throws IOException {
+	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	        System.out.println("----------test---- "+ ChatClient.typeacc);
+	        switch (ChatClient.typeacc) {
+	        	case "customer":
+	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+	        				,"/clientGUI/NewReservationForUserController.css");
+	    	        break;
+	        	case "guide":
+	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+	        				,"/clientGUI/NewReservationForGuideController.css");
+	    	        break;
+	        }	
 	    }
 
 	    @FXML

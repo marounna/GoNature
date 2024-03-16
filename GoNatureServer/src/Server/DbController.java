@@ -3,6 +3,7 @@ package Server;
 
 import java.util.ArrayList;
 
+import entities.Park;
 import logic.Order;
 
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 //commit by Adar 15/3 time 9.20
@@ -114,6 +116,7 @@ public class DbController {
         }
 		return null;
     }
+ 
 
     public static int searchOrder(Connection conn, String order_number) {
         String sql = "SELECT * FROM orders WHERE OrderNumber = ?";
@@ -137,25 +140,28 @@ public class DbController {
         }
         return 0; // Return 0 or appropriate error code/value in case of exception
     }
+    
+    
+
 
     // Method to update an order in the database
-    public static int updateOrder(Connection conn, String[] orderdetails) {
-        // Assuming the message format is "orderNumber,parkName,timeOfVisit,numberOfVisitors,telephoneNumber, email"
-        String[] details = orderdetails;
-
-        if (details.length != 7) {
+    public static int updateOrder(Connection conn, String[] msg) {
+        if (msg.length != 7) {
             System.out.println("dbController> Invalid message format for updating order.");
             return 0;
         }
-        String sql = "UPDATE orders SET ParkName = ?, TimeOfVisit = ?, NumberOfVisitors = ?, TelephoneNumber = ?, Email = ? WHERE OrderNumber = ?";
+        String sql = "UPDATE orders SET ParkName = ?,UserId=? TimeOfVisit = ?, NumberOfVisitors = ?, IsConfirmed = ?, IsVisit = ?, IsCanceled = ?, TotalPrice = ?, IsInWaitingList = ? WHERE OrderId = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, details[1]); // ParkName
-            pstmt.setString(2, details[3]); // TimeOfVisit
-            pstmt.setString(3, details[4]); // NumberOfVisitors
-            pstmt.setString(4, details[5]); // TelephoneNumber
-            pstmt.setString(5, details[6]); // Email
-            pstmt.setString(6, details[2]); // OrderNumber
-            
+            pstmt.setString(1, msg[2]); // ParkName
+            pstmt.setString(2, msg[3]); // UserId
+            pstmt.setString(3, msg[4]); // TimeOfVisit
+            pstmt.setString(4, msg[5]); // NumberOfVisitors
+            pstmt.setString(5, msg[6]); // IsConfirmed
+            pstmt.setString(6, msg[7]); // IsVisit
+            pstmt.setString(7, msg[8]); // IsCanceled
+            pstmt.setString(8, msg[9]); // TotalPrice
+            pstmt.setString(9, msg[10]); // IsInWaitingList
+            pstmt.setString(10, msg[1]); // OrderId
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 System.out.println("dbController> Order updated successfully.");
@@ -179,7 +185,7 @@ public class DbController {
             pstmt.setString(2, password);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("DbController> User exists.");
+                    //System.out.println("DbController> User exists.");
                     EchoServer.is_logged = rs.getString("IsLogged");
                     EchoServer.type = rs.getString("TypeUser");
                     return 1;
@@ -235,6 +241,54 @@ public class DbController {
 	    }
 	    return 0;
 	}
+
+	public static String getParkNames(Connection conn, String names) {
+		String sql="SELECT Parkname FROM park";
+		String parks ="";
+		int i=0;
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql);
+	           ResultSet rs = pstmt.executeQuery()) {
+	           while (rs.next()) {
+	        	   	i++;	
+        		    parks += rs.getString("Parkname")+" ";
+        		    //System.out.println(parks);
+	           }
+	    }catch (SQLException e) {
+	        System.out.println("DbController> Error fetching park names: " + e.getMessage());}    
+        return i+" "+ parks; 
+    }
+
+
+	public static ArrayList<Park> park(Connection conn) {
+         	ArrayList<Park> parks = new ArrayList<>();
+	        String query = "SELECT * FROM park;";
+	        try (Statement stmt = conn.createStatement(); 
+	             ResultSet rs = stmt.executeQuery(query)) { // try-with-resources for auto closing
+	            
+	            while (rs.next()) {
+	                String parkName = rs.getString("Parkname");
+	                String capacityOfVisitors = rs.getString("CapacityOfVisitors");
+	                String pricePerPerson = rs.getString("PricePerPerson");
+	                String availableSpot = rs.getString("AvailableSpot");
+	                String visitTimeLimit = rs.getString("visitTimeLimit");
+	                String parkManagerId = rs.getString("ParkMangerId");
+	                
+	                // Assuming the Park constructor matches these fields
+	                Park park = new Park(parkName, capacityOfVisitors, pricePerPerson, availableSpot, visitTimeLimit, parkManagerId);
+	                parks.add(park);
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+  		    System.out.println("354");
+
+		return parks;
+	}
+
+}
+
+
+	
 	
     
-}
+
