@@ -3,6 +3,7 @@ package Server;
 
 import java.util.ArrayList;
 
+import entities.Park;
 import logic.Order;
 
 import java.sql.Connection;
@@ -228,6 +229,32 @@ public class DbController {
 	        System.out.println("DbController> Error fetching park names: " + e.getMessage());}    
         return i+" "+ parks; 
     }
+
+	public static ArrayList<Park> park(Connection conn) {
+         	ArrayList<Park> parks = new ArrayList<>();
+	        String query = "SELECT * FROM park;";
+	        try (Statement stmt = conn.createStatement(); 
+	             ResultSet rs = stmt.executeQuery(query)) { // try-with-resources for auto closing
+	            
+	            while (rs.next()) {
+	                String parkName = rs.getString("Parkname");
+	                String capacityOfVisitors = rs.getString("CapacityOfVisitors");
+	                String pricePerPerson = rs.getString("PricePerPerson");
+	                String availableSpot = rs.getString("AvailableSpot");
+	                String visitTimeLimit = rs.getString("visitTimeLimit");
+	                String parkManagerId = rs.getString("ParkMangerId");
+	                
+	                // Assuming the Park constructor matches these fields
+	                Park park = new Park(parkName, capacityOfVisitors, pricePerPerson, availableSpot, visitTimeLimit, parkManagerId);
+	                parks.add(park);
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+  		    System.out.println("354");
+
+		return parks;
+	}
 }
 
 

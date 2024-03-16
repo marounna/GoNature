@@ -10,10 +10,13 @@ import clientGUI.NewReservationForGuideController;
 import clientGUI.NewReservationForUserController;
 import clientGUI.UserMenuController;
 import common.ChatIF;
+import entities.Park;
+import logic.Message;
 import logic.Order;
 import ocsf.client.AbstractClient;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -63,8 +66,19 @@ public class ChatClient extends AbstractClient
    * @param msg The message from the server.
    */
   public int type=0;
-  public void handleMessageFromServer(Object msg) 
+  @SuppressWarnings("unchecked")
+public void handleMessageFromServer(Object msg1) 
   {
+	  String msg= " ";
+	  Message payloadMessage = null;
+	  if(msg1 instanceof Message) {
+		  System.out.println("it workkkkkkkkkkkkkkkkkkkkk");
+		  payloadMessage =(Message) msg1;
+		  msg=payloadMessage.getCommand();
+	  }
+	  else {
+		  msg = (String)msg1;
+	  }
 	  System.out.println("--> handleMessageFromServer");
       System.out.println("ChatClient> Message received: " + (String)msg);
       String message = (String) msg.toString();
@@ -113,7 +127,13 @@ public class ChatClient extends AbstractClient
 				  System.out.println("chatClient> user park names");
 				  for(int i=0; i<Integer.parseInt(result[1]);i++)
 					  NewReservationForUserController.parknames.add(result[i+2]);}
-			  break;  
+			  break;
+		  case "park":
+			  ArrayList<Park> msgList = (ArrayList<Park>) payloadMessage.getPayload() ;
+			  System.out.println("----------"+ msg +"-------------" + msgList);
+			  NewReservationForUserController.parks.addAll(msgList);
+			  break;
+		  		
 	  }
 	  
   }

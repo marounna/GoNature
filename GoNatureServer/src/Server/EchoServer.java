@@ -5,10 +5,14 @@ import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import Server.DbController;
+import entities.Park;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.ClientConnectionStatus;
+import logic.Message;
 import logic.Order;
 import ocsf.server.AbstractServer;
 import ocsf.server.ConnectionToClient;
@@ -131,12 +135,29 @@ public class EchoServer extends AbstractServer {
 				parknames = getParks(conn,"parkNames");
             	sendToClient(client,"parkNames " +  parknames);
             	break;
+            case "park":
+            	ArrayList<Park> parks = new ArrayList<>();
+            	parks = Park(conn);
+
+            	Message payload = new Message("park", parks);
+
+      		    try {
+      		    	client.sendToClient(payload);
+      		    } catch (IOException e) {
+      		    	e.printStackTrace();
+      		    }
+            	
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }
     }
     
     
+
+	private ArrayList<Park> Park(Connection conn) {
+		return DbController.park(conn );
+	}
 
 	private String getParks(Connection conn, String names) {
 		String parknames="";
@@ -195,6 +216,8 @@ public class EchoServer extends AbstractServer {
             e.printStackTrace();
         }
     }
+	
+	
 
     private void handleErrorMessage(ConnectionToClient client, String errorMessage) {
         sendToClient(client, errorMessage);
