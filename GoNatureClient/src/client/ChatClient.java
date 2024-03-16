@@ -106,11 +106,9 @@ public class ChatClient extends AbstractClient
 		  case "parkNames":
 			  if (type==1) {
 				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
-					  System.out.println("chatClient> guide park names");
 					  NewReservationForGuideController.parknames.add(result[i+2]);}
 			  }
 			  else {	  
-				  System.out.println("chatClient> user park names");
 				  for(int i=0; i<Integer.parseInt(result[1]);i++)
 					  NewReservationForUserController.parknames.add(result[i+2]);}
 			  break;  
