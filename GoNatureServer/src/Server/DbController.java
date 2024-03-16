@@ -162,7 +162,7 @@ public class DbController {
                     EchoServer.is_logged = rs.getString("IsLogged");
                     EchoServer.type = rs.getString("TypeUser");
                     // Debugging output
-                    //System.out.println("Logged: " + EchoServer.is_logged + ", Type: " + EchoServer.type);
+                    System.out.println("Logged: " + EchoServer.is_logged + ", Type: " + EchoServer.type);
                     return 1;
                 } else {
                     System.out.println("DbController> User does not exist.");

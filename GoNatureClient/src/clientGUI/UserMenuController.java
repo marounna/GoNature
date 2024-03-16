@@ -2,6 +2,7 @@ package clientGUI;
 
 import java.io.IOException;
 
+import client.ChatClient;
 import client.ClientUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,11 +32,9 @@ public class UserMenuController {
 	    private Button ordersWaitingListBtn;
 	    
 	    public static boolean islogout =false;
-	    public static String type;
 
-	    @FXML
+	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader();
 	    	String message="logout "+username;
 			try {
 				ClientUI.chat.accept(message);
@@ -46,33 +45,25 @@ public class UserMenuController {
 			if(islogout) {
 				islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		        loader.setLocation(getClass().getResource("/clientGUI/LoginController.fxml")); 
-			    Parent previousScreen = loader.load();
-			    Scene scene = new Scene(previousScreen);
-			    stage.setScene(scene);
-			    // Show the updated stage
-			    stage.show();
+        		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml"
+        				,"/clientGUI/LoginController.css");
 			}
 	    }
 
-	    @FXML
+	    @FXML //moving to new reservation screen
 	    void ClickOnNewReservation(ActionEvent event) throws IOException {
-			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        switch (type) {
+	        System.out.println("----------test---- "+ ChatClient.typeacc);
+	        switch (ChatClient.typeacc) {
 	        	case "customer":
-	    	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForUserController.fxml")); 
+	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+	        				,"/clientGUI/NewReservationForUserController.css");
 	    	        break;
 	        	case "guide":
-	    	        loader.setLocation(getClass().getResource("/clientGUI/NewReservationForGuideController.fxml")); 
+	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+	        				,"/clientGUI/NewReservationForGuideController.css");
 	    	        break;
-	        }
-		    Parent previousScreen = loader.load();
-		    Scene scene = new Scene(previousScreen);
-		    stage.setScene(scene);
-		    // Show the updated stage
-		    stage.show();
-	    	
+	        }	
 	    }
 
 	    @FXML

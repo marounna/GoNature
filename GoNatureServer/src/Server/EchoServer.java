@@ -55,6 +55,9 @@ public class EchoServer extends AbstractServer {
             return;
         }
         Connection conn = DbController.createDbConnection();
+        if(result[0].equals("park")) {
+        	System.out.println("its park!~~~~~~~~~~~~~~~~");
+        	result[0]="park";}
         switch (result[0]) {
         	case "connect":
             	String Ip = client.toString() + " " ;
@@ -71,8 +74,7 @@ public class EchoServer extends AbstractServer {
             	ClientConnectionStatus thisClient1=clientDisconnection(clientIp1[0],hostIp1);
             	updateClientConnect(thisClient1);
             	sendToClient(client,"Disconnected succeed");
-            	break;
-        		
+            	break;	
             case "updateOrderDetails":
                 if (updateOrderDetails(result,conn) == 1) {
                     sendToClient(client, "updateOrderDetails succeed");
@@ -111,7 +113,7 @@ public class EchoServer extends AbstractServer {
                     return;
                 }
                 if (userExist(result[1],result[2],conn) == 1) {
-                    sendToClient(client, "userExist succeed "+ is_logged + " " + type);//-----------------------------------------------
+                    sendToClient(client, "userExist succeed "+ is_logged + " " + type);
                 } else {
                     sendToClient(client, "userExist failed");
                 }
@@ -136,21 +138,21 @@ public class EchoServer extends AbstractServer {
             	sendToClient(client,"parkNames " +  parknames);
             	break;
             case "park":
+            	System.out.println("echoserver> its park case");
             	ArrayList<Park> parks = new ArrayList<>();
             	parks = Park(conn);
             	Message payload = new Message("park", parks);
-            	System.out.println("test park");
-      		    try {
-      		    	client.sendToClient(payload);
-      		    } catch (IOException e) {
-      		    	e.printStackTrace();
-      		    }
+				try {
+					client.sendToClient(payload);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
       		    break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }
     }
-    
     
 
 	private String getParks(Connection conn, String names) {
@@ -175,7 +177,7 @@ public class EchoServer extends AbstractServer {
 	}
 
 	private int userExist(String username, String password, Connection conn) {
-		  System.out.println("echo server userExist method");
+		  //System.out.println("echo server userExist method");
 		  int exist=DbController.searchUser(conn,username,password);
 		  if (exist==1) {return 1;} 
 		  else {return 0;}
@@ -224,7 +226,7 @@ public class EchoServer extends AbstractServer {
 	}
 	
 	private ArrayList<Park> Park(Connection conn) {
-		return DbController.park(conn );
+		return DbController.park(conn);
 	}
 
 	public static int updateOrderDetails(String[] orderdetails) {

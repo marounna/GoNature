@@ -48,25 +48,22 @@ public class PaymentController {
     void clickOnBack(ActionEvent event) throws IOException {
     	orderDetailsArea.clear();
     	msg="";
-    	FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         switch(type) {
         	case "g":
-	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/NewReservationForGuideController.fxml"));
+        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+        				,"/clientGUI/NewReservationForGuideController.css");
 	        	break;
         	case "c":
-	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/NewReservationForUserController.fxml"));
+        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+        				,"/clientGUI/NewReservationForUserController.css");
 	        	break;
         	/*case "ec":
         	  case "eg":
 	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeMenuController.fxml"));
+	        	SwitchScreen.changeScreen(stage,"/clientGUI/EmployeeMenuController.fxml");
 	        	break;*/
         }
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
     }
 
     @FXML
@@ -75,12 +72,6 @@ public class PaymentController {
     		totalprice=totalprice*0.88;
     		flag=0;
     	}
-        /*Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Payment Information");
-        alert.setHeaderText(null); // You can set a header text here
-        alert.setContentText("Total price for payment is: "+totalprice);
-        // Show the Alert and wait for user response
-        alert.showAndWait();*/
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Payment Information");
     	alert.setHeaderText(null); // You can set a header text here
@@ -114,6 +105,7 @@ public class PaymentController {
     private void initialize() {
     	orderDetailsArea.clear();
     	if (NewReservationForUserController.flagC==1) {//if its personal order (booked in advance)
+    		NewReservationForUserController.flagC=0;
     		type="c";
     		discount=0.85;
     		visitorsnumber=NewReservationForUserController.numberofvisitors;

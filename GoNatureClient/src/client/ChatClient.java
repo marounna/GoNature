@@ -5,6 +5,7 @@
 package client;
 
 import client.*;
+import clientGUI.EmployeeMenuController;
 import clientGUI.LoginController;
 import clientGUI.NewReservationForGuideController;
 import clientGUI.NewReservationForUserController;
@@ -39,7 +40,8 @@ public class ChatClient extends AbstractClient
   ChatIF clientUI; 
   public static Order o1 = new Order(null, null, null, null, null, null);
   public static boolean awaitResponse = false;
-
+  public int type=0;
+  public static String typeacc;
   //Constructors ****************************************************
   
   /**
@@ -65,9 +67,7 @@ public class ChatClient extends AbstractClient
    *
    * @param msg The message from the server.
    */
-  public int type=0;
-
-@SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
 public void handleMessageFromServer(Object msg1) 
   {
 	  String msg= " ";
@@ -97,41 +97,76 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "userExist":
 			  if(result[1].equals("succeed")) {
-				  LoginController.typeacc=result[3];
-				  UserMenuController.type=result[3];
 				  LoginController.isexist=true;
+				  typeacc=result[3];
+				  if(result[3].equals("park")||result[3].equals("department")||result[3].equals("service"))
+				  	  typeacc += " " + result[4];				  		
+
 				  if(result[2].equals("1"))
 					  LoginController.islogged=true;}
 			  else LoginController.isexist=false;
 			  break;
 		  case "login":
+			  System.out.println("login case chat client");
 			  if(result[1].equals("succeed")) {
+				  LoginController.isexist=true;
 				  if (result[2].equals("guide"))
 					  type=1;
-				  UserMenuController.username=result[2];
-				  LoginController.isexist=true;}
+				  switch (typeacc) {
+					  case "guide":
+					  case "customer":
+						  UserMenuController.username=result[2];
+						  break;
+					  case "park employee":
+						  EmployeeMenuController.username=result[2];
+						  break;
+					  /*case "department manager":
+						  DmMenuController.username=result[2];
+						  break;
+					  case "service employee":
+						  ServiceEmployeeMenuController.username=result[2];
+						  break;*/
+				  }
+			  }
 			  else LoginController.isexist=false;
 			  break;
 		  case "logout":
 			  if(result[1].equals("succeed")) {
-				  UserMenuController.islogout=true;
+				  switch (typeacc) {
+				  case "guide":
+				  case "customer":
+					  UserMenuController.islogout=true;
+					  break;
+				  case "park employee":
+					  EmployeeMenuController.islogout=true;
+					  break;
+				  /*case "department manager":
+					  DmMenuController.username.islogout=true;
+					  break;
+				  case "service employee":
+					  ServiceEmployeeMenuController.islogout=true;
+					  break;*/
+				  }
 			  	  if(type==1) type=0;}
 			  else UserMenuController.islogout=false;
 			  break;
 		  case "parkNames":
 			  if (type==1) {
 				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
+					  System.out.println("chatClient> guide park names");
 					  NewReservationForGuideController.parknames.add(result[i+2]);}
 			  }
 			  else {	  
+				  System.out.println("chatClient> user park names");
 				  for(int i=0; i<Integer.parseInt(result[1]);i++)
 					  NewReservationForUserController.parknames.add(result[i+2]);}
-			  break; 
+			  break;
 		  case "park":
 			  ArrayList<Park> msgList = (ArrayList<Park>) payloadMessage.getPayload() ;
 			  System.out.println("----------"+ msg +"-------------" + msgList);
-			  NewReservationForUserController.parks.addAll(msgList);
+			  LoginController.parks.addAll(msgList);
 			  break;
+		  		
 	  }
 	  
   }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import client.ClientUI;
+import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,20 +55,15 @@ public class NewReservationForGuideController {
 
     public static ArrayList<String> parknames = new ArrayList<>();
 
-	    @FXML
+	    @FXML //moving back to user menu
 	    void ClickOnBack(ActionEvent event) throws IOException {
 	    	flagG=0;
-			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
-			Pane root = loader.load();
-	        Scene scene = new Scene(root);
-	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-	        stage.setScene(scene);
-	        stage.show();
+	        SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+	        		,"/clientGUI/UserMenuController.css");
 	    }
 
-	    @FXML
+	    @FXML //setting the fields data into orderdetails string and moving to the payment screen
 	    void ClickForPayment(ActionEvent event) throws IOException {
 	    	numberofvisitors=Integer.parseInt(numberVisitorsCombo.getValue());
 	    	orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
@@ -78,26 +74,53 @@ public class NewReservationForGuideController {
 	    	orderdetails+="\nLast name: "+ textLastName.getText();
 	    	orderdetails+="\nTelephone: "+ textPhone.getText();
 	        orderdetails+="\nEmail: " +textEmail.getText();
-			FXMLLoader loader = new FXMLLoader();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        loader = new FXMLLoader(getClass().getResource("/clientGUI/PaymentController.fxml"));
-			Pane root = loader.load();
-	        Scene scene = new Scene(root);
-	        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
-	        stage.setScene(scene);
-	        stage.show();
+	        SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml"
+	        		,"/clientGUI/PaymentController.css");
+
 	    }
 	    
-	    @FXML
+	    @FXML //initialize the screen with park names and time combo fields
 	    private void initialize() {
 	    	flagG=1;
-	    	numberVisitorsCombo.getItems().addAll("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15");
-	        timeCombo.getItems().addAll("8:00","9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00");
-	    	ClientUI.chat.accept("parkNames ");
-        	parkNameCombo.getItems().addAll(parknames);
-        	parknames.clear();
+	    	LoginController.parks.clear();
+	        ClientUI.chat.accept("park");
+	        parkNameCombo.getItems().addAll(getParkNames());
+	        parkNameCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+	            updateAvailableTimes(newValue);
+	        });
+	        // Default time slots for when no park is selected or if a park allows all-day visits
+	        timeCombo.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00", "13:00",
+	        		"14:00", "15:00", "16:00", "17:00", "18:00", "19:00");
+	        parknames.clear();
 	    }
-	
+	    // update available time from db
+	    private void updateAvailableTimes(String parkName) {
+	        // Find the selected park
+	        Park selectedPark = LoginController.parks.stream().filter(park -> park.getParkString().equals(parkName)).findFirst()
+	        		.orElse(null);
+	        if (selectedPark != null) {
+	            int visitLimitHours = selectedPark.getVisitTimeLimit();
+
+	            // Clear previous time slots
+	            timeCombo.getItems().clear();
+
+	            // Add time slots based on visit limit
+	            for (int hour = 8; hour < 20; hour++) {
+	                if (hour + visitLimitHours <= 20) {
+	                    timeCombo.getItems().add(String.format("%02d:00", hour));
+	                }
+	            }
+	        }
+	    }
+	    // getting park names from db and adding it into array list
+	    public static ArrayList<String> getParkNames() {
+	        ArrayList<String> parkName = new ArrayList<>();
+	        for (Park park : LoginController.parks) {
+	            parkName.add(park.getParkString()); 
+	        }
+	        return parkName;
+	    }
 	
 	
 }
