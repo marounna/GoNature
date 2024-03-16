@@ -8,12 +8,6 @@ import java.util.Objects;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
-
 public class ClientConnectionStatus implements Comparable<ClientConnectionStatus>{
 
 	public String ip;

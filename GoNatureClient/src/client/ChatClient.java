@@ -67,7 +67,13 @@ public class ChatClient extends AbstractClient
    *
    * @param msg The message from the server.
    */
+
   @SuppressWarnings("unchecked")
+
+
+
+
+
 public void handleMessageFromServer(Object msg1) 
   {
 	  String msg= " ";

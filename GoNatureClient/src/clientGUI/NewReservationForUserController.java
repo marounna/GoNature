@@ -2,6 +2,8 @@ package clientGUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import client.ChatClient;
 import client.ClientUI;
@@ -58,6 +60,7 @@ public class NewReservationForUserController {
     
 
 
+
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
 
@@ -94,10 +97,13 @@ public class NewReservationForUserController {
 	    
 	    @FXML
 	    private void initialize() {
+
 	    	flagC=1;
+
 	    	LoginController.parks.clear();
 	        ClientUI.chat.accept("park");
 	        parkNameCombo.getItems().addAll(getParkNames());
+
 	        parkNameCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 	            updateAvailableTimes(newValue);
 	        });
