@@ -8,12 +8,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import client.ClientUI;
 import clientGUI.NewReservationForUserController;
@@ -39,6 +42,7 @@ public class PaymentController {
 	public double totalprice;
 	public String type;
 	String msg="";
+	int flag=0;
 
     @FXML
     void clickOnBack(ActionEvent event) throws IOException {
@@ -67,15 +71,38 @@ public class PaymentController {
 
     @FXML
     void clickOnPayNow(ActionEvent event) {
-    	if (type.equals("g")) {
+    	if (type.equals("g")&&flag==1) {
     		totalprice=totalprice*0.88;
+    		flag=0;
     	}
-        Alert alert = new Alert(AlertType.INFORMATION);
+        /*Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Payment Information");
         alert.setHeaderText(null); // You can set a header text here
         alert.setContentText("Total price for payment is: "+totalprice);
         // Show the Alert and wait for user response
-        alert.showAndWait();
+        alert.showAndWait();*/
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setTitle("Payment Information");
+    	alert.setHeaderText(null); // You can set a header text here
+    	alert.setContentText("Total price for payment is: " + totalprice);
+
+    	// Create custom ButtonTypes
+    	ButtonType okButton = new ButtonType("Confirm", ButtonData.OK_DONE);
+    	ButtonType cancelButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+
+    	// Set the ButtonTypes to the alert
+    	alert.getButtonTypes().setAll(okButton, cancelButton);
+
+    	// Show the alert and wait for a response
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.isPresent()) {
+    	    if (result.get() == okButton) {
+    	        // Handle "Confirm" button action
+    	    } else if (result.get() == cancelButton) {
+    	        // Handle "Cancel" button action
+    	    }
+    	}
+
     	
     }
     
@@ -97,6 +124,7 @@ public class PaymentController {
     	}
     	else if(NewReservationForGuideController.flagG==1) {//if its group order (booked in advance)
     		type="g";
+    		flag=1;
     		discountLabel.setText("Click on pay now for extra 12% discount");
     		discount=0.75;
     		visitorsnumber=NewReservationForGuideController.numberofvisitors-1;
