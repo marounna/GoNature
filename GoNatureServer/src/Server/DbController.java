@@ -113,9 +113,6 @@ public class DbController {
         }
         return 0; // Return 0 or appropriate error code/value in case of exception
     }
-    
-    
-
 
     // Method to update an order in the database
     public static int updateOrder(Connection conn, String[] msg) {
@@ -233,7 +230,6 @@ public class DbController {
         return i+" "+ parks; 
     }
 
-
 	public static ArrayList<Park> park(Connection conn) {
          	ArrayList<Park> parks = new ArrayList<>();
 	        String query = "SELECT * FROM park;";
@@ -259,7 +255,6 @@ public class DbController {
 
 		return parks;
 	}
-
 }
 
 

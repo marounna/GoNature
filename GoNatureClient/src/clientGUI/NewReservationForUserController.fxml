@@ -19,7 +19,7 @@
       <TextField fx:id="numberOfVisitors" layoutX="211.0" layoutY="130.0" prefHeight="25.0" prefWidth="174.0" />
       <Label layoutX="213.0" layoutY="28.0" text="New Reservation" />
       <Button fx:id="backBtn" layoutX="63.0" layoutY="478.0" mnemonicParsing="false" onAction="#ClickOnBack" text="Back" />
-      <Button fx:id="paymentBtn" layoutX="257.0" layoutY="478.0" mnemonicParsing="false" onAction="#ClickForPayment" text="Confirm for payment" />
+      <Button fx:id="bextBtn" layoutX="257.0" layoutY="478.0" mnemonicParsing="false" onAction="#ClickOnNext" text="Confirm for payment" />
       <Label layoutX="71.0" layoutY="270.0" text="First name:" />
       <Label layoutX="71.0" layoutY="361.0" text="Tel." />
       <Label layoutX="71.0" layoutY="408.0" text="E-mail:" />

@@ -21,7 +21,7 @@ public class Park implements Serializable {
         this.visitTimeLimit = visitTimeLimit;
         this.parkMangerId = parkMangerId;
     }
-
+    
     public String getParkString() {
 		return parkString;
 	}
@@ -102,7 +102,7 @@ public class Park implements Serializable {
 	public void setParkMangerId(String parkMangerId) {
 		this.parkMangerId = parkMangerId;
 	}
-
+	
 	public int getvisiterinpark() {
 		return Integer.parseInt(maxCapacity)-Integer.parseInt(availableSpots);
 	}
@@ -121,6 +121,4 @@ public class Park implements Serializable {
                 ", parkMangerId='" + parkMangerId + '\'' +
                 '}';
     }
-
 }
-
