@@ -139,6 +139,7 @@ public class EchoServer extends AbstractServer {
             	ArrayList<Park> parks = new ArrayList<>();
             	parks = Park(conn);
 
+
             	Message payload = new Message("park", parks);
 
       		    try {
@@ -146,8 +147,8 @@ public class EchoServer extends AbstractServer {
       		    } catch (IOException e) {
       		    	e.printStackTrace();
       		    }
-            	
             	break;
+
             default:
                 handleErrorMessage(client, "Invalid command");
         }
@@ -229,6 +230,10 @@ public class EchoServer extends AbstractServer {
 	
 		  if (exist==1) {return 1;} 
 		  else {return 0;}
+	}
+	
+	private ArrayList<Park> Park(Connection conn) {
+		return DbController.park(conn );
 	}
 
 	public static int updateOrderDetails(String[] orderdetails) {

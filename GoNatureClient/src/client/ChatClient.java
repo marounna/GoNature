@@ -66,7 +66,9 @@ public class ChatClient extends AbstractClient
    * @param msg The message from the server.
    */
   public int type=0;
-  @SuppressWarnings("unchecked")
+
+@SuppressWarnings("unchecked")
+
 public void handleMessageFromServer(Object msg1) 
   {
 	  String msg= " ";
@@ -120,11 +122,9 @@ public void handleMessageFromServer(Object msg1)
 		  case "parkNames":
 			  if (type==1) {
 				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
-					  System.out.println("chatClient> guide park names");
 					  NewReservationForGuideController.parknames.add(result[i+2]);}
 			  }
 			  else {	  
-				  System.out.println("chatClient> user park names");
 				  for(int i=0; i<Integer.parseInt(result[1]);i++)
 					  NewReservationForUserController.parknames.add(result[i+2]);}
 			  break;
@@ -133,7 +133,6 @@ public void handleMessageFromServer(Object msg1)
 			  System.out.println("----------"+ msg +"-------------" + msgList);
 			  NewReservationForUserController.parks.addAll(msgList);
 			  break;
-		  		
 	  }
 	  
   }
