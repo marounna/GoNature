@@ -68,6 +68,7 @@ public class ChatClient extends AbstractClient
   public int type=0;
 
 @SuppressWarnings("unchecked")
+
 public void handleMessageFromServer(Object msg1) 
   {
 	  String msg= " ";
@@ -126,7 +127,7 @@ public void handleMessageFromServer(Object msg1)
 			  else {	  
 				  for(int i=0; i<Integer.parseInt(result[1]);i++)
 					  NewReservationForUserController.parknames.add(result[i+2]);}
-			  break; 
+			  break;
 		  case "park":
 			  ArrayList<Park> msgList = (ArrayList<Park>) payloadMessage.getPayload() ;
 			  System.out.println("----------"+ msg +"-------------" + msgList);

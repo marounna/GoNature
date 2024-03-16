@@ -2,6 +2,8 @@ package clientGUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import client.ClientUI;
 import entities.Park;
@@ -57,6 +59,7 @@ public class NewReservationForUserController {
     public static ArrayList<String> parknames = new ArrayList<>();
     public static ArrayList<Park> parks = new ArrayList<>();
 
+
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
 	    	flagC=0;
@@ -93,10 +96,13 @@ public class NewReservationForUserController {
 	    
 	    @FXML
 	    private void initialize() {
+
 	    	flagC=1;
-	    	ClientUI.chat.accept("park");
-	        parkNameCombo.getItems().addAll(getParkNames());
-	    	//parkNameCombo.getItems().addAll(parknames);
+
+	      ClientUI.chat.accept("park");
+
+	       parkNameCombo.getItems().addAll(getParkNames());
+
 	        parkNameCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 	            updateAvailableTimes(newValue);
 	        });
@@ -128,6 +134,8 @@ public class NewReservationForUserController {
 	            }
 	        }
 	    }
+
+
 	    
 	    public static ArrayList<String> getParkNames() {
 
@@ -137,5 +145,6 @@ public class NewReservationForUserController {
 	        }
 	        return parkName;
 	    }
-	    
+	    	    		
+
 }

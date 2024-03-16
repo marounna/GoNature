@@ -138,20 +138,27 @@ public class EchoServer extends AbstractServer {
             case "park":
             	ArrayList<Park> parks = new ArrayList<>();
             	parks = Park(conn);
+
+
             	Message payload = new Message("park", parks);
-            	System.out.println("test park");
+
       		    try {
       		    	client.sendToClient(payload);
       		    } catch (IOException e) {
       		    	e.printStackTrace();
       		    }
-      		    break;
+            	break;
+
             default:
                 handleErrorMessage(client, "Invalid command");
         }
     }
     
     
+
+	private ArrayList<Park> Park(Connection conn) {
+		return DbController.park(conn );
+	}
 
 	private String getParks(Connection conn, String names) {
 		String parknames="";
@@ -210,6 +217,8 @@ public class EchoServer extends AbstractServer {
             e.printStackTrace();
         }
     }
+	
+	
 
     private void handleErrorMessage(ConnectionToClient client, String errorMessage) {
         sendToClient(client, errorMessage);
