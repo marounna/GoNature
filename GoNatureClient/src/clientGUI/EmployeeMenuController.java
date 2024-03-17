@@ -78,7 +78,7 @@ public class EmployeeMenuController {
 			if(islogout) {
 				islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	      		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/clientGUI/LoginController.css");
+	      		SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
 
 			}
 	    }

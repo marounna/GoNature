@@ -68,14 +68,14 @@ public class NewReservationForUserController {
 	        switch (ChatClient.typeacc) {
 		        case "guide":
 		        case "customer":
-		        	//loader = new FXMLLoader(getClass().getResource("/clientGUI/UserMenuController.fxml"));
-		        	SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
-		        			,"/clientGUI/UserMenuController.css");
+		        	//loader = new FXMLLoader(getClass().getResource("/resources/UserMenuController.fxml"));
+		        	SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+		        			,"/resources/UserMenuController.css");
 		        	break;
 		        case "guest":
-		    		//loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservationController.fxml"));
-		    		SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
-		    				,"/clientGUI/EnterIDForReservationController.css");
+		    		//loader = new FXMLLoader(getClass().getResource("/resources/EnterIDForReservationController.fxml"));
+		    		SwitchScreen.changeScreen(stage,"/resources/EnterIDForReservationController.fxml"
+		    				,"/resources/EnterIDForReservationController.css");
 		    		break;
 	        }
 
@@ -92,14 +92,13 @@ public class NewReservationForUserController {
 	    	orderdetails+="\nTelephone: "+ textPhone.getText();
 	        orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    		SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml","/clientGUI/PaymentController.css");
+    		SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml","/resources/PaymentController.css");
 	    }
 	    
-	    @FXML
+	    @FXML  //initialize the new reservation screen
 	    private void initialize() {
 
 	    	flagC=1;
-
 	    	LoginController.parks.clear();
 	        ClientUI.chat.accept("park");
 	        parkNameCombo.getItems().addAll(getParkNames());
@@ -112,17 +111,15 @@ public class NewReservationForUserController {
 	        		"14:00", "15:00", "16:00", "17:00", "18:00", "19:00");
 	        parknames.clear();
 	    }
-
+	    //getting available hours from DB
 	    private void updateAvailableTimes(String parkName) {
 	        // Find the selected park
 	        Park selectedPark = LoginController.parks.stream().filter(park -> park.getParkString().equals(parkName)).findFirst()
 	        		.orElse(null);
 	        if (selectedPark != null) {
 	            int visitLimitHours = selectedPark.getVisitTimeLimit();
-
 	            // Clear previous time slots
 	            timeCombo.getItems().clear();
-
 	            // Add time slots based on visit limit
 	            for (int hour = 8; hour < 20; hour++) {
 	                if (hour + visitLimitHours <= 20) {
@@ -131,7 +128,8 @@ public class NewReservationForUserController {
 	            }
 	        }
 	    }
-
+	    
+	    //getting park names from DB
 	    public static ArrayList<String> getParkNames() {
 	        ArrayList<String> parkName = new ArrayList<>();
 	        for (Park park : LoginController.parks) {

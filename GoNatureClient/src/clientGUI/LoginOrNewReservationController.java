@@ -27,11 +27,11 @@ public class LoginOrNewReservationController {
     void LoginBtnAction(ActionEvent event) throws IOException {
 		//FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/clientGUI/LoginController.css");
-		/*loader = new FXMLLoader(getClass().getResource("/clientGUI/LoginController.fxml"));
+        SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
+		/*loader = new FXMLLoader(getClass().getResource("/resources/LoginController.fxml"));
 		Pane root = loader.load();
         Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+        //scene.getStylesheets().add(getClass().getResource("/resources/OrderFrame.css").toExternalForm());
         stage.setScene(scene);
         stage.show();*/
     }
@@ -41,12 +41,12 @@ public class LoginOrNewReservationController {
     void NewReservationBtnAction(ActionEvent event) throws IOException {
 		//FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
-        		,"EnterIDForReservationController.css");
-		/*loader = new FXMLLoader(getClass().getResource("/clientGUI/EnterIDForReservationController.fxml"));
+        SwitchScreen.changeScreen(stage,"/resources/EnterIDForReservationController.fxml"
+        		,"/resources/EnterIDForReservationController.css");
+		/*loader = new FXMLLoader(getClass().getResource("/resources/EnterIDForReservationController.fxml"));
 		Pane root = loader.load();
         Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+        //scene.getStylesheets().add(getClass().getResource("/resources/OrderFrame.css").toExternalForm());
         stage.setScene(scene);
         stage.show();*/
     }

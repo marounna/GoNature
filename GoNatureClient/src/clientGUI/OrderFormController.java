@@ -56,13 +56,13 @@ public class OrderFormController  {
 		try {
 		  // Load the FXML for the previous screen
 		  FXMLLoader loader = new FXMLLoader();
-		  loader.setLocation(getClass().getResource("/clientGUI/OrderFrame.fxml")); // Update the path to your FXML
+		  loader.setLocation(getClass().getResource("/resources/OrderFrame.fxml")); // Update the path to your FXML
 		  Parent previousScreen = loader.load();
 		  // Get the current stage from the event source
 		  Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		  // Set the scene for the stage with the root of the previous screen
 		  Scene scene = new Scene(previousScreen);
-		  scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());
+		  scene.getStylesheets().add(getClass().getResource("/resources/OrderFrame.css").toExternalForm());
 		  stage.setScene(scene);
           
 		  // Optionally, set the title for the stage

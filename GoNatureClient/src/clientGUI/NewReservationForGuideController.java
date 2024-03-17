@@ -59,8 +59,8 @@ public class NewReservationForGuideController {
 	    void ClickOnBack(ActionEvent event) throws IOException {
 	    	flagG=0;
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
-	        		,"/clientGUI/UserMenuController.css");
+	        SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+	        		,"/resources/UserMenuController.css");
 	    }
 
 	    @FXML //setting the fields data into orderdetails string and moving to the payment screen
@@ -75,8 +75,8 @@ public class NewReservationForGuideController {
 	    	orderdetails+="\nTelephone: "+ textPhone.getText();
 	        orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml"
-	        		,"/clientGUI/PaymentController.css");
+	        SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml"
+	        		,"/resources/PaymentController.css");
 
 	    }
 	    

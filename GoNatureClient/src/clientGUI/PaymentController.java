@@ -51,17 +51,17 @@ public class PaymentController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         switch(type) {
         	case "g":
-        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
-        				,"/clientGUI/NewReservationForGuideController.css");
+        		SwitchScreen.changeScreen(stage,"/resources/NewReservationForGuideController.fxml"
+        				,"/resources/NewReservationForGuideController.css");
 	        	break;
         	case "c":
-        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
-        				,"/clientGUI/NewReservationForUserController.css");
+        		SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
+        				,"/resources/NewReservationForUserController.css");
 	        	break;
         	/*case "ec":
         	  case "eg":
-	        	loader = new FXMLLoader(getClass().getResource("/clientGUI/EmployeeMenuController.fxml"));
-	        	SwitchScreen.changeScreen(stage,"/clientGUI/EmployeeMenuController.fxml");
+	        	loader = new FXMLLoader(getClass().getResource("/resources/EmployeeMenuController.fxml"));
+	        	SwitchScreen.changeScreen(stage,"/resources/EmployeeMenuController.fxml");
 	        	break;*/
         }
     }

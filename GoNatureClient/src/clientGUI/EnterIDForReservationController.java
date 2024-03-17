@@ -28,8 +28,8 @@ public class EnterIDForReservationController {
     void ClickBackBtn(ActionEvent event) {
 		try {
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	          SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
-	        		  ,"/clientGUI/LoginOrNewReservation.css");
+	          SwitchScreen.changeScreen(stage,"/resources/LoginOrNewReservation.fxml"
+	        		  ,"/resources/LoginOrNewReservation.css");
 
 			  } catch (Exception e) {
 			      e.printStackTrace();}
@@ -41,8 +41,8 @@ public class EnterIDForReservationController {
     	try {
 		  ChatClient.typeacc="guest";
           Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		  SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
-				  ,"/clientGUI/NewReservationForUserController.fxml");
+		  SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
+				  ,"/resources/NewReservationForUserController.fxml");
 	  	  } catch (Exception e) {
 		      e.printStackTrace();}
     	

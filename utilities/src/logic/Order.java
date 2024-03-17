@@ -1,7 +1,7 @@
 package logic;
 
 public class Order {
-	   private String parkName;
+	    private String parkName;
 	    private String orderNumber;
 	    private String timeOfVisit; 
 	    private String numberOfVisitors;

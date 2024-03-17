@@ -45,8 +45,8 @@ public class UserMenuController {
 			if(islogout) {
 				islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml"
-        				,"/clientGUI/LoginController.css");
+        		SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml"
+        				,"/resources/LoginController.css");
 			}
 	    }
 
@@ -56,12 +56,12 @@ public class UserMenuController {
 	        System.out.println("----------test---- "+ ChatClient.typeacc);
 	        switch (ChatClient.typeacc) {
 	        	case "customer":
-	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
-	        				,"/clientGUI/NewReservationForUserController.css");
+	        		SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
+	        				,"/resources/NewReservationForUserController.css");
 	    	        break;
 	        	case "guide":
-	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
-	        				,"/clientGUI/NewReservationForGuideController.css");
+	        		SwitchScreen.changeScreen(stage,"/resources/NewReservationForGuideController.fxml"
+	        				,"/resources/NewReservationForGuideController.css");
 	    	        break;
 	        }	
 	    }

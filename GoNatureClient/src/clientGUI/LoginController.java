@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 
 //commit by Adar 15/3 time 9.20
 public class LoginController {
@@ -26,7 +27,7 @@ public class LoginController {
     private Label userNotExist;
 	
     @FXML
-    private TextField password;
+    private PasswordField password;
 
     @FXML
     private TextField userID;
@@ -47,8 +48,8 @@ public class LoginController {
 		try {
 
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      		  SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
-      				  ,"/clientGUI/LoginOrNewReservation.css");
+      		  SwitchScreen.changeScreen(stage,"/resources/LoginOrNewReservation.fxml"
+      				  ,"/resources/LoginOrNewReservation.css");
 
 			  } catch (Exception e) {
 			      e.printStackTrace();}
@@ -84,24 +85,24 @@ public class LoginController {
 		        switch(ChatClient.typeacc) {
 		        	case "customer":
 		        	case "guide":
-		        		SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
-		        				,"/clientGUI/UserMenuController.css");
+		        		SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+		        				,"/resources/UserMenuController.css");
 		        		break;
 		        	case "park manager" :
-		        		SwitchScreen.changeScreen(stage,"/clientGUI/ParkManagerMenuController.fxml"
-		        				,"/clientGUI/ParkManagerMenuController.css");
+		        		SwitchScreen.changeScreen(stage,"/resources/ParkManagerMenuController.fxml"
+		        				,"/resources/ParkManagerMenuController.css");
 		        		break;
 		        	case "department manager":
-		        		SwitchScreen.changeScreen(stage,"/clientGUI/DepartmentManagerMenuController.fxml"
-		        				,"/clientGUI/DepartmentManagerMenuController.css");
+		        		SwitchScreen.changeScreen(stage,"/resources/DepartmentManagerMenuController.fxml"
+		        				,"/resources/DepartmentManagerMenuController.css");
 		        		break;
 		        	case "service employee":
-		        		SwitchScreen.changeScreen(stage,"/clientGUI/ServiceEmployeeMenuController.fxml"
-		        				,"/clientGUI/ServiceEmployeeMenuController.css");
+		        		SwitchScreen.changeScreen(stage,"/resources/ServiceEmployeeMenuController.fxml"
+		        				,"/resources/ServiceEmployeeMenuController.css");
 		        		break;
 		        	case "park employee":
-		        		SwitchScreen.changeScreen(stage,"/clientGUI/EmployeeMenuController.fxml"
-		        				,"/clientGUI/EmployeeMenuController.css");
+		        		SwitchScreen.changeScreen(stage,"/resources/EmployeeMenuController.fxml"
+		        				,"/resources/EmployeeMenuController.css");
 		        		break;
 		        }
 	        }

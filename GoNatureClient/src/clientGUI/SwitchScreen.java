@@ -24,6 +24,5 @@ public class SwitchScreen {
             System.out.println("Error switching screens: " + e.getMessage());
         }
     }
-        
 }
 
