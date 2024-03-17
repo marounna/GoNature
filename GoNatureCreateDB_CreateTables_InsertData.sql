@@ -23,7 +23,7 @@ CREATE TABLE gonaturedb.users (
     Email VARCHAR(255),
     PhoneNumber VARCHAR(255),
     TypeUser VARCHAR(255),
-    IsLogged VARCHAR(255),
+    IsLogged VARCHAR(255) DEFAULT "0",
     FOREIGN KEY (TypeUser) REFERENCES user_types(TypeUser)
 );
 
