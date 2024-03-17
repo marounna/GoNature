@@ -7,21 +7,17 @@ import java.util.ArrayList;
 
 import client.ChatClient;
 import client.ClientUI;
+import common.StaticClass;
 import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
-//commit by Adar 15/3 time 9.20
 public class LoginController {
     @FXML
     private Label userNotExist;
@@ -38,10 +34,6 @@ public class LoginController {
     @FXML
     private Button LoginBtn;
     
-    public static boolean isexist =false;
-    public static boolean islogged =false;
-    public static String typeacc;
-    public static ArrayList<Park> parks = new ArrayList<>();
 
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
@@ -65,10 +57,10 @@ public class LoginController {
 		}catch (Exception e){
 			System.out.println("LoginController> User does not exist");
 		}
-		System.out.println("check before ifexist login controller");
-		if (isexist) {
-
-			isexist=false;
+		System.out.println("check before if exist login controller");
+		if (StaticClass.isexist) {
+			StaticClass.username=username;
+			StaticClass.isexist=false;
 			try {
 				String loginMessage= "login " + username +" "+ pass ;
 			ClientUI.chat.accept(loginMessage);//Send Msg TO Server
@@ -77,12 +69,12 @@ public class LoginController {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		if(!islogged) {
-			if (isexist){
-				isexist=false;
+		if(!StaticClass.islogged) {
+			if (StaticClass.isexist){
+				StaticClass.isexist=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		        System.out.println(typeacc);
-		        switch(ChatClient.typeacc) {
+		        System.out.println(StaticClass.typeacc);
+		        switch(StaticClass.typeacc) {
 		        	case "customer":
 		        	case "guide":
 		        		SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
@@ -108,8 +100,8 @@ public class LoginController {
 	        }
 		}		
 		else {
-			if(islogged) { 
-				islogged=false;
+			if(StaticClass.islogged) { 
+				StaticClass.islogged=false;
 				userNotExist.setText("User already logged in");}
 			else 
 				userNotExist.setText("User details are not valid");

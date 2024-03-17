@@ -4,6 +4,7 @@ package clientGUI;
 import java.io.IOException;
 
 import client.ClientUI;
+import common.StaticClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -68,15 +69,15 @@ public class EmployeeMenuController {
 	    
 	    @FXML
 	    void clickOnLogout(ActionEvent event) throws IOException {
-	    	String message="logout "+username;
+	    	String message="logout "+StaticClass.username;
 			try {
 				ClientUI.chat.accept(message);
 				System.out.println("UserMenuController> request Sent to server");
 			}catch (Exception e){
 				System.out.println("UserMenuController> Logout failed");
 			}
-			if(islogout) {
-				islogout=false;
+			if(StaticClass.islogout) {
+				StaticClass.islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	      		SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
 

@@ -132,11 +132,11 @@ public class EchoServer extends AbstractServer {
                       sendToClient(client, "logout failed");
                   }
                   break;
-            case "parkNames":
+            /*case "parkNames":
 				String parknames="";
 				parknames = getParks(conn,"parkNames");
             	sendToClient(client,"parkNames " +  parknames);
-            	break;
+            	break;*/
             case "park":
             	System.out.println("echoserver> its park case");
             	ArrayList<Park> parks = new ArrayList<>();
@@ -148,20 +148,49 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace();
 				}
       		    break;
+            case "priceCheck":
+            	int price = parkPrice(conn,result[1]);
+            	sendToClient(client, "priceCheck "+price);
+            	break;
+            	
+            case "checkDiscount":
+            	int parkdiscount = checkDiscount(conn,result[1]);
+            	sendToClient(client, "checkDiscount "+parkdiscount);
+            	break;
+            case "checkAvailability":
+            	int avaiable=checkAvailability(conn,result[1],result[2],result[3],result[4]);
+            	sendToClient(client, "checkAvailability "+avaiable);
+            	
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
+
         }
     }
     
 
-	private String getParks(Connection conn, String names) {
+	private int checkAvailability(Connection conn, String parkname, String numberofvisitors,String date,String time) {
+		int check=DbController.checkAvailable(conn,parkname,numberofvisitors,date,time);
+		return check;
+	}
+
+	private int checkDiscount(Connection conn ,String discounttype) {
+		int discount=DbController.discountCheck(conn,discounttype);
+		return discount;
+	}
+
+	private int parkPrice(Connection conn ,String parkname) {
+		int parkprice=DbController.checkPrice(conn,parkname);
+		return parkprice;	
+	}
+
+	/*private String getParks(Connection conn, String names) {
 		String parknames="";
 		parknames=DbController.getParkNames(conn,names);
 		return parknames;
-	}
+	}*/
 
 	private int updateOrderDetails(String[] details, Connection conn) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

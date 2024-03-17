@@ -1,30 +1,40 @@
 package logic;
 
 public class Order {
+		private String orderId;
 	    private String parkName;
-	    private String orderNumber;
+	    private String userId;
+	    private String dateOfVisit;
 	    private String timeOfVisit; 
 	    private String numberOfVisitors;
 	    private String telephoneNumber;
 	    private String email;
+	    private String isConfirmed;
+	    private String isVisit;
+	    private String isCanceled;
+	    private String totalPrice;
 
-	    public Order(String parkName, String orderNumber, String timeOfVisit, String numberOfVisitors2, String telephoneNumber,String Email) {
-	        
+	    public Order(String orderId, String parkName,String date, String timeOfVisit, String numberOfVisitors, String telephoneNumber,String Email) {
+	        this.orderId = orderId;
 	    	this.parkName = parkName;
-	        this.orderNumber = orderNumber;
+	    	this.dateOfVisit=date;
 	        this.timeOfVisit = timeOfVisit;
-	        this.numberOfVisitors = numberOfVisitors2;
+	        this.numberOfVisitors = numberOfVisitors;
 	        this.telephoneNumber = telephoneNumber;
 	        this.email=Email;
 	    }
 
 	    // Getters
+	    
+	    public String getDate() {
+	    	return dateOfVisit;
+	    }
 	    public String getParkName() {
 	        return parkName;
 	    }
 
-	    public String getOrderNumber() {
-	        return orderNumber;
+	    public String getOrderId() {
+	        return orderId;
 	    }
 
 	    public String getTimeOfVisit() {
@@ -41,21 +51,75 @@ public class Order {
 	    public String getEmail() {
 	    	return email;
 	    }
-
+	    public String getUserId() {
+	    	return userId;
+	    }
+	    public String getIsCanceled() {
+	    	return isCanceled;
+	    }
+	    public String getIsConfirmed() {
+	    	return isConfirmed;
+	    }
+	    public String getIsVisit() {
+	    	return isVisit;
+	    }
+	    public String getTotalPrice() {
+	    	return totalPrice;
+	    }
+	    
 	    // Setters
-	    public void setParkName(String parkName) {
-	    	if(parkName!=null)
-	        this.parkName = parkName;
+	    public void setUserId(String id) {
+	    	if(id!=null)
+	    		this.userId=id;
+	    	else
+	    		this.userId="";	
+	    }
+	    
+
+	    public void setParkName(String parkname) {
+	    	if(parkname!=null)
+	    		this.parkName = parkname;
 	    	else
 	    		this.parkName="";
 	    		
 	    }
+	    
+	    public void setIsCanceled(String canceled) {
+	    	if(canceled!=null)
+	    		this.isCanceled=canceled;
+	    	else
+	    		this.isCanceled="";	
+			
+		}
+	    
+	    public void setTotalPrice(String total) {
+	    	if(total!=null)
+	    		this.totalPrice=total;
+	    	else {
+				this.totalPrice="";
+			}
+	    }
+	    
+	    public void setIsConfirmed(String confirmed) {
+	    	if(confirmed!=null)
+	    		this.isConfirmed=confirmed;
+	    	else
+	    		this.isConfirmed="";	
+			
+		}
 
-	    public void setOrderNumber(String orderNumber) {
+	    public void setDate(String date) {
+	    	if(date!=null)
+	    		this.dateOfVisit=date;
+	    	else
+	    		this.dateOfVisit="";	
+			
+		}
+	    public void setOrderId(String orderNumber) {
 	        if(orderNumber!=null)
-	        	this.orderNumber = orderNumber;
+	        	this.orderId = orderNumber;
 		    	else
-		    		this.orderNumber="";
+		    		this.orderId="";
 	    }
 
 	    public void setTimeOfVisit(String timeOfVisit) {      
@@ -87,7 +151,8 @@ public class Order {
 	    
 	    @Override
 	    public String toString() {
-	        return String.format("%s %s %s %s %s %s\n",parkName,orderNumber,timeOfVisit,numberOfVisitors,telephoneNumber,email);
+	        return String.format("%s %s %s %s %s %s\n",parkName,orderId,timeOfVisit,numberOfVisitors,telephoneNumber,email);
 	    	//return String.format("%s fix me later i am in Order class tosting method ",parkName);
 	    }
+
 }

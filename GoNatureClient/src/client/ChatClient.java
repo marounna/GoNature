@@ -11,6 +11,7 @@ import clientGUI.NewReservationForGuideController;
 import clientGUI.NewReservationForUserController;
 import clientGUI.UserMenuController;
 import common.ChatIF;
+import common.StaticClass;
 import entities.Park;
 import logic.Message;
 import logic.Order;
@@ -38,10 +39,10 @@ public class ChatClient extends AbstractClient
    * the display method in the client.
    */
   ChatIF clientUI; 
-  public static Order o1 = new Order(null, null, null, null, null, null);
+  //public static Order o1 = new Order(null, null, null, null, null, null);
   public static boolean awaitResponse = false;
   public int type=0;
-  public static String typeacc;
+  //public static String typeacc;
   //Constructors ****************************************************
   
   /**
@@ -94,85 +95,95 @@ public void handleMessageFromServer(Object msg1)
 	  awaitResponse = false;
 	  switch (result[0]) {
 		  case "loadOrder":
-			  o1.setParkName(result[0]);
-			  o1.setOrderNumber(result[1]);
-			  o1.setTimeOfVisit(result[2]);
-			  o1.setNumberOfVisitors(result[3]);
-			  o1.setTelephoneNumber(result[4]);
-			  o1.setEmail(result[5]);
+			  StaticClass.o1.setParkName(result[0]);
+			  StaticClass.o1.setOrderId(result[1]);
+			  StaticClass.o1.setTimeOfVisit(result[2]);
+			  StaticClass.o1.setNumberOfVisitors(result[3]);
+			  StaticClass.o1.setTelephoneNumber(result[4]);
+			  StaticClass.o1.setEmail(result[5]);
 			  break;
 		  case "userExist":
 			  if(result[1].equals("succeed")) {
-				  LoginController.isexist=true;
-				  typeacc=result[3];
+				  StaticClass.isexist=true;
+				  StaticClass.typeacc=result[3];
 				  if(result[3].equals("park")||result[3].equals("department")||result[3].equals("service"))
-				  	  typeacc += " " + result[4];				  		
+					  StaticClass.typeacc += " " + result[4];				  		
 
 				  if(result[2].equals("1"))
-					  LoginController.islogged=true;}
-			  else LoginController.isexist=false;
+					  StaticClass.islogged=true;}
+			  else StaticClass.isexist=false;
 			  break;
 		  case "login":
-			  System.out.println("login case chat client");
 			  if(result[1].equals("succeed")) {
-				  LoginController.isexist=true;
+				  StaticClass.isexist=true;
 				  if (result[2].equals("guide"))
 					  type=1;
-				  switch (typeacc) {
+				  /*switch (StaticClass.typeacc) {
 					  case "guide":
 					  case "customer":
 						  UserMenuController.username=result[2];
 						  break;
 					  case "park employee":
-						  EmployeeMenuController.username=result[2];
-						  break;
+						  StaticClass.username=result[2];
+						  break;*/
 					  /*case "department manager":
 						  DmMenuController.username=result[2];
 						  break;
 					  case "service employee":
 						  ServiceEmployeeMenuController.username=result[2];
 						  break;*/
-				  }
+				 // }
 			  }
-			  else LoginController.isexist=false;
+			  else StaticClass.isexist=false;
 			  break;
 		  case "logout":
 			  if(result[1].equals("succeed")) {
-				  switch (typeacc) {
+				  StaticClass.islogout=true;
+				  /*switch (StaticClass.typeacc) {
 				  case "guide":
 				  case "customer":
-					  UserMenuController.islogout=true;
+					  StaticClass.islogout=true;
 					  break;
 				  case "park employee":
-					  EmployeeMenuController.islogout=true;
+					  StaticClass.islogout=true;
 					  break;
-				  /*case "department manager":
-					  DmMenuController.username.islogout=true;
+				  case "department manager":
+					  StaticClass.islogout=true;
 					  break;
 				  case "service employee":
-					  ServiceEmployeeMenuController.islogout=true;
-					  break;*/
-				  }
+					  StaticClass.islogout=true;
+					  break;
+				  }*/
 			  	  if(type==1) type=0;}
-			  else UserMenuController.islogout=false;
+			  else StaticClass.islogout=false;
 			  break;
-		  case "parkNames":
+		  /*case "parkNames":
 			  if (type==1) {
 				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
-					  System.out.println("chatClient> guide park names");
-					  NewReservationForGuideController.parknames.add(result[i+2]);}
+					  System.out.println("chatClient> guide park names");}
+					  StaticClass.parknames.add(result[i+2]);}
 			  }
 			  else {	  
 				  System.out.println("chatClient> user park names");
-				  for(int i=0; i<Integer.parseInt(result[1]);i++)
-					  NewReservationForUserController.parknames.add(result[i+2]);}
-			  break;
+				  /*for(int i=0; i<Integer.parseInt(result[1]);i++){
+					  //StaticClass.parknames.add(result[i+2]);}
+			  break;*/
 		  case "park":
 			  ArrayList<Park> msgList = (ArrayList<Park>) payloadMessage.getPayload() ;
 			  System.out.println("----------"+ msg +"-------------" + msgList);
-			  LoginController.parks.addAll(msgList);
+			  StaticClass.parks.addAll(msgList);
 			  break;
-		  		
+		  case "priceCheck":
+			  StaticClass.parkprice=Integer.parseInt(result[1]);
+			  break; 
+		  case "checkDiscount":
+			  StaticClass.discount=Integer.parseInt(result[1]);
+			  break;
+		  case "checkAvailability":
+			  if (result[1].equals("1"))
+				  StaticClass.available=1;
+			  break;
+			  
 	  }
 	  
   }

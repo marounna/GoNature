@@ -4,6 +4,7 @@ package Server;
 import java.util.ArrayList;
 
 import entities.Park;
+import javafx.css.PseudoClass;
 import logic.Order;
 
 import java.sql.Connection;
@@ -60,12 +61,12 @@ public class DbController {
             try (ResultSet rs = pstmt.executeQuery()) {
                 System.out.println("Select * was executed");
                 if (rs.next()) {
+                    orderDetails.add(rs.getString("OrderId"));
                     orderDetails.add(rs.getString("ParkName"));
-                    orderDetails.add((rs.getString("OrderNumber")));
+                    orderDetails.add(rs.getString("UserId"));
+                    orderDetails.add((rs.getString("DateOfVisit")));
                     orderDetails.add(rs.getString("TimeOfVisit"));
                     orderDetails.add((rs.getString("NumberOfVisitors")));
-                    orderDetails.add((rs.getString("TelephoneNumber")));
-                    orderDetails.add(rs.getString("Email"));
                 }
                 pstmt.close();
             }
@@ -77,7 +78,7 @@ public class DbController {
         try {
             // Ensure orderDetails has all necessary elements
             if (orderDetails.size() == 6) {
-                order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5));
+                order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5),orderDetails.get(6));
                 //System.out.println("dbController> " + order);
                 return order;
             } else {
@@ -217,7 +218,7 @@ public class DbController {
 	    return 0;
 	}
 
-	public static String getParkNames(Connection conn, String names) {
+	/*public static String getParkNames(Connection conn, String names) {
 		String sql="SELECT Parkname FROM park";
 		String parks ="";
 		int i=0;
@@ -231,7 +232,7 @@ public class DbController {
 	    }catch (SQLException e) {
 	        System.out.println("DbController> Error fetching park names: " + e.getMessage());}    
         return i+" "+ parks; 
-    }
+    }*/
 
 
 	public static ArrayList<Park> park(Connection conn) {
@@ -255,11 +256,82 @@ public class DbController {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
-  		    System.out.println("354");
 
 		return parks;
 	}
 
+	public static int checkPrice(Connection conn,String parkname) {
+        String sql = "SELECT PricePerPerson FROM park WHERE ParkName = ?"; 
+        int price=0;
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setString(1, parkname);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	  price=Integer.parseInt(rs.getString("PricePerPerson"));
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching price per person: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}   
+	    System.out.println("dbController> price per prson is: " + price);
+        return price;
+    }
+
+	public static int discountCheck(Connection conn, String discounttype) {
+        String sql = "SELECT SalePercentage FROM sales WHERE SaleType = ?";
+        int discount=0;
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setString(1, discounttype);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	  discount=Integer.parseInt(rs.getString("SalePercentage"));
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching sales: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}
+	    System.out.println("dbcontroller> discount: " + discount);
+	    return discount;
+    }
+
+	public static int checkAvailable(Connection conn, String parkname, String numberofvisitors, String date, String time) {
+		String st="";
+		for (int i=8;i<20;i++) {
+			if (time.contains(""+i))
+				st="t"+i;
+		}
+		String sql="SELECT * FROM park_used_capacity_total WHERE Parkname = ? AND date = ?";
+        int numberofsigned=0;
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setString(1, parkname);
+				pstmt.setString(2, date);
+			//	pstmt.setString(2, st);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	   numberofsigned=Integer.parseInt(rs.getString(st));
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching sales: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}
+	    
+	    System.out.println("dbcontroller> number of signed visitors: " + numberofsigned);
+	    int capacity=0;
+	    String sql2="SELECT CapacityOfVisitors FROM park WHERE Parkname = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql2)){
+				pstmt.setString(1, parkname);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	  capacity=Integer.parseInt(rs.getString("CapacityOfVisitors"));
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching sales: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}
+	    if(Integer.parseInt(numberofvisitors)+numberofsigned<capacity)
+	    	return 1;
+	    return 0;
+	}
 }
 
 

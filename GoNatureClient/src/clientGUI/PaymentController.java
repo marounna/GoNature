@@ -2,9 +2,7 @@ package clientGUI;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -12,14 +10,16 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logic.Message;
 
 import java.io.IOException;
 import java.util.Optional;
 
+import client.ChatClient;
 import client.ClientUI;
-import clientGUI.NewReservationForUserController;
+import common.ChatIF;
+import common.StaticClass;
 
 public class PaymentController {
 	
@@ -49,32 +49,37 @@ public class PaymentController {
     	orderDetailsArea.clear();
     	msg="";
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        switch(type) {
-        	case "g":
+        switch(StaticClass.typeacc) {
+        	case "guide":
         		SwitchScreen.changeScreen(stage,"/resources/NewReservationForGuideController.fxml"
         				,"/resources/NewReservationForGuideController.css");
 	        	break;
-        	case "c":
+        	case "customer":
+        	case "guest":
         		SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
         				,"/resources/NewReservationForUserController.css");
 	        	break;
-        	/*case "ec":
-        	  case "eg":
-	        	loader = new FXMLLoader(getClass().getResource("/resources/EmployeeMenuController.fxml"));
-	        	SwitchScreen.changeScreen(stage,"/resources/EmployeeMenuController.fxml");
-	        	break;*/
+        	case "park employee":
+        		if(StaticClass.reservationtype.equals("eg"))//eg= employee group
+            		SwitchScreen.changeScreen(stage,"/resources/NewReservationForGuideController.fxml"
+            				,"/resources/NewReservationForGuideController.css");
+        		else {
+            		SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
+            				,"/resources/NewReservationForUserController.css");
+				}
+	        	break;
         }
     }
 
-    @FXML
+    @FXML// user decide to pay now
     void clickOnPayNow(ActionEvent event) {
-    	if (type.equals("g")&&flag==1) {
-    		totalprice=totalprice*0.88;
+    	if (StaticClass.typeacc.equals("guide")&&flag==1) {//if its a guide and booked order, getting 12% discount 
     		flag=0;
+    		totalprice=totalprice*0.88;
     	}
     	Alert alert = new Alert(AlertType.INFORMATION);
     	alert.setTitle("Payment Information");
-    	alert.setHeaderText(null); // You can set a header text here
+    	alert.setHeaderText(null);
     	alert.setContentText("Total price for payment is: " + totalprice);
 
     	// Create custom ButtonTypes
@@ -88,7 +93,17 @@ public class PaymentController {
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.isPresent()) {
     	    if (result.get() == okButton) {
-    	        // Handle "Confirm" button action
+    	    	Message msg = new Message("checkAvailability", StaticClass.o1);
+    	    	ClientUI.chat.accept("checkAvailability " + StaticClass.o1.getParkName() + " " + StaticClass.o1.getNumberOfVisitors()+ " "
+    	    		+StaticClass.o1.getDate() + " " + StaticClass.o1.getTimeOfVisit());
+    	    	if(StaticClass.available==1) {
+    	    		System.out.println("its available!!!!!");
+    	    	}
+
+    	    	
+    	    	
+    	    	
+    	    	
     	    } else if (result.get() == cancelButton) {
     	        // Handle "Cancel" button action
     	    }
@@ -97,35 +112,45 @@ public class PaymentController {
     	
     }
     
-    @FXML
+    @FXML //user decide to pay in park
     void clickOnPayInPark(ActionEvent event) {
-
     }
     @FXML//initialize the order details textArea field with the order details from the last screen
     private void initialize() {
     	orderDetailsArea.clear();
-    	if (NewReservationForUserController.flagC==1) {//if its personal order (booked in advance)
-    		NewReservationForUserController.flagC=0;
-    		type="c";
-    		discount=0.85;
-    		visitorsnumber=NewReservationForUserController.numberofvisitors;
-    		msg+=NewReservationForUserController.orderdetails;
-    		NewReservationForUserController.orderdetails="";
-        	msg+="\nFull price before discount: " + 50*visitorsnumber;
-        	msg+="\nDiscount: 15%";
+    	switch (StaticClass.typeacc) {//if its personal order (booked in advance)
+    		case "customer":
+    		case "guest":
+    			ClientUI.chat.accept("checkDiscount personal");
+	        	break;
+    		case "guide":
+    			flag=1;//mark that its a guide user and its not casual order, so getting extra 12% discount
+    			ClientUI.chat.accept("checkDiscount group");
+    			discountLabel.setText("Click on pay now and get extra 12% discount!");
+    			StaticClass.numberofvisitors--;
+    			break;
+    		case "park employee":
+    			if(StaticClass.reservationtype.equals("ec")) {
+        			ClientUI.chat.accept("checkDiscount casual_personal");}
+    			else {
+    				ClientUI.chat.accept("checkDiscount casual_group");}
+    			break;
     	}
-    	else if(NewReservationForGuideController.flagG==1) {//if its group order (booked in advance)
+    	msg+=StaticClass.orderdetails+"\nTotal price before discount: " +StaticClass.numberofvisitors*StaticClass.parkprice ;
+    	msg+="\nDiscount: "+ (int)StaticClass.discount+"%";
+    	
+    	/*else if(StaticClass.flagG==1) {//if its group order (booked in advance)
     		type="g";
     		flag=1;
     		discountLabel.setText("Click on pay now for extra 12% discount");
     		discount=0.75;
-    		visitorsnumber=NewReservationForGuideController.numberofvisitors-1;
-    		msg+=NewReservationForGuideController.orderdetails;
-    		NewReservationForGuideController.orderdetails="";
+    		visitorsnumber=StaticClass.numberofvisitors-1;
+    		msg+=StaticClass.orderdetails;
+    		StaticClass.orderdetails="";
         	msg+="\nFull price before discount: " + 50*visitorsnumber;
         	msg+="\nDiscount: 25%";
-        	
-    	}
+        	*/
+    	//}
     	/*else if(NewReservationForEmployeeController.flagE==1){//if its personal / family order (not booked in advance)
     	    type="ec;
     		visitorsnumber=NewReservationForEmployeeController.numberofvisitors;}
@@ -133,7 +158,7 @@ public class PaymentController {
     		type="eg";
     		discount=0.9;
     		visitorsnumber=NewReservationForEmployeeGroupController.numberofvisitors;}*/
-    	totalprice=50*discount*visitorsnumber;
+    	totalprice=StaticClass.parkprice*(1-(0.01*StaticClass.discount))*StaticClass.numberofvisitors;
     	msg+="\nTotal price after discount: " + totalprice;
     	orderDetailsArea.setText(msg);
     }

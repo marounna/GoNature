@@ -97,7 +97,7 @@ public class OrderFormController  {
     	System.out.println("OrderFormControler>"+o1.toString());
     	this.o=o1;
     	this.parkNameField.setValue(o.getParkName());
-    	this.orderNumberField.setText(o.getOrderNumber());
+    	this.orderNumberField.setText(o.getOrderId());
     	this.timeOfVisitField.setText(o.getTimeOfVisit());
     	this.numberOfVisitorsField.setValue(o.getNumberOfVisitors());
     	this.telephoneNumberField.setText(o.getTelephoneNumber());

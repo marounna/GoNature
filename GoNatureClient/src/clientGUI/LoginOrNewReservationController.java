@@ -25,30 +25,16 @@ public class LoginOrNewReservationController {
     //move to login screen
     @FXML
     void LoginBtnAction(ActionEvent event) throws IOException {
-		//FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
-		/*loader = new FXMLLoader(getClass().getResource("/resources/LoginController.fxml"));
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/resources/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();*/
     }
     
     //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
-		//FXMLLoader loader = new FXMLLoader();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         SwitchScreen.changeScreen(stage,"/resources/EnterIDForReservationController.fxml"
         		,"/resources/EnterIDForReservationController.css");
-		/*loader = new FXMLLoader(getClass().getResource("/resources/EnterIDForReservationController.fxml"));
-		Pane root = loader.load();
-        Scene scene = new Scene(root);
-        //scene.getStylesheets().add(getClass().getResource("/resources/OrderFrame.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();*/
     }
     
     @FXML

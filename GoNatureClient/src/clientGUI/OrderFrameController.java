@@ -6,6 +6,7 @@ import javax.print.DocFlavor.URL;
 
 import client.ChatClient;
 import client.ClientUI;
+import common.StaticClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -56,7 +57,7 @@ public class OrderFrameController {
 				String loadMessage= "loadOrder " + orderId ;
 			ClientUI.chat.accept(loadMessage);//Send Msg TO Server
 			System.out.println("OrderFrameContoler> request Sent to server");
-			orderForm1.loadOrder(ChatClient.o1);
+			orderForm1.loadOrder(StaticClass.o1);
 			}catch(Exception e) {
 				System.out.println(e+" OrderFrameContoler> OrderForm1 is not good");
 			}

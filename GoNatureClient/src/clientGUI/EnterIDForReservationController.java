@@ -1,6 +1,7 @@
 package clientGUI;
 
 import client.ChatClient;
+import common.StaticClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -39,7 +40,7 @@ public class EnterIDForReservationController {
     void ClickNextBtn(ActionEvent event) {
     	String userId=idField.getText();
     	try {
-		  ChatClient.typeacc="guest";
+    		StaticClass.typeacc="guest";
           Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		  SwitchScreen.changeScreen(stage,"/resources/NewReservationForUserController.fxml"
 				  ,"/resources/NewReservationForUserController.fxml");

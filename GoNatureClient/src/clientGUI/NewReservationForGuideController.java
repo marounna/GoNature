@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import client.ClientUI;
+import common.StaticClass;
 import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,15 +50,10 @@ public class NewReservationForGuideController {
     @FXML
     private TextField textLastName;
     
-    public static int numberofvisitors;
-    public static int flagG=0;
-    public static String orderdetails="";
-
-    public static ArrayList<String> parknames = new ArrayList<>();
 
 	    @FXML //moving back to user menu
 	    void ClickOnBack(ActionEvent event) throws IOException {
-	    	flagG=0;
+	    	StaticClass.flagG=0;
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
 	        		,"/resources/UserMenuController.css");
@@ -65,15 +61,16 @@ public class NewReservationForGuideController {
 
 	    @FXML //setting the fields data into orderdetails string and moving to the payment screen
 	    void ClickForPayment(ActionEvent event) throws IOException {
-	    	numberofvisitors=Integer.parseInt(numberVisitorsCombo.getValue());
-	    	orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
-	    	orderdetails+="\nNumber of visitors: "+numberofvisitors;
-	    	orderdetails+="\nDate: "+ date.getValue().toString();
-	    	orderdetails+="\nTime: "+ timeCombo.getValue().toString();
-	    	orderdetails+="\nFirst name: "+ textFirstName.getText();
-	    	orderdetails+="\nLast name: "+ textLastName.getText();
-	    	orderdetails+="\nTelephone: "+ textPhone.getText();
-	        orderdetails+="\nEmail: " +textEmail.getText();
+	    	ClientUI.chat.accept("priceCheck " + parkNameCombo.getValue().toString());
+	    	StaticClass.numberofvisitors=Integer.parseInt(numberVisitorsCombo.getValue());
+	    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
+	    	StaticClass.orderdetails+="\nNumber of visitors: "+StaticClass.numberofvisitors;
+	    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
+	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
+	    	StaticClass.orderdetails+="\nFirst name: "+ textFirstName.getText();
+	    	StaticClass.orderdetails+="\nLast name: "+ textLastName.getText();
+	    	StaticClass.orderdetails+="\nTelephone: "+ textPhone.getText();
+	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml"
 	        		,"/resources/PaymentController.css");
@@ -82,9 +79,9 @@ public class NewReservationForGuideController {
 	    
 	    @FXML //initialize the screen with park names and time combo fields
 	    private void initialize() {
-	    	flagG=1;
-	    	LoginController.parks.clear();
+	    	StaticClass.parks.clear();
 	        ClientUI.chat.accept("park");
+	        numberVisitorsCombo.getItems().addAll("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15");
 	        parkNameCombo.getItems().addAll(getParkNames());
 	        parkNameCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 	            updateAvailableTimes(newValue);
@@ -92,12 +89,11 @@ public class NewReservationForGuideController {
 	        // Default time slots for when no park is selected or if a park allows all-day visits
 	        timeCombo.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00", "13:00",
 	        		"14:00", "15:00", "16:00", "17:00", "18:00", "19:00");
-	        parknames.clear();
 	    }
 	    // update available time from db
 	    private void updateAvailableTimes(String parkName) {
 	        // Find the selected park
-	        Park selectedPark = LoginController.parks.stream().filter(park -> park.getParkString().equals(parkName)).findFirst()
+	        Park selectedPark = StaticClass.parks.stream().filter(park -> park.getParkString().equals(parkName)).findFirst()
 	        		.orElse(null);
 	        if (selectedPark != null) {
 	            int visitLimitHours = selectedPark.getVisitTimeLimit();
@@ -116,7 +112,7 @@ public class NewReservationForGuideController {
 	    // getting park names from db and adding it into array list
 	    public static ArrayList<String> getParkNames() {
 	        ArrayList<String> parkName = new ArrayList<>();
-	        for (Park park : LoginController.parks) {
+	        for (Park park : StaticClass.parks) {
 	            parkName.add(park.getParkString()); 
 	        }
 	        return parkName;
