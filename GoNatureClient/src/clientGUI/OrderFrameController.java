@@ -41,9 +41,8 @@ public class OrderFrameController {
 			System.out.println("You must enter an id number");	
 		}
 		else {
-			int i=2;
-			String message = i+" orderExist" +" "+ orderId;
-			i++;
+
+			String message ="orderExist" +" "+ orderId;
 			try {
 				ClientUI.chat.accept(message);
 			}catch (Exception e){
@@ -54,7 +53,7 @@ public class OrderFrameController {
 			Pane root = loader.load();
 			OrderFormController orderForm1 = loader.getController();
 			try {
-				String loadMessage= i+" loadOrder " + orderId ;
+				String loadMessage= "loadOrder " + orderId ;
 			ClientUI.chat.accept(loadMessage);//Send Msg TO Server
 			System.out.println("OrderFrameContoler> request Sent to server");
 			orderForm1.loadOrder(ChatClient.o1);

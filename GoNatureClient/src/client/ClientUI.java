@@ -48,7 +48,7 @@ public class ClientUI extends Application {
 		}    
 		chat= new ClientController(serverIp, 5555);
 		try {
-			chat.accept("1");
+			chat.accept("connect");
 		}catch (Exception e){
 			System.out.println("ClientUI> Failed to load client into server monitor");
 		}

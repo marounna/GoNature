@@ -23,7 +23,7 @@ CREATE TABLE gonaturedb.users (
     Email VARCHAR(255),
     PhoneNumber VARCHAR(255),
     TypeUser VARCHAR(255),
-    IsLogged VARCHAR(255),
+    IsLogged VARCHAR(255) DEFAULT "0",
     FOREIGN KEY (TypeUser) REFERENCES user_types(TypeUser)
 );
 
@@ -32,18 +32,20 @@ CREATE TABLE gonaturedb.external_users (
     PRIMARY KEY (UserId)
 );
 
-INSERT INTO gonaturedb.users (UserId, Fname, Lname, Username, Password, Email, PhoneNumber, TypeUser, IsLogged) 
+INSERT INTO gonaturedb.users (UserId, Fname, Lname, Username, Password, Email, PhoneNumber, TypeUser)
 VALUES 
-('314813825', 'Hamza', 'Abunimer', 'hamzaabunimer', 'Pwd12345', 'hamzaabunimer@gmail.com', '0521111111', 'customer', '0'),
-('314813826', 'Ava', 'Smith', 'departmentmanager', 'Pwd12345', 'avasmith@gmail.com', '0522222222', 'department manager', '0'),
-('314813827', 'Liam', 'Johnson', 'parkmanager', 'Pwd12345', 'liamjohnson@gmail.com', '0523333333', 'park manager', '0'),
-('314813828', 'Olivia', 'Williams', 'service', 'Pwd12345', 'oliviawilliams@gmail.com', '0524444444', 'service employee', '0'),
-('314813829', 'Noah', 'Brown', 'noahbrown', 'Pwd12345', 'noahbrown@gmail.com', '0525555555', 'guide', '0'),
-('314813830', 'Emma', 'Jones', 'emmajones', 'Pwd12345', 'emmajones@gmail.com', '0526666666', 'guide', '0'),
-('314813831', 'Oliver', 'Garcia', 'olivergarcia', 'Pwd12345', 'olivergarcia@gmail.com', '0527777777', 'guide', '0'),
-('314813832', 'Isabella', 'Martinez', 'isabellamartinez', 'Pwd12345', 'isabellamartinez@gmail.com', '0528888888', 'customer', '0'),
-('314813833', 'Mason', 'Rodriguez', 'masonrodriguez', 'Pwd12345', 'masonrodriguez@gmail.com', '0529999999', 'customer', '0'),
-('314813834', 'Sophia', 'Lopez', 'sophialopez', 'Pwd12345', 'sophialopez@gmail.com', '0530000000', 'customer', '0');
+(1, 'customer', 'customeri', 'customer', '123456', 'customer@gmail.com', '12345645', 'customer'),
+(314813825, 'Hamza', 'Abunimer', 'hamzaabunimer', '123456', 'hamzaabunimer@gmail.com', '0521111111', 'customer'),
+(314813826, 'Ava', 'Smith', 'depm', '123456', 'avasmith@gmail.com', '0522222222', 'department manager'),
+(314813827, 'Liam', 'Johnson', 'safarim', '123456', 'liamjohnson@gmail.com', '0523333333', 'park manager'),
+(314813828, 'Olivia', 'Williams', 'service', '123456', 'oliviawilliams@gmail.com', '0524444444', 'service employee'),
+(314813829, 'Noah', 'Brown', 'guide', '123456', 'noahbrown@gmail.com', '0525555555', 'guide'),
+(314813830, 'Emma', 'Jones', 'guide2', '123456', 'emmajones@gmail.com', '0526666666', 'guide'),
+(314813831, 'Oliver', 'Garcia', 'guide3', '123456', 'olivergarcia@gmail.com', '0527777777', 'guide'),
+(314813832, 'Isabella', 'Martinez', 'customer1', '123456', 'isabellamartinez@gmail.com', '0528888888', 'customer'),
+(314813833, 'Mason', 'Rodriguez', 'customer2', '123456', 'masonrodriguez@gmail.com', '0529999999', 'customer'),
+(314813834, 'Sophia', 'Lopez', 'customer3', '123456', 'sophialopez@gmail.com', '0530000000', 'customer'),
+(5, 'israel', 'israeli', 'parke', '123456', 'parke@gmail.com', '02522555546', 'park employee');
 
 
 INSERT INTO gonaturedb.external_users(UserId)
@@ -73,19 +75,21 @@ CREATE TABLE gonaturedb.park (
     CapacityOfVisitors VARCHAR(255),
     PricePerPerson VARCHAR(255),
     AvailableSpot VARCHAR(255),
-    visitTimeLimit VARCHAR(255) DEFAULT '4' COMMENT 'Visit time limit in hours default value = 4'
+    ParkMangerId VARCHAR(255),
+    visitTimeLimit VARCHAR(255) DEFAULT '4' COMMENT 'Visit time limit in hours default value = 4',
+    FOREIGN KEY (ParkMangerId) REFERENCES users(UserId)
 );
 
-INSERT INTO gonaturedb.park (Parkname, CapacityOfVisitors, PricePerPerson)
+INSERT INTO gonaturedb.park (Parkname, CapacityOfVisitors, PricePerPerson,ParkMangerId)
 VALUES 
-('Safari', '100', '20'),
-('Gan-Tanahi', '80', '15'),
-('Yaar-Hakofim', '120', '25'),
-('Hay-Park', '90', '18'),
-('Mitspe-Tat-Yami', '70', '22');
+('Safari', '100', '20','314813827'),
+('Gan-Tanahi', '80', '15','314813827'),
+('Yaar-Hakofim', '120', '25','314813827'),
+('Hay-Park', '90', '18','314813827'),
+('Mitspe-Tat-Yami', '70', '22','314813827');
 
 
-CREATE TABLE gonaturedb.park_used_capacity (
+CREATE TABLE gonaturedb.park_used_capacity_Total (
     Parkname VARCHAR(255),
     date DATE,
     value1 INT DEFAULT 0,
@@ -102,6 +106,43 @@ CREATE TABLE gonaturedb.park_used_capacity (
     value12 INT DEFAULT 0,
     FOREIGN KEY (ParkName) REFERENCES park(Parkname)
 );
+
+CREATE TABLE gonaturedb.park_used_capacity_individual (
+    Parkname VARCHAR(255),
+    date DATE,
+    value1 INT DEFAULT 0,
+    value2 INT DEFAULT 0,
+    value3 INT DEFAULT 0,
+    value4 INT DEFAULT 0,
+    value5 INT DEFAULT 0,
+    value6 INT DEFAULT 0,
+    value7 INT DEFAULT 0,
+    value8 INT DEFAULT 0,
+    value9 INT DEFAULT 0,
+    value10 INT DEFAULT 0,
+    value11 INT DEFAULT 0,
+    value12 INT DEFAULT 0,
+    FOREIGN KEY (ParkName) REFERENCES park(Parkname)
+);
+CREATE TABLE gonaturedb.park_used_capacity_groups (
+    Parkname VARCHAR(255),
+    date DATE,
+    value1 INT DEFAULT 0,
+    value2 INT DEFAULT 0,
+    value3 INT DEFAULT 0,
+    value4 INT DEFAULT 0,
+    value5 INT DEFAULT 0,
+    value6 INT DEFAULT 0,
+    value7 INT DEFAULT 0,
+    value8 INT DEFAULT 0,
+    value9 INT DEFAULT 0,
+    value10 INT DEFAULT 0,
+    value11 INT DEFAULT 0,
+    value12 INT DEFAULT 0,
+    FOREIGN KEY (ParkName) REFERENCES park(Parkname)
+);
+
+
 
 
 CREATE TABLE gonaturedb.orders (
@@ -180,12 +221,3 @@ VALUES
 ('1017', 'Gan-Tanahi',         '2022', '02', '7'),
 ('1018', 'Hay-Park',           '2022', '11', '14'),
 ('1019', 'Yaar-Hakofim',       '2022', '04', '4');
-
-
-
-
-
-
-
-
-
