@@ -62,11 +62,9 @@ CREATE TABLE gonaturedb.sales (
 INSERT INTO gonaturedb.sales (SaleType, SalePercentage)
 VALUES 
 ('personal', '15'),
-('family', '15'),
 ('group', '25'),
 ('casual_group', '10'),
-('casual_personal', '0'),
-('casual_family', '0');
+('casual_personal', '0');
 
 
 
@@ -76,7 +74,7 @@ CREATE TABLE gonaturedb.park (
     PricePerPerson VARCHAR(255),
     AvailableSpot VARCHAR(255),
     ParkMangerId VARCHAR(255),
-    visitTimeLimit VARCHAR(255) DEFAULT '4' COMMENT 'Visit time limit in hours default value = 4',
+    visitTimeLimit VARCHAR(255) DEFAULT '4', -- default is 4
     FOREIGN KEY (ParkMangerId) REFERENCES users(UserId)
 );
 
@@ -92,53 +90,53 @@ VALUES
 CREATE TABLE gonaturedb.park_used_capacity_Total (
     Parkname VARCHAR(255),
     date DATE,
-    value1 INT DEFAULT 0,
-    value2 INT DEFAULT 0,
-    value3 INT DEFAULT 0,
-    value4 INT DEFAULT 0,
-    value5 INT DEFAULT 0,
-    value6 INT DEFAULT 0,
-    value7 INT DEFAULT 0,
-    value8 INT DEFAULT 0,
-    value9 INT DEFAULT 0,
-    value10 INT DEFAULT 0,
-    value11 INT DEFAULT 0,
-    value12 INT DEFAULT 0,
+    t8 INT DEFAULT 0,
+    t9 INT DEFAULT 0,
+    t10 INT DEFAULT 0,
+    t11 INT DEFAULT 0,
+    t12 INT DEFAULT 0,
+    t13 INT DEFAULT 0,
+    t14 INT DEFAULT 0,
+    t15 INT DEFAULT 0,
+    t16 INT DEFAULT 0,
+    t17 INT DEFAULT 0,
+    t18 INT DEFAULT 0,
+    t19 INT DEFAULT 0,
     FOREIGN KEY (ParkName) REFERENCES park(Parkname)
 );
 
 CREATE TABLE gonaturedb.park_used_capacity_individual (
     Parkname VARCHAR(255),
     date DATE,
-    value1 INT DEFAULT 0,
-    value2 INT DEFAULT 0,
-    value3 INT DEFAULT 0,
-    value4 INT DEFAULT 0,
-    value5 INT DEFAULT 0,
-    value6 INT DEFAULT 0,
-    value7 INT DEFAULT 0,
-    value8 INT DEFAULT 0,
-    value9 INT DEFAULT 0,
-    value10 INT DEFAULT 0,
-    value11 INT DEFAULT 0,
-    value12 INT DEFAULT 0,
+    t8 INT DEFAULT 0,
+    t9 INT DEFAULT 0,
+    t10 INT DEFAULT 0,
+    t11 INT DEFAULT 0,
+    t12 INT DEFAULT 0,
+    t13 INT DEFAULT 0,
+    t14 INT DEFAULT 0,
+    t15 INT DEFAULT 0,
+    t16 INT DEFAULT 0,
+    t17 INT DEFAULT 0,
+    t18 INT DEFAULT 0,
+    t19 INT DEFAULT 0,
     FOREIGN KEY (ParkName) REFERENCES park(Parkname)
 );
 CREATE TABLE gonaturedb.park_used_capacity_groups (
     Parkname VARCHAR(255),
     date DATE,
-    value1 INT DEFAULT 0,
-    value2 INT DEFAULT 0,
-    value3 INT DEFAULT 0,
-    value4 INT DEFAULT 0,
-    value5 INT DEFAULT 0,
-    value6 INT DEFAULT 0,
-    value7 INT DEFAULT 0,
-    value8 INT DEFAULT 0,
-    value9 INT DEFAULT 0,
-    value10 INT DEFAULT 0,
-    value11 INT DEFAULT 0,
-    value12 INT DEFAULT 0,
+    t8 INT DEFAULT 0,
+    t9 INT DEFAULT 0,
+    t10 INT DEFAULT 0,
+    t11 INT DEFAULT 0,
+    t12 INT DEFAULT 0,
+    t13 INT DEFAULT 0,
+    t14 INT DEFAULT 0,
+    t15 INT DEFAULT 0,
+    t16 INT DEFAULT 0,
+    t17 INT DEFAULT 0,
+    t18 INT DEFAULT 0,
+    t19 INT DEFAULT 0,
     FOREIGN KEY (ParkName) REFERENCES park(Parkname)
 );
 
@@ -177,6 +175,17 @@ VALUES
 ('111117', 'Yaar-Hakofim',      '314813831','2024-03-11','12:00', '3', 'YES', 'YES', 'NO', '300', 'NO');
 
 
+
+INSERT INTO gonaturedb.park_used_capacity_individual (Parkname, date, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19)
+VALUES
+    ('Safari', '2024-03-17', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0),
+    ('Mitspe-Tat-Yami', '2024-03-17', 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0);
+
+
+INSERT INTO gonaturedb.park_used_capacity_groups (Parkname, date, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19)
+VALUES
+    ('Safari', '2024-03-17', 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0),
+    ('Mitspe-Tat-Yami', '2024-03-17', 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0);
 
 CREATE TABLE gonaturedb.report_visit (
     ReportId VARCHAR(255) PRIMARY KEY,
