@@ -144,7 +144,7 @@ CREATE TABLE gonaturedb.park_used_capacity_groups (
 
 
 CREATE TABLE gonaturedb.orders (
-    OrderId VARCHAR(255) PRIMARY KEY,
+    OrderId int auto_increment PRIMARY KEY,
     ParkName VARCHAR(255),
     UserId VARCHAR(255),
     dateOfVisit date,
@@ -163,16 +163,16 @@ CREATE TABLE gonaturedb.orders (
 
 
 
-INSERT INTO gonaturedb.orders (OrderId, ParkName, UserId, dateOfVisit,TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList) 
+INSERT INTO gonaturedb.orders ( ParkName, UserId, dateOfVisit,TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList) 
 VALUES
-('111110', 'Safari',            '314813825','2024-03-13','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
-('111111', 'Mitspe-Tat-Yami',   '314813832','2024-03-13','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
-('111112', 'Hay-Park',          '314813833','2024-03-12','13:00', '3', 'YES', 'YES', 'NO', '300', 'NO'),
-('111113', 'Yaar-Hakofim',      '314813831','2024-03-12','12:00', '7', 'YES', 'YES', 'NO', '300', 'NO'),
-('111114', 'Gan-Tanahi',        '314813832','2024-03-11','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
-('111115', 'Safari',            '314813833','2024-03-11','17:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
-('111116', 'Safari',            '314813834','2024-03-11','11:00', '1', 'YES', 'YES', 'NO', '300', 'NO'),
-('111117', 'Yaar-Hakofim',      '314813831','2024-03-11','12:00', '3', 'YES', 'YES', 'NO', '300', 'NO');
+( 'Safari',            '314813825','2024-03-13','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Mitspe-Tat-Yami',   '314813832','2024-03-13','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Hay-Park',          '314813833','2024-03-12','13:00', '3', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Yaar-Hakofim',      '314813831','2024-03-12','12:00', '7', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Gan-Tanahi',        '314813832','2024-03-11','10:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Safari',            '314813833','2024-03-11','17:00', '5', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Safari',            '314813834','2024-03-11','11:00', '1', 'YES', 'YES', 'NO', '300', 'NO'),
+( 'Yaar-Hakofim',      '314813831','2024-03-11','12:00', '3', 'YES', 'YES', 'NO', '300', 'NO');
 
 
 
