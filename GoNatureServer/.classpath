@@ -8,9 +8,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="mysql-connector-java-8.0.13.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JAVAFX21"/>
-	<classpathentry kind="lib" path="C:/Users/yarden/Downloads/Ex-03-Workbench&amp;JDBC/mysql-connector-java-8.0.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/אדר/Documents/shitot/lab3/mysql-connector-java-8.0.13.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javafx"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
