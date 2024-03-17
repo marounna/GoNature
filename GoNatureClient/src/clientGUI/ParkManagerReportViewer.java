@@ -5,7 +5,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
-public class parkManagerReportManagement { 
+public class ParkManagerReportViewer { 
     //maroun commmit Making Report 16/03/2024 10:00
     @FXML
     private BarChart<String, Number> barCHART;
@@ -40,7 +40,7 @@ public class parkManagerReportManagement {
 
         barCHART.getData().addAll(individualSeries, groupSeries);
 
-        // Customize the chart if needed
+        
         CategoryAxis xAxis = (CategoryAxis) barCHART.getXAxis();
         xAxis.setLabel("Time");
 
