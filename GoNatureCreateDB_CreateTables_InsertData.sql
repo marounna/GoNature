@@ -75,16 +75,18 @@ CREATE TABLE gonaturedb.park (
     CapacityOfVisitors VARCHAR(255),
     PricePerPerson VARCHAR(255),
     AvailableSpot VARCHAR(255),
-    visitTimeLimit VARCHAR(255) DEFAULT '4' COMMENT 'Visit time limit in hours default value = 4'
+    ParkMangerId VARCHAR(255),
+    visitTimeLimit VARCHAR(255) DEFAULT '4' COMMENT 'Visit time limit in hours default value = 4',
+    FOREIGN KEY (ParkMangerId) REFERENCES users(UserId)
 );
 
-INSERT INTO gonaturedb.park (Parkname, CapacityOfVisitors, PricePerPerson)
+INSERT INTO gonaturedb.park (Parkname, CapacityOfVisitors, PricePerPerson,ParkMangerId)
 VALUES 
-('Safari', '100', '20'),
-('Gan-Tanahi', '80', '15'),
-('Yaar-Hakofim', '120', '25'),
-('Hay-Park', '90', '18'),
-('Mitspe-Tat-Yami', '70', '22');
+('Safari', '100', '20','314813827'),
+('Gan-Tanahi', '80', '15','314813827'),
+('Yaar-Hakofim', '120', '25','314813827'),
+('Hay-Park', '90', '18','314813827'),
+('Mitspe-Tat-Yami', '70', '22','314813827');
 
 
 CREATE TABLE gonaturedb.park_used_capacity_Total (
