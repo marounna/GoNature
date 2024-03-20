@@ -3,6 +3,7 @@ package Server;
 
 import java.util.ArrayList;
 
+
 import entities.Park;
 import javafx.css.PseudoClass;
 import logic.Order;
@@ -50,18 +51,16 @@ public class DbController {
     }
 
     // Method to load an order from the database
-    public static Order loadOrder(Connection conn, String order_number) {
+    public static ArrayList<String> loadOrder(Connection conn, String order_number) {
         System.out.println("dbController> Order number = " + order_number);
-        String sql = "SELECT * FROM orders WHERE OrderNumber = ?";
-
+        String sql = "SELECT * FROM orders WHERE OrderId = ?";
         ArrayList<String> orderDetails = new ArrayList<>();
-
+        orderDetails.add(order_number);
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, order_number);
             try (ResultSet rs = pstmt.executeQuery()) {
-                System.out.println("Select * was executed");
+                //System.out.println("Select * was executed");
                 if (rs.next()) {
-                    orderDetails.add(rs.getString("OrderId"));
                     orderDetails.add(rs.getString("ParkName"));
                     orderDetails.add(rs.getString("UserId"));
                     orderDetails.add((rs.getString("DateOfVisit")));
@@ -73,12 +72,24 @@ public class DbController {
         } catch (SQLException e) {
             System.out.println("Error loading order: " + e.getMessage());
         }
+        String sql1 = "SELECT * FROM users WHERE UserId = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+            pstmt.setString(1, orderDetails.get(2));
+            try (ResultSet rs = pstmt.executeQuery()) {
+            	if (rs.next())
+            		orderDetails.add(rs.getString("Email"));
 
+            }
+            pstmt.close();
         
-        try {
+        } catch (SQLException e) {
+        System.out.println("Error loading order: " + e.getMessage());}
+        return orderDetails;
+        /**try {
             // Ensure orderDetails has all necessary elements
-            if (orderDetails.size() == 6) {
-                order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5),orderDetails.get(6));
+            if (orderDetails.size() == 7) {
+                order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5),
+                		orderDetails.get(6));
                 //System.out.println("dbController> " + order);
                 return order;
             } else {
@@ -87,8 +98,7 @@ public class DbController {
         } catch (Exception e) {
             System.out.println("dbController> Error creating Order object: " + e.getMessage());
             e.printStackTrace();
-        }
-		return null;
+        }*/
     }
  
 
@@ -432,29 +442,129 @@ public class DbController {
 				pstmt.setString(10, totalprice);
 				pstmt.setString(11, "NO");
 			    pstmt.executeUpdate();
-			    updateTotalTables(conn,parkname,date,time,numberofvisitors, typeacc,reservationtype,dwelltime,"+");
-			    return 1;
+			    int update = updateTotalTables(conn,parkname,date,time,numberofvisitors, typeacc,reservationtype,dwelltime,"+");
+			    if(update==0) {
+			    	insertTotalTables(conn,parkname,date,time,numberofvisitors,typeacc,reservationtype,dwelltime,"+");
+			    	return 1;}
 	    } catch (SQLException e) {
 			e.printStackTrace();
 		}
 	   return 0; 
 	}
 
-	private static void updateTotalTables(Connection conn, String parkname, String date, String time,
-			String numberofvisitors, String typeaccount,String resevationtype,String dwelltime, String sign) {
+	private static void insertTotalTables(Connection conn, String parkname, String date, String time,
+		String numberofvisitors, String typeacc, String reservationtype, String dwelltime, String sign) {
+//--------------------------------------------------------------------------------------------------------------------------------------------------
+		System.out.println("its insertTotalTables here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		String t="t";
 		int tfield=0;
 		int ordertime = 0;
 		int numbervisitors=Integer.parseInt(numberofvisitors);
 		String sql = "";
 		int dwell=Integer.parseInt(dwelltime);
-		int rowexistindb=0;
-		for (int i=8; i<20;i++) {
+		for (int i=8; i<20-dwell;i++) {
 			if(time.contains(""+i)) {
 				tfield=i;
 				ordertime=i;
 			}
 		}
+		//INSERT INTO park_used_capacity_individual (Parkname, date, t8, t9, t10, t11) VALUES (?, ?, ?, ?, ?, ?);
+
+    	switch(typeacc) {//updating table values with the new order number of visitors 
+			case "customer":
+			case "guest":
+				sql="INSERT INTO park_used_capacity_individual (Parkname, date, " + t +tfield;
+				for(int i=0;i<dwell-1;i++) {
+					t="t";
+					tfield++;
+					sql+=", " + t +tfield;
+				}
+				
+				sql+=") VALUES (?, ?, ?, ?, ?, ?)" ;
+				System.out.println("dbcontroller sql query: " + sql);
+				break;
+			case "guide":
+				sql="INSERT INTO park_used_capacity_groups (Parkname, date, " + t +tfield;
+				for(int i=0;i<dwell-1;i++) {
+					t="t";
+					tfield++;
+					sql+=", " + t +tfield;
+				}
+				
+				sql+=") VALUES (?, ?, ?, ?, ?, ?)" ;
+
+				break;
+			case "park employee":
+				if (reservationtype.equals("customer")) {
+					sql="INSERT INTO park_used_capacity_individual (Parkname, date, " + t +tfield;
+					for(int i=0;i<dwell-1;i++) {
+						t="t";
+						tfield++;
+						sql+=", " + t +tfield;
+					}
+					
+					sql+=") VALUES (?, ?, ?, ?, ?, ?)" ;}
+				
+				else { sql="INSERT INTO park_used_capacity_groups (Parkname, date, " + t +tfield;
+				for(int i=0;i<dwell-1;i++) {
+					t="t";
+					tfield++;
+					sql+=", " + t +tfield;
+				}
+				
+				sql+=") VALUES (?, ?, ?, ?, ?, ?)" ;
+				break;		
+				}
+    	}
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, parkname);
+		    pstmt.setString(2, date);
+			for(int i=3;i<dwell+3;i++) {
+				pstmt.setInt(i, numbervisitors);}
+		    // Execute the update using executeUpdate()
+		    int affectedRows = pstmt.executeUpdate();
+		    if (affectedRows > 0) {
+		        System.out.println("Update capacity succeeded");
+		    } else {
+		        System.out.println("No rows were updated");
+		    }
+		} catch (SQLException e) {
+		    System.out.println("DbController> Error fetching capacity tables: " + e.getMessage());
+		}
+		tfield=ordertime;
+		sql="INSERT INTO park_used_capacity_total (Parkname, date, " + t +tfield;
+		for(int i=0;i<dwell-1;i++) {
+			t="t";
+			tfield++;
+			sql+=", " + t +tfield;
+		}
+		sql+=") VALUES (?, ?, ?, ?, ?, ?);" ;
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, parkname);
+		    pstmt.setString(2, date);
+			for(int i=3;i<dwell+3;i++) {
+				pstmt.setInt(i, numbervisitors);}
+		    // Execute the update using executeUpdate()
+		    int affectedRows = pstmt.executeUpdate();
+		    if (affectedRows > 0) {
+		        System.out.println("Update capacity succeeded");
+		    } else {
+		        System.out.println("No rows were updated");
+		    }
+		} catch (SQLException e) {
+		    System.out.println("DbController> Error fetching capacity tables: " + e.getMessage());
+		}
+    	
+		
+		
+		
+}
+	
+	
+	
+	
+	private static int checkRowExist(Connection conn,String typeaccount,String reservationtype,String parkname,String date) {
+		String sql="";
 		switch(typeaccount) {// checking if there is any orders at all on this date and park
 		case "customer":
 		case "guest":
@@ -464,7 +574,49 @@ public class DbController {
 			sql="SELECT * FROM park_used_capacity_groups WHERE Parkname = ? AND date= ? " ;
 			break;
 		case "park employee":
-			if (resevationtype.equals("customer"))
+			if (reservationtype.equals("customer"))
+				sql="SELECT * FROM park_used_capacity_individual  WHERE Parkname = ? AND date= ? " ;
+			else sql="SELECT * FROM park_used_capacity_groups  WHERE Parkname = ? AND date= ? " ;
+			break;	
+		}
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setString(1, parkname);
+				pstmt.setString(2, date);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+			           if (rs.next()) {	
+			        	   return 1;//means there is a row on db with the park name and date
+			           }
+			    }catch (SQLException e) {
+			        System.out.println("DbController> Error fetching checking row: " + e.getMessage());}    
+		    } catch (SQLException e2) {
+				e2.printStackTrace();}
+	    return 0;
+	}
+
+	private static int updateTotalTables(Connection conn, String parkname, String date, String time,
+			String numberofvisitors, String typeaccount,String reservationtype,String dwelltime, String sign) {
+		String t="t";
+		int tfield=0;
+		int ordertime = 0;
+		int numbervisitors=Integer.parseInt(numberofvisitors);
+		String sql = "";
+		int dwell=Integer.parseInt(dwelltime);
+		for (int i=8; i<20;i++) {
+			if(time.contains(""+i)) {
+				tfield=i;
+				ordertime=i;
+			}
+		}
+		/*switch(typeaccount) {// checking if there is any orders at all on this date and park
+		case "customer":
+		case "guest":
+			sql="SELECT * FROM park_used_capacity_individual WHERE Parkname = ? AND date= ? " ;
+			break;
+		case "guide":
+			sql="SELECT * FROM park_used_capacity_groups WHERE Parkname = ? AND date= ? " ;
+			break;
+		case "park employee":
+			if (reservationtype.equals("customer"))
 				sql="SELECT * FROM park_used_capacity_individual  WHERE Parkname = ? AND date= ? " ;
 			else sql="SELECT * FROM park_used_capacity_groups  WHERE Parkname = ? AND date= ? " ;
 			break;	
@@ -479,9 +631,11 @@ public class DbController {
 			    }catch (SQLException e) {
 			        System.out.println("DbController> Error fetching capacity total: " + e.getMessage());}    
 		    } catch (SQLException e2) {
-				e2.printStackTrace();}
-	    if(rowexistindb==1) {//means there is a row on db with the park name and date
-			switch(typeaccount) {//updating table values with the new order number of visitors 
+				e2.printStackTrace();}*/
+	    //if(rowexistindb==1) {//means there is a row on db with the park name and date
+		System.out.println("im hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+		if(checkRowExist(conn,typeaccount,reservationtype, parkname, date)==1) {
+	    	switch(typeaccount) {//updating table values with the new order number of visitors 
 				case "customer":
 				case "guest":
 					sql="UPDATE park_used_capacity_individual SET " + t +tfield+ "= "+t+tfield  + sign +" ?" ;
@@ -504,7 +658,7 @@ public class DbController {
 
 					break;
 				case "park employee":
-					if (resevationtype.equals("customer")) {
+					if (reservationtype.equals("customer")) {
 						sql="UPDATE park_used_capacity_individual SET " + t +tfield+ "= "+t+tfield  + sign +" ?" ;
 						for(int i=0;i<dwell-1;i++) {
 							t="t";
@@ -521,13 +675,13 @@ public class DbController {
 					sql+="  WHERE Parkname = ? AND date= ? " ;}
 					break;		
 			}
+	    	int cnt=1;
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			    pstmt.setInt(1, numbervisitors);
-			    pstmt.setInt(2, numbervisitors);
-			    pstmt.setInt(3, numbervisitors);
-			    pstmt.setInt(4, numbervisitors);
-			    pstmt.setString(5, parkname);
-			    pstmt.setString(6, date);
+				for(int i=1;i<dwell+1;i++) {
+					pstmt.setInt(i, numbervisitors);
+					cnt++;}
+			    pstmt.setString((cnt), parkname);
+			    pstmt.setString((cnt+1), date);
 
 			    // Execute the update using executeUpdate()
 			    int affectedRows = pstmt.executeUpdate();
@@ -549,28 +703,28 @@ public class DbController {
 			}
 			sql+="  WHERE Parkname = ? AND date= ? " ;
 			System.out.println("dbcontroller total sql query: "+ sql);
+			cnt=1;
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			    pstmt.setInt(1, numbervisitors);
-			    pstmt.setInt(2, numbervisitors);
-			    pstmt.setInt(3, numbervisitors);
-			    pstmt.setInt(4, numbervisitors);
-			    pstmt.setString(5, parkname);
-			    pstmt.setString(6, date);
+				for(int i=1;i<dwell+1;i++) {
+					pstmt.setInt(i, numbervisitors);
+					cnt++;}
+			    pstmt.setString((cnt), parkname);
+			    pstmt.setString((cnt+1), date);
 
 			    // Execute the update using executeUpdate()
 			    int affectedRows = pstmt.executeUpdate();
 			    if (affectedRows > 0) {
 			        System.out.println("Update total capacity table succeeded");
+			        return 1;
 			    } else {
 			        System.out.println("No rows were updated");
 			    }
 			} catch (SQLException e) {
 			    System.out.println("DbController> Error fetching capacity total table: " + e.getMessage());
 			}
-			
 	    }
-	    	
-		
+		System.out.println("no existing row-------------------------------------------");
+		return 0;
 	}
 
 	
@@ -648,10 +802,10 @@ public class DbController {
 		    ResultSet rs = pstmt.executeQuery();
 		    if (rs.next()) {
 		        userid = rs.getString("UserId");
-		        System.out.println("user id is: " + userid);
+		        //System.out.println("user id is: " + userid);
 		        System.out.println("The UserId is: " + userid);
 		    } else {
-		        System.out.println("No user found with the provided username.");
+		        System.out.println("No user found with the provided user.");
 		    }
 		} catch (SQLException e) {
 		    e.printStackTrace();
@@ -659,8 +813,47 @@ public class DbController {
 		return userid;
 	}
 
+	public static String DeleteOrder(Connection conn, String orderid, String typeaccount, String reservationtype) {
+		int delete=0;
+		String parkname="";
+		String date="";
+		String time="";
+		String numberofvisitors="";
+		String sql="SELECT * FROM orders WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, orderid); 
+		    ResultSet rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		    	parkname = rs.getString("ParkName");
+		    	date = rs.getString("DateOfVisit");
+		    	time = rs.getString("TimeOfVisit");
+		    	numberofvisitors = rs.getString("NumberOfVisitors");
+		    } else {
+		        System.out.println("DbController> failed to delete order.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();}
+		String dwell=checkDwell(conn, parkname);
+		sql = "DELETE FROM orders WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    // Assuming you have the orderId as a String or change accordingly if it's an integer
+		    pstmt.setString(1, orderid); // Replace orderId with the actual OrderId you want to delete
 
-	
+		    int rowsAffected = pstmt.executeUpdate();
+		    if (rowsAffected > 0) {
+		    	delete=1;
+		        System.out.println("Row deleted successfully.");
+		    } else {
+		        System.out.println("No row found with the specified OrderId.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		updateTotalTables(conn, parkname, date, time, numberofvisitors, typeaccount, reservationtype, dwell, "-");	
+		if (delete==1)
+			return "succeed";
+		return "failed";
+	}
 }
 
 

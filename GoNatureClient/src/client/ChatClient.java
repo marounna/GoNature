@@ -95,12 +95,14 @@ public void handleMessageFromServer(Object msg1)
 	  awaitResponse = false;
 	  switch (result[0]) {
 		  case "loadOrder":
-			  StaticClass.o1.setParkName(result[0]);
 			  StaticClass.o1.setOrderId(result[1]);
-			  StaticClass.o1.setTimeOfVisit(result[2]);
-			  StaticClass.o1.setNumberOfVisitors(result[3]);
-			  StaticClass.o1.setTelephoneNumber(result[4]);
-			  StaticClass.o1.setEmail(result[5]);
+			  StaticClass.o1.setParkName(result[2]);
+			  StaticClass.o1.setUserId(result[3]);
+			  StaticClass.o1.setDate(result[4]);
+			  StaticClass.o1.setTimeOfVisit(result[5]);
+			  StaticClass.o1.setNumberOfVisitors(result[6]);
+			  StaticClass.o1.setEmail(result[7]);
+			  System.out.println("this is my test " + StaticClass.o1.toString());
 			  break;
 		  case "userExist":
 			  if(result[1].equals("succeed")) {
@@ -115,59 +117,19 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "login":
 			  if(result[1].equals("succeed")) {
+				  StaticClass.username=result[2];
 				  StaticClass.isexist=true;
 				  if (result[2].equals("guide"))
 					  type=1;
-				  /*switch (StaticClass.typeacc) {
-					  case "guide":
-					  case "customer":
-						  UserMenuController.username=result[2];
-						  break;
-					  case "park employee":
-						  StaticClass.username=result[2];
-						  break;*/
-					  /*case "department manager":
-						  DmMenuController.username=result[2];
-						  break;
-					  case "service employee":
-						  ServiceEmployeeMenuController.username=result[2];
-						  break;*/
-				 // }
 			  }
 			  else StaticClass.isexist=false;
 			  break;
 		  case "logout":
 			  if(result[1].equals("succeed")) {
 				  StaticClass.islogout=true;
-				  /*switch (StaticClass.typeacc) {
-				  case "guide":
-				  case "customer":
-					  StaticClass.islogout=true;
-					  break;
-				  case "park employee":
-					  StaticClass.islogout=true;
-					  break;
-				  case "department manager":
-					  StaticClass.islogout=true;
-					  break;
-				  case "service employee":
-					  StaticClass.islogout=true;
-					  break;
-				  }*/
 			  	  if(type==1) type=0;}
 			  else StaticClass.islogout=false;
 			  break;
-		  /*case "parkNames":
-			  if (type==1) {
-				  for(int i=0; i<Integer.parseInt(result[1]);i++) {
-					  System.out.println("chatClient> guide park names");}
-					  StaticClass.parknames.add(result[i+2]);}
-			  }
-			  else {	  
-				  System.out.println("chatClient> user park names");
-				  /*for(int i=0; i<Integer.parseInt(result[1]);i++){
-					  //StaticClass.parknames.add(result[i+2]);}
-			  break;*/
 		  case "park":
 			  ArrayList<Park> msgList = (ArrayList<Park>) payloadMessage.getPayload() ;
 			  System.out.println("----------"+ msg +"-------------" + msgList);
@@ -210,6 +172,13 @@ public void handleMessageFromServer(Object msg1)
           case "userId":
         	  StaticClass.userid=result[1];
         	  break;
+          case "deleteOrder":
+        	  if(result[1].equals("succeed"))
+        		  System.out.println("ChatClient> delete order succeed");
+        	  else {
+        		  System.out.println("ChatClient> delete order failed");
+        	  }
+    		  break;
       	  
         	  
 	  }

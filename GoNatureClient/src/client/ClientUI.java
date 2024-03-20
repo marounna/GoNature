@@ -53,7 +53,7 @@ public class ClientUI extends Application {
 			System.out.println("ClientUI> Failed to load client into server monitor");
 		}
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		loader = new FXMLLoader(getClass().getResource("/resources/LoginOrNewReservation.fxml"));
+		loader = new FXMLLoader(getClass().getResource("/clientGUI/LoginOrNewReservation.fxml"));
 		Pane root = loader.load();
         Scene scene = new Scene(root);
         //scene.getStylesheets().add(getClass().getResource("/clientGUI/OrderFrame.css").toExternalForm());

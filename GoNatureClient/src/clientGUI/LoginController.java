@@ -40,7 +40,7 @@ public class LoginController {
 		try {
 
 	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      		  SwitchScreen.changeScreen(stage,"/resources/LoginOrNewReservation.fxml"
+      		  SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
       				  ,"/resources/LoginOrNewReservation.css");
 
 			  } catch (Exception e) {
@@ -61,6 +61,7 @@ public class LoginController {
 		System.out.println("check before if exist login controller");
 		if (StaticClass.isexist) {
 			StaticClass.username=username;
+			System.out.println("this is loginController> username is: "+StaticClass.username);
 			StaticClass.isexist=false;
 			try {
 				String loginMessage= "login " + username +" "+ pass ;
@@ -78,23 +79,26 @@ public class LoginController {
 		        switch(StaticClass.typeacc) {
 		        	case "customer":
 		        	case "guide":
-		        		SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+		        		if(StaticClass.typeacc.equals("customer"))
+		        			StaticClass.reservationtype="customer";
+		        		else { StaticClass.reservationtype="guide";}
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
 		        				,"/resources/UserMenuController.css");
 		        		break;
 		        	case "park manager" :
-		        		SwitchScreen.changeScreen(stage,"/resources/ParkManagerMenuController.fxml"
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/ParkManagerMenuController.fxml"
 		        				,"/resources/ParkManagerMenuController.css");
 		        		break;
 		        	case "department manager":
-		        		SwitchScreen.changeScreen(stage,"/resources/DepartmentManagerMenuController.fxml"
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/DepartmentManagerMenuController.fxml"
 		        				,"/resources/DepartmentManagerMenuController.css");
 		        		break;
 		        	case "service employee":
-		        		SwitchScreen.changeScreen(stage,"/resources/ServiceEmployeeMenuController.fxml"
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/ServiceEmployeeMenuController.fxml"
 		        				,"/resources/ServiceEmployeeMenuController.css");
 		        		break;
 		        	case "park employee":
-		        		SwitchScreen.changeScreen(stage,"/resources/EmployeeMenuController.fxml"
+		        		SwitchScreen.changeScreen(stage,"/clientGUI/EmployeeMenuController.fxml"
 		        				,"/resources/EmployeeMenuController.css");
 		        		break;
 		        }

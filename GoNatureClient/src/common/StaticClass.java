@@ -11,6 +11,7 @@ import logic.Order;
 public class StaticClass {
     public static String userid;
     public static String username;
+    public static String orderid;
     public static boolean islogout =false;
     public static Order o1 = new Order(null, null, null, null, null, null,null);
     public static String typeacc;

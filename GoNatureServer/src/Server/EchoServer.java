@@ -98,9 +98,11 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                Order order = DbController.loadOrder(conn, result[1]);
+                ArrayList<String> order = DbController.loadOrder(conn, result[1]);  
                 if(order!=null) {
-                	returnmsg="loadOrder "+order.toString();
+                	returnmsg="loadOrder "+order.get(0)+" "+ order.get(1) + " " +
+                order.get(2)+" "+ order.get(3)+" "+order.get(4)+" "+order.get(5)+" "
+                +order.get(6);
                 	sendToClient(client,returnmsg);
                 	return;}
                 else {
@@ -192,10 +194,15 @@ public class EchoServer extends AbstractServer {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+				break;
             case "userId":
             	String userid=DbController.checkUserId(conn,result[1]);
             	sendToClient(client, "userId "+ userid);
-        	
+            	break;
+            case "deleteOrder":
+            	String delete = DbController.DeleteOrder(conn, result[1],result[2],result[3]);
+            	sendToClient(client, "deleteOrder "+delete);
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }

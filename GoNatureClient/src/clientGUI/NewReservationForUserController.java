@@ -1,6 +1,8 @@
 package clientGUI;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +33,7 @@ public class NewReservationForUserController {
     private DatePicker date;
 
     @FXML
-    private TextField numberOfVisitors;
+    private TextField numberOfVisitors;   
 
     @FXML
     private ComboBox<String> parkNameCombo;
@@ -52,11 +54,11 @@ public class NewReservationForUserController {
 	        switch (StaticClass.typeacc) {
 		        case "guide":
 		        case "customer":
-		        	SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+		        	SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
 		        			,"/resources/UserMenuController.css");
 		        	break;
 		        case "guest":
-		    		SwitchScreen.changeScreen(stage,"/resources/EnterIDForReservationController.fxml"
+		    		SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
 		    				,"/resources/EnterIDForReservationController.css");
 		    		break;
 	        }
@@ -80,12 +82,11 @@ public class NewReservationForUserController {
 	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
 	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    		SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml","/resources/PaymentController.css");
+    		SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml","/resources/PaymentController.css");
 	    }
 	    
-	    @FXML  //initialize the new reservation screen
+	    @FXML  //initialize the new reservation screen  date numberOfVisitors parkNameCombo textEmail timeCombo
 	    private void initialize() {
-	    	//StaticClass.flagC=1;
 	    	StaticClass.parks.clear();
 	        ClientUI.chat.accept("park");
 	        parkNameCombo.getItems().addAll(getParkNames());

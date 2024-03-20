@@ -46,7 +46,7 @@ public class NewReservationForGuideController {
 	    void ClickOnBack(ActionEvent event) throws IOException {
 	    	//StaticClass.flagG=0;
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
+	        SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
 	        		,"/resources/UserMenuController.css");
 	    }
 
@@ -59,15 +59,14 @@ public class NewReservationForGuideController {
 	    	StaticClass.o1.setNumberOfVisitors(""+StaticClass.numberofvisitors);
 	    	StaticClass.o1.setTimeOfVisit(timeCombo.getValue().toString());
 	    	StaticClass.o1.setEmail(textEmail.getText());
-	    	
-	    	
+
 	    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
 	    	StaticClass.orderdetails+="\nNumber of visitors: "+StaticClass.numberofvisitors;
 	    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
 	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
 	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml"
+	        SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml"
 	        		,"/resources/PaymentController.css");
 
 	    }

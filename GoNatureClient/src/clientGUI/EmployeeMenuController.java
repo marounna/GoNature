@@ -79,7 +79,7 @@ public class EmployeeMenuController {
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
 		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	      		SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
+	      		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
 
 			}
 	    }

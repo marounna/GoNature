@@ -26,14 +26,14 @@ public class LoginOrNewReservationController {
     @FXML
     void LoginBtnAction(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/resources/LoginController.fxml","/resources/LoginController.css");
+        SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
     }
     
     //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/resources/EnterIDForReservationController.fxml"
+        SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
         		,"/resources/EnterIDForReservationController.css");
     }
     

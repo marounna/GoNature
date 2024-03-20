@@ -26,8 +26,6 @@ public class Order implements Serializable {
 	        this.telephoneNumber = telephoneNumber;
 	        this.email=Email;
 	    }
-
-	    // Getters
 	    
 	    public Order(String orderId, String parkName, String date, String timeOfVisit, String numberOfVisitors) {
 	        this.orderId = orderId;
@@ -37,7 +35,17 @@ public class Order implements Serializable {
 	        this.numberOfVisitors = numberOfVisitors;
 
 		}
+	    
+	    public Order(String orderId, String parkName, String date, String timeOfVisit, String numberOfVisitors,String email) {
+	        this.orderId = orderId;
+	    	this.parkName = parkName;
+	    	this.dateOfVisit=date;
+	        this.timeOfVisit = timeOfVisit;
+	        this.numberOfVisitors = numberOfVisitors;
+	        this.email=email;
+		}
 
+	    // Getters
 		public String getDate() {
 	    	return dateOfVisit;
 	    }
@@ -163,7 +171,7 @@ public class Order implements Serializable {
 	    
 	    @Override
 	    public String toString() {
-	        return String.format("%s %s %s %s %s %s\n",parkName,orderId,timeOfVisit,numberOfVisitors,telephoneNumber,email);
+	        return String.format("%s %s %s %s %s %s\n",orderId,parkName,timeOfVisit,numberOfVisitors,email,telephoneNumber);
 	    	//return String.format("%s fix me later i am in Order class tosting method ",parkName);
 	    }
 
