@@ -132,11 +132,6 @@ public class EchoServer extends AbstractServer {
                       sendToClient(client, "logout failed");
                   }
                   break;
-            /*case "parkNames":
-				String parknames="";
-				parknames = getParks(conn,"parkNames");
-            	sendToClient(client,"parkNames " +  parknames);
-            	break;*/
             case "park":
             	System.out.println("echoserver> its park case");
             	ArrayList<Park> parks = new ArrayList<>();
@@ -162,12 +157,70 @@ public class EchoServer extends AbstractServer {
             	sendToClient(client, "checkAvailability "+avaiable);
             	
             	break;
+            case "waitingList":
+            	int waitingList = enterWaitingList(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7]);
+            	sendToClient(client, "waitingList "+waitingList);
+            	break;
+            case "maxNumberOrder":
+            	int max=DbController.checkMax(conn);
+            	sendToClient(client, "maxNumberOrder "+max );
+            	break;	
+            case "saveOrder":
+            	int save = saveOrder(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8], result[9],result[10]);
+            	sendToClient(client, "saveOrder " + save );
+            	break;
+            case "dwellTime":
+            	String dwell=DbController.checkDwell(conn, result[1]);
+            	sendToClient(client, "dwellTime " + dwell);
+            	break;
+            case "loadOrderForApproveTable":
+            	ArrayList<Order> ordersForApproveTable = new ArrayList<>();
+            	ordersForApproveTable = loadOrderForApproveTable(conn,result[1]);
+            	Message payload1 = new Message("loadOrderForApproveTable", ordersForApproveTable);
+			try {
+				client.sendToClient(payload1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            	break;
+            case "loadOrderForWaitingTable": 
+            	ArrayList<Order> ordersForWaitingListTable = new ArrayList<>();
+            	ordersForWaitingListTable = loadOrderForWaitingListTable(conn,result[1]);
+            	Message payload2 = new Message("loadOrderForWaitingTable", ordersForWaitingListTable);
+			try {
+				client.sendToClient(payload2);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            case "userId":
+            	String userid=DbController.checkUserId(conn,result[1]);
+            	sendToClient(client, "userId "+ userid);
+        	
             default:
                 handleErrorMessage(client, "Invalid command");
-
         }
     }
     
+
+	private ArrayList<Order> loadOrderForWaitingListTable(Connection conn, String userid) {
+		return DbController.loadOrderForWaitingListTable(conn,userid);
+	}
+
+	private ArrayList<Order> loadOrderForApproveTable(Connection conn, String username) {
+		return DbController.loadOrderForApproveTable(conn,username);
+	}
+
+	private int saveOrder(Connection conn, String parkname, String username, String date, String time,
+			String numberofvisitors,String orderId,String totalprice, String typeacc,String reservationtype,String dwelltime) {
+			int saveorder=DbController.saveOrder(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice, typeacc,reservationtype,dwelltime);
+			return saveorder;
+	}
+
+	private int enterWaitingList(Connection conn, String parkname, String username, String date, String time,
+			String numberofvisitors,String orderId,String totalprice) {
+		int waitinglist=DbController.waitingList(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice);
+		return waitinglist;
+	}
 
 	private int checkAvailability(Connection conn, String parkname, String numberofvisitors,String date,String time) {
 		int check=DbController.checkAvailable(conn,parkname,numberofvisitors,date,time);
@@ -184,11 +237,6 @@ public class EchoServer extends AbstractServer {
 		return parkprice;	
 	}
 
-	/*private String getParks(Connection conn, String names) {
-		String parknames="";
-		parknames=DbController.getParkNames(conn,names);
-		return parknames;
-	}*/
 
 	private int updateOrderDetails(String[] details, Connection conn) {
 		return 0;

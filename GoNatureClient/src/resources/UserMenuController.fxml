@@ -6,21 +6,33 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="549.0" prefWidth="901.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.UserMenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="718.0" prefWidth="901.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.UserMenuController">
    <children>
-      <Button fx:id="logoutBtn" layoutX="64.0" layoutY="469.0" mnemonicParsing="false" onAction="#ClickOnLogOut" text="Logout" />
-      <Button fx:id="ordersWaitingListBtn" layoutX="423.0" layoutY="405.0" mnemonicParsing="false" onAction="#ClickOnOrdersOnWaitingList" text="Orders on waiting list" />
-      <Button fx:id="newReservationBtn" layoutX="651.0" layoutY="405.0" mnemonicParsing="false" onAction="#ClickOnNewReservation" text="New reservation" />
-      <TableView fx:id="TableField" layoutX="193.0" layoutY="71.0" prefHeight="297.0" prefWidth="648.0">
+      <Button fx:id="logoutBtn" layoutX="64.0" layoutY="647.0" mnemonicParsing="false" onAction="#ClickOnLogOut" text="Logout" />
+      <Button fx:id="newReservationBtn" layoutX="728.0" layoutY="647.0" mnemonicParsing="false" onAction="#ClickOnNewReservation" text="New reservation" />
+      <TableView fx:id="ApprovedOrdersTableField" layoutX="80.0" layoutY="71.0" prefHeight="231.0" prefWidth="761.0">
         <columns>
-          <TableColumn prefWidth="75.0" />
-            <TableColumn prefWidth="110.0" text="OrderID" />
-            <TableColumn prefWidth="96.0" text="ParkName" />
-            <TableColumn prefWidth="106.0" text="Date" />
-            <TableColumn prefWidth="155.0" text="NumberOfVisitors" />
-            <TableColumn minWidth="0.0" prefWidth="102.0" text="Time" />
+          <TableColumn fx:id="cancelApprovedBtn" prefWidth="71.0" />
+            <TableColumn fx:id="approvedOrderId" prefWidth="100.0" text="OrderId" />
+            <TableColumn fx:id="approvedParkName" prefWidth="130.0" text="ParkName" />
+            <TableColumn fx:id="approvedDate" prefWidth="116.0" text="Date" />
+            <TableColumn fx:id="approvedNumberVisitors" prefWidth="134.0" text="NumberOfVisitors" />
+            <TableColumn fx:id="approvedTime" minWidth="0.0" prefWidth="110.0" text="Time" />
+            <TableColumn fx:id="approvedUpdate" prefWidth="99.0" text="Update" />
         </columns>
       </TableView>
-      <Label layoutX="463.0" layoutY="28.0" text="Orders details" />
+      <Label layoutX="394.0" layoutY="24.0" text="Approved orders" />
+      <TableView fx:id="WaitingListTable" layoutX="80.0" layoutY="380.0" prefHeight="231.0" prefWidth="761.0">
+        <columns>
+          <TableColumn fx:id="cancelWaitingList" prefWidth="75.0" />
+          <TableColumn fx:id="orderIdWaitingList" prefWidth="126.0" text="OrderId" />
+            <TableColumn fx:id="parkNameWaitingList" prefWidth="109.0" text="ParkName" />
+            <TableColumn fx:id="dateWaitingList" prefWidth="107.0" text="Date" />
+            <TableColumn fx:id="numberVisitorsWaitingList" prefWidth="139.0" text="NumberOfVisitors" />
+            <TableColumn fx:id="timeWaitingList" prefWidth="101.0" text="Time" />
+            <TableColumn fx:id="updateWaitingList" prefWidth="103.0" text="Update" />
+        </columns>
+      </TableView>
+      <Label layoutX="394.0" layoutY="335.0" text="Orders on waiting list" />
    </children>
 </Pane>

@@ -182,8 +182,36 @@ public void handleMessageFromServer(Object msg1)
 		  case "checkAvailability":
 			  if (result[1].equals("1"))
 				  StaticClass.available=1;
+			  System.out.println("chatclient> avaiable = "+ StaticClass.available);
 			  break;
-			  
+          case "maxNumberOrder":
+        	  StaticClass.maxorderid=result[1];
+        	  break;
+          case "waitingList":
+        	  if(result[1].equals("1")) {
+        		  System.out.println("Enter waiting list succeed");
+				  StaticClass.available=0;}
+    		  System.out.println("Enter waiting list failed");
+    		  break;
+          case "dwellTime":
+        	  StaticClass.dwelltime=result[1];
+        	  break;
+          case "saveOrder":
+        	  StaticClass.available=0;
+        	  break;
+          case "loadOrderForApproveTable":
+			  ArrayList<Order> orderforapprovetable = (ArrayList<Order>) payloadMessage.getPayload() ;
+			  StaticClass.ordersforapprovetable.addAll(orderforapprovetable);
+			  break;
+          case "loadOrderForWaitingTable":  
+			  ArrayList<Order> ordersforwaitinglisttable = (ArrayList<Order>) payloadMessage.getPayload() ;
+			  StaticClass.ordersforwaitingtable.addAll(ordersforwaitinglisttable);
+			  break;
+          case "userId":
+        	  StaticClass.userid=result[1];
+        	  break;
+      	  
+        	  
 	  }
 	  
   }

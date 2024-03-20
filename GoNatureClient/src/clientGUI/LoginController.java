@@ -48,6 +48,7 @@ public class LoginController {
     }//login into the user and move to the user menu screen
     @FXML
     void ClickOnLoginBtn(ActionEvent event) throws IOException {
+    	StaticClass.available=0;
     	String username=userID.getText();
     	String pass=password.getText();
     	String message="userExist "+username + " " + pass;

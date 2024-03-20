@@ -13,9 +13,10 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import logic.Message;
 
+
 import java.io.IOException;
 import java.util.Optional;
-
+import javafx.stage.Stage;
 import client.ChatClient;
 import client.ClientUI;
 import common.ChatIF;
@@ -77,44 +78,80 @@ public class PaymentController {
     		flag=0;
     		totalprice=totalprice*0.88;
     	}
-    	Alert alert = new Alert(AlertType.INFORMATION);
-    	alert.setTitle("Payment Information");
-    	alert.setHeaderText(null);
-    	alert.setContentText("Total price for payment is: " + totalprice);
+    	Alert alertpayment = new Alert(AlertType.INFORMATION);
+    	alertpayment.setTitle("Payment Information");
+    	alertpayment.setHeaderText(null);
+    	alertpayment.setContentText("Total price for payment is: " + totalprice);
 
     	// Create custom ButtonTypes
     	ButtonType okButton = new ButtonType("Confirm", ButtonData.OK_DONE);
     	ButtonType cancelButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 
     	// Set the ButtonTypes to the alert
-    	alert.getButtonTypes().setAll(okButton, cancelButton);
+    	alertpayment.getButtonTypes().setAll(okButton, cancelButton);
 
     	// Show the alert and wait for a response
-    	Optional<ButtonType> result = alert.showAndWait();
+    	Optional<ButtonType> result = alertpayment.showAndWait();
+    	ClientUI.chat.accept("maxNumberOrder");
     	if (result.isPresent()) {
-    	    if (result.get() == okButton) {
-    	    	Message msg = new Message("checkAvailability", StaticClass.o1);
+    		if (result.get() == okButton) {
+    	    	//Message msg = new Message("checkAvailability", StaticClass.o1);
     	    	ClientUI.chat.accept("checkAvailability " + StaticClass.o1.getParkName() + " " + StaticClass.o1.getNumberOfVisitors()+ " "
     	    		+StaticClass.o1.getDate() + " " + StaticClass.o1.getTimeOfVisit());
-    	    	if(StaticClass.available==1) {
-    	    		System.out.println("its available!!!!!");
+    	    	if(StaticClass.available==0) {
+    	        	Alert alertwaitinglist = new Alert(AlertType.INFORMATION);
+    	        	alertwaitinglist.setTitle("Waiting list");
+    	        	alertwaitinglist.setHeaderText(null);
+    	        	alertwaitinglist.setContentText("The park is fully booked, do you want to enter watitng list?");
+    	        	ButtonType okWaitingListButton = new ButtonType("Confirm", ButtonData.OK_DONE);
+    	        	ButtonType cancelWaitingListButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+    	        	alertwaitinglist.getButtonTypes().setAll(okWaitingListButton, cancelWaitingListButton);
+    	        	Optional<ButtonType> resultWaitingList = alertwaitinglist.showAndWait();
+    	        	if (resultWaitingList.isPresent()) {
+    	        	    if (resultWaitingList.get() == okWaitingListButton) {//enter into waiting list 
+    	        	    	//ClientUI.chat.accept("maxNumberOrder");
+    	        	    	ClientUI.chat.accept("waitingList " + StaticClass.o1.getParkName() + " " +StaticClass.username + " " + StaticClass.o1.getDate() + " " +
+    	        	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice));
+    	        	    }
+    	        	}
     	    	}
-
+    	    	else {
+    	    		ClientUI.chat.accept("dwellTime " + StaticClass.o1.getParkName());
+    	    	ClientUI.chat.accept("saveOrder " + StaticClass.o1.getParkName() + " " +StaticClass.username + " " + StaticClass.o1.getDate() + " " +
+    	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice) + " "
+    	    			+StaticClass.typeacc+" "+ StaticClass.reservationtype+" " +StaticClass.dwelltime);
     	    	
+    	    	}
     	    	
-    	    	
-    	    	
-    	    } else if (result.get() == cancelButton) {
-    	        // Handle "Cancel" button action
-    	    }
+	        	Alert alertwaitinglist = new Alert(AlertType.INFORMATION);
+	        	alertwaitinglist.setTitle("Simulation");
+	        	alertwaitinglist.setContentText(this.msg);
+	        	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    	    	switch(StaticClass.typeacc) {
+        	    	case "customer":
+        	    	case "guide":
+        	    		SwitchScreen.changeScreen(stage, "/resources/UserMenuController.fxml"
+        	    				,"/resources/UserMenuController.css");
+        	    		break;
+        	    	case "guest":
+        	    		SwitchScreen.changeScreen(stage,"/resources/GuestMenuController.fxml"
+        	    				,"/resources/GuestMenuController.css");
+        	    		break;
+        	    	case "park employee":
+        	    		SwitchScreen.changeScreen(stage, "/resources/EmployeeMenuController.fxml"
+        	    				,"/resources/EmployeeMenuController.css");
+    	    	}
+	      } else if (result.get() == cancelButton) {
+	      }
     	}
-
     	
     }
     
     @FXML //user decide to pay in park
     void clickOnPayInPark(ActionEvent event) {
     }
+    
+    
     @FXML//initialize the order details textArea field with the order details from the last screen
     private void initialize() {
     	orderDetailsArea.clear();
@@ -126,7 +163,7 @@ public class PaymentController {
     		case "guide":
     			flag=1;//mark that its a guide user and its not casual order, so getting extra 12% discount
     			ClientUI.chat.accept("checkDiscount group");
-    			discountLabel.setText("Click on pay now and get extra 12% discount!");
+    			discountLabel.setText("Click on pay now to get extra 12% discount!");
     			StaticClass.numberofvisitors--;
     			break;
     		case "park employee":

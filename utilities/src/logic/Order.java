@@ -1,6 +1,9 @@
 package logic;
 
-public class Order {
+import java.io.Serializable;
+
+public class Order implements Serializable {
+	    private static final long serialVersionUID = 1L;
 		private String orderId;
 	    private String parkName;
 	    private String userId;
@@ -26,7 +29,16 @@ public class Order {
 
 	    // Getters
 	    
-	    public String getDate() {
+	    public Order(String orderId, String parkName, String date, String timeOfVisit, String numberOfVisitors) {
+	        this.orderId = orderId;
+	    	this.parkName = parkName;
+	    	this.dateOfVisit=date;
+	        this.timeOfVisit = timeOfVisit;
+	        this.numberOfVisitors = numberOfVisitors;
+
+		}
+
+		public String getDate() {
 	    	return dateOfVisit;
 	    }
 	    public String getParkName() {

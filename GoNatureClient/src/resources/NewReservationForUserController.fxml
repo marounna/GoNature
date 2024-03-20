@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="565.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.NewReservationForUserController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.NewReservationForUserController">
    <children>
       <Label layoutX="71.0" layoutY="93.0" text="Park Name:" />
       <Label layoutX="71.0" layoutY="134.0" text="Number Of Visitors:" />
@@ -18,15 +18,9 @@
       <DatePicker fx:id="date" layoutX="211.0" layoutY="177.0" />
       <TextField fx:id="numberOfVisitors" layoutX="211.0" layoutY="130.0" prefHeight="25.0" prefWidth="174.0" />
       <Label layoutX="213.0" layoutY="28.0" text="New Reservation" />
-      <Button fx:id="backBtn" layoutX="63.0" layoutY="478.0" mnemonicParsing="false" onAction="#ClickOnBack" text="Back" />
-      <Button fx:id="paymentBtn" layoutX="257.0" layoutY="478.0" mnemonicParsing="false" onAction="#ClickForPayment" text="Confirm for payment" />
-      <Label layoutX="71.0" layoutY="270.0" text="First name:" />
-      <Label layoutX="71.0" layoutY="361.0" text="Tel." />
-      <Label layoutX="71.0" layoutY="408.0" text="E-mail:" />
-      <TextField fx:id="textFirstName" layoutX="211.0" layoutY="266.0" prefHeight="25.0" prefWidth="174.0" />
-      <TextField fx:id="textPhone" layoutX="211.0" layoutY="357.0" prefHeight="25.0" prefWidth="174.0" />
-      <TextField fx:id="textEmail" layoutX="211.0" layoutY="404.0" prefHeight="25.0" prefWidth="174.0" />
-      <Label layoutX="71.0" layoutY="316.0" text="Last name:" />
-      <TextField fx:id="textLastName" layoutX="211.0" layoutY="312.0" prefHeight="25.0" prefWidth="174.0" />
+      <Button fx:id="backBtn" layoutX="71.0" layoutY="331.0" mnemonicParsing="false" onAction="#ClickOnBack" text="Back" />
+      <Button fx:id="paymentBtn" layoutX="257.0" layoutY="331.0" mnemonicParsing="false" onAction="#ClickForPayment" text="Confirm for payment" />
+      <Label layoutX="71.0" layoutY="274.0" text="E-mail:" />
+      <TextField fx:id="textEmail" layoutX="211.0" layoutY="270.0" prefHeight="25.0" prefWidth="174.0" />
    </children>
 </Pane>

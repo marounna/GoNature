@@ -27,33 +27,24 @@ public class NewReservationForGuideController {
     private DatePicker date;
 
     @FXML
-    private Button paymentBtn;
-
-    @FXML
     private ComboBox<String> numberVisitorsCombo;
 
     @FXML
     private ComboBox<String> parkNameCombo;
 
     @FXML
-    private TextField textPhone;
-
-    @FXML
-    private ComboBox<String> timeCombo;
+    private Button paymentBtn;
 
     @FXML
     private TextField textEmail;
 
     @FXML
-    private TextField textFirstName;
-
-    @FXML
-    private TextField textLastName;
+    private ComboBox<String> timeCombo;
     
 
 	    @FXML //moving back to user menu
 	    void ClickOnBack(ActionEvent event) throws IOException {
-	    	StaticClass.flagG=0;
+	    	//StaticClass.flagG=0;
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        SwitchScreen.changeScreen(stage,"/resources/UserMenuController.fxml"
 	        		,"/resources/UserMenuController.css");
@@ -63,13 +54,17 @@ public class NewReservationForGuideController {
 	    void ClickForPayment(ActionEvent event) throws IOException {
 	    	ClientUI.chat.accept("priceCheck " + parkNameCombo.getValue().toString());
 	    	StaticClass.numberofvisitors=Integer.parseInt(numberVisitorsCombo.getValue());
+	    	StaticClass.o1.setParkName(parkNameCombo.getValue().toString());//inserting the order data
+	    	StaticClass.o1.setDate(date.getValue().toString());
+	    	StaticClass.o1.setNumberOfVisitors(""+StaticClass.numberofvisitors);
+	    	StaticClass.o1.setTimeOfVisit(timeCombo.getValue().toString());
+	    	StaticClass.o1.setEmail(textEmail.getText());
+	    	
+	    	
 	    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
 	    	StaticClass.orderdetails+="\nNumber of visitors: "+StaticClass.numberofvisitors;
 	    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
 	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
-	    	StaticClass.orderdetails+="\nFirst name: "+ textFirstName.getText();
-	    	StaticClass.orderdetails+="\nLast name: "+ textLastName.getText();
-	    	StaticClass.orderdetails+="\nTelephone: "+ textPhone.getText();
 	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
 	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        SwitchScreen.changeScreen(stage,"/resources/PaymentController.fxml"

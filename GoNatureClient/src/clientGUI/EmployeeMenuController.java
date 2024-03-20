@@ -54,12 +54,12 @@ public class EmployeeMenuController {
 
 	    @FXML
 	    void ClickOnGuideReservation(ActionEvent event) {
-
+	    	StaticClass.reservationtype="group";
 	    }
 
 	    @FXML
 	    void ClickOnNewReservation(ActionEvent event) {
-
+	    	StaticClass.reservationtype="customer";
 	    }
 
 	    @FXML
