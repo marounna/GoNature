@@ -5,6 +5,26 @@
     -fx-font-family: 'Arial', sans-serif;
 }
 
+/* Styling for the title bar */
+.titleBar {
+    -fx-background-color: #0077CC; /* Blue background for the title bar */
+    -fx-pref-height: 20px; /* Preferred height for the title bar */
+    -fx-alignment: center-right; /* Align the close button to the right */
+}
+
+/* Styling for the close button */
+#closeBtn {
+    -fx-background-color: #FF0000; /* Red background for the close button */
+    -fx-text-fill: white; /* White text for the "X" */
+    -fx-font-weight: bold; /* Make the "X" bold */
+    -fx-background-radius: 0; /* No rounded corners for the close button */
+    -fx-padding: 0 5px 0 5px; /* Padding for the close button */
+}
+
+#closeBtn:hover {
+    -fx-background-color: #D60000; /* Slightly darker red on hover */
+}
+
 /* Styling for text fields with clear visibility and aesthetic appeal */
 .text-field {
     -fx-font-size: 13px;
@@ -30,7 +50,7 @@
     -fx-background-color: #507856; /* Deep green */
     -fx-text-fill: white;
     -fx-border-radius: 1px;
-    -fx-background-radius:1px;
+    -fx-background-radius: 1px;
     -fx-padding: 5px 15px;
 }
 
@@ -39,12 +59,12 @@
 }
 
 /* Specific style for the okBtn Button */
-#okBtn {
+#okBtn1 { /* Ensure this matches the ID in your FXML */
     -fx-background-color: #74a662; /* Lighter green variation */
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
-#okBtn:hover {
+#okBtn1:hover { /* Ensure this matches the ID in your FXML */
     -fx-background-color: #5d8a4b;
 }

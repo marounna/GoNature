@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="403.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.UpdateReservationForUserController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="423.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.UpdateReservationForUserController">
    <children>
       <Label layoutX="71.0" layoutY="93.0" text="Park Name:" />
       <Label layoutX="71.0" layoutY="134.0" text="Number Of Visitors:" />
@@ -16,11 +16,12 @@
       <ComboBox fx:id="parkNameCombo" layoutX="211.0" layoutY="89.0" prefHeight="25.0" prefWidth="174.0" />
       <ComboBox fx:id="timeCombo" layoutX="211.0" layoutY="218.0" prefHeight="25.0" prefWidth="174.0" />
       <DatePicker fx:id="date" layoutX="211.0" layoutY="177.0" />
-      <TextField fx:id="numberOfVisitors" editable="false" layoutX="211.0" layoutY="130.0" prefHeight="25.0" prefWidth="174.0" />
+      <TextField fx:id="numberOfVisitors" editable="true" layoutX="211.0" layoutY="130.0" prefHeight="25.0" prefWidth="174.0" />
       <Label layoutX="213.0" layoutY="28.0" text="Update Reservation" />
-      <Button fx:id="backBtn" layoutX="71.0" layoutY="331.0" mnemonicParsing="false" onAction="#ClickOnBack" text="Back" />
-      <Button fx:id="saveBtn" layoutX="344.0" layoutY="331.0" mnemonicParsing="false" onAction="#ClickForSave" text="Save" />
+      <Button fx:id="backBtn" layoutX="68.0" layoutY="344.0" mnemonicParsing="false" onAction="#ClickOnBack" text="Back" />
+      <Button fx:id="saveBtn" layoutX="344.0" layoutY="344.0" mnemonicParsing="false" onAction="#ClickForSave" text="Save" />
       <Label layoutX="71.0" layoutY="274.0" text="E-mail:" />
       <TextField fx:id="textEmail" layoutX="211.0" layoutY="270.0" prefHeight="25.0" prefWidth="174.0" />
+      <Label fx:id="guidelabel" layoutX="211.0" layoutY="308.0" />
    </children>
 </Pane>

@@ -21,6 +21,7 @@ import client.ChatClient;
 import client.ClientUI;
 import common.ChatIF;
 import common.StaticClass;
+import common.SwitchScreen;
 
 public class PaymentController {
 	
@@ -49,23 +50,23 @@ public class PaymentController {
     void clickOnBack(ActionEvent event) throws IOException {
     	orderDetailsArea.clear();
     	StaticClass.orderdetails="";
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+       // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         switch(StaticClass.typeacc) {
         	case "guide":
-        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForGuideController.fxml"
         				,"/resources/NewReservationForGuideController.css");
 	        	break;
         	case "customer":
         	case "guest":
-        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
         				,"/resources/NewReservationForUserController.css");
 	        	break;
         	case "park employee":
         		if(StaticClass.reservationtype.equals("eg"))//eg= employee group
-            		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+            		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForGuideController.fxml"
             				,"/resources/NewReservationForGuideController.css");
         		else {
-            		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+            		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
             				,"/resources/NewReservationForUserController.css");
 				}
 	        	break;
@@ -124,24 +125,32 @@ public class PaymentController {
     	    	
     	    	}
     	    	
-	        	Alert alertwaitinglist = new Alert(AlertType.INFORMATION);
-	        	alertwaitinglist.setTitle("Simulation");
-	        	alertwaitinglist.setContentText(this.msg);
-	        	Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    	    	switch(StaticClass.typeacc) {
-        	    	case "customer":
-        	    	case "guide":
-        	    		SwitchScreen.changeScreen(stage, "/clientGUI/UserMenuController.fxml"
-        	    				,"/resources/UserMenuController.css");
-        	    		break;
-        	    	case "guest":
-        	    		SwitchScreen.changeScreen(stage,"/clientGUI/GuestMenuController.fxml"
-        	    				,"/resources/GuestMenuController.css");
-        	    		break;
-        	    	case "park employee":
-        	    		SwitchScreen.changeScreen(stage, "/clientGUI/EmployeeMenuController.fxml"
-        	    				,"/resources/EmployeeMenuController.css");
-    	    	}
+	        	Alert alertsimulation = new Alert(AlertType.INFORMATION);
+	        	alertsimulation.setTitle("Simulation");
+	        	alertsimulation.setHeaderText(null);
+	        	String combinedText = "Order Details:\n" + this.msg;
+	        	alertsimulation.setContentText(combinedText);
+	        	ButtonType okSimulationButton = new ButtonType("OK", ButtonData.OK_DONE);
+	        	alertsimulation.getButtonTypes().setAll(okSimulationButton);
+	        	Optional<ButtonType> resultWaitingList = alertsimulation.showAndWait();
+	        	if (resultWaitingList.isPresent()) {
+	        	    if (resultWaitingList.get() ==okSimulationButton) {
+		    	    	switch(StaticClass.typeacc) {
+		        	    	case "customer":
+		        	    	case "guide":
+		        	    		SwitchScreen.changeScreen(event, "/clientGUI/UserMenuController.fxml"
+		        	    				,"/resources/UserMenuController.css");
+		        	    		break;
+		        	    	case "guest":
+		        	    		SwitchScreen.changeScreen(event,"/clientGUI/GuestMenuController.fxml"
+		        	    				,"/resources/GuestMenuController.css");
+		        	    		break;
+		        	    	case "park employee":
+		        	    		SwitchScreen.changeScreen(event, "/clientGUI/EmployeeMenuController.fxml"
+		        	    				,"/resources/EmployeeMenuController.css");
+		    	    	}
+	        	    }
+	        	}
 	      } else if (result.get() == cancelButton) {
 	      }
     	}

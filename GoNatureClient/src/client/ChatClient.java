@@ -179,6 +179,15 @@ public void handleMessageFromServer(Object msg1)
         		  System.out.println("ChatClient> delete order failed");
         	  }
     		  break;
+          case "updateOrder":
+        	  if(result[1].equals("waitinglist")) {
+        		  StaticClass.updatetowaitinglist=1;
+        	  }
+        	  else if(result[1].equals("visaCredit")) {
+        		  StaticClass.visa=1;
+        	  	System.out.println("chatClient> visa= "+StaticClass.visa);}
+        	  
+        	  break;
       	  
         	  
 	  }

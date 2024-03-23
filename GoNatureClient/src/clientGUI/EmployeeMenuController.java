@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import client.ClientUI;
 import common.StaticClass;
+import common.SwitchScreen;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -55,11 +56,13 @@ public class EmployeeMenuController {
 	    @FXML
 	    void ClickOnGuideReservation(ActionEvent event) {
 	    	StaticClass.reservationtype="group";
+	    	StaticClass.discounttype="casual_group";
 	    }
 
 	    @FXML
 	    void ClickOnNewReservation(ActionEvent event) {
 	    	StaticClass.reservationtype="customer";
+	    	StaticClass.discounttype="casual_personal";
 	    }
 
 	    @FXML
@@ -78,8 +81,7 @@ public class EmployeeMenuController {
 			}
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
-		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	      		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
+	      		SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
 
 			}
 	    }

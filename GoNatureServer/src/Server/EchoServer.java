@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import Server.DbController;
 import entities.Park;
 import javafx.collections.FXCollections;
@@ -75,12 +74,24 @@ public class EchoServer extends AbstractServer {
             	updateClientConnect(thisClient1);
             	sendToClient(client,"Disconnected succeed");
             	break;	
-            case "updateOrderDetails":
-                if (updateOrderDetails(result,conn) == 1) {
-                    sendToClient(client, "updateOrderDetails succeed");
-                } else {
-                    sendToClient(client, "updateOrderDetails failed");
+            	
+            case "updateOrder":
+                int update =updateOrderDetails(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8]) ;
+                if(update==1) {
+                    if(DbController.needvisaalert.equals("yes")) {
+                    	sendToClient(client, "updateOrder visaCredit");
+                    	DbController.needvisaalert="no";
+                    }
+                    sendToClient(client, "updateOrder succeed");
+                } 
+                else if (update==10) {
+                    sendToClient(client, "updateOrder waitinglist");
                 }
+                else {
+                    sendToClient(client, "updateOrder failed");
+                }
+                //need to finish those if blocks so chat client will receive the visa value, and to change on ddbcontroller
+                //the total calculation, (when the total is less than zero, need to plus instead minus
                 break;
             case "orderExist":
                 if (result.length < 2) {
@@ -203,6 +214,10 @@ public class EchoServer extends AbstractServer {
             	String delete = DbController.DeleteOrder(conn, result[1],result[2],result[3]);
             	sendToClient(client, "deleteOrder "+delete);
             	break;
+            case "updateWaitingList":
+            	DbController.updateWaitingList(conn,result[1]);
+            	sendToClient(client, "updateWaitingList succeed");
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }
@@ -245,8 +260,10 @@ public class EchoServer extends AbstractServer {
 	}
 
 
-	private int updateOrderDetails(String[] details, Connection conn) {
-		return 0;
+	private int updateOrderDetails( Connection conn,String orderid,String parkname, String date, String time, String numberofvisitors, String discounttype
+			,String typeacc,String reservationtype) {
+		int update = DbController.updateOrder(conn, orderid,parkname,date,time,numberofvisitors,discounttype,typeacc,reservationtype);
+		return update;
 	}
 
 	private int userLogout(String username, Connection conn) {
@@ -312,13 +329,13 @@ public class EchoServer extends AbstractServer {
 		return DbController.park(conn);
 	}
 
-	public static int updateOrderDetails(String[] orderdetails) {
+	/*public static int updateOrderDetails(String[] orderdetails) {
 		int update=0;
 		Connection conn = DbController.createDbConnection();
 		System.out.println("EchoServer> Sending the data to dbc ");
 		update=DbController.updateOrder(conn,orderdetails);
 		return update;
-	}
+	}*/
 
     protected void serverStarted() {
         System.out.println("EchoServer> Server listening for connections on port " + getPort());

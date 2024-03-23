@@ -5,8 +5,8 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="207.0" prefWidth="301.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.LoginOrNewReservationController">
    <children>
-      <Button fx:id="LoginBtn" layoutX="65.0" layoutY="79.0" mnemonicParsing="false" onAction="#LoginBtnAction" text="Login" />
-      <Button fx:id="NewReservationBtn" layoutX="159.0" layoutY="79.0" mnemonicParsing="false" onAction="#NewReservationBtnAction" text="New Reservation" />
-      <Button fx:id="ExitButton" layoutX="125.0" layoutY="137.0" mnemonicParsing="false" onAction="#ClickOnExitButton" text="Exit" />
+      <Button fx:id="LoginBtn" layoutX="17.0" layoutY="79.0" mnemonicParsing="false" onAction="#LoginBtnAction" prefHeight="25.0" prefWidth="105.0" text="Login" />
+      <Button fx:id="NewReservationBtn" layoutX="161.0" layoutY="79.0" mnemonicParsing="false" onAction="#NewReservationBtnAction" text="New Reservation" />
+      <Button fx:id="ExitButton" layoutX="122.0" layoutY="136.0" mnemonicParsing="false" onAction="#ClickOnExitButton" text="Exit" />
    </children>
 </Pane>

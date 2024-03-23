@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 
 import entities.Park;
-import javafx.css.PseudoClass;
 import logic.Order;
 
 import java.sql.Connection;
@@ -16,11 +15,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 
-//commit by Adar 15/3 time 9.20
 
 public class DbController {
     public static Order order;
-    
+    public static String needvisaalert;
     
     //connect to MySQL
     @SuppressWarnings("unused")
@@ -126,29 +124,122 @@ public class DbController {
     }
     
     
-
-
-    // Method to update an order in the database
-    public static int updateOrder(Connection conn, String[] msg) {
-        if (msg.length != 7) {
-            System.out.println("dbController> Invalid message format for updating order.");
-            return 0;
-        }
-        String sql = "UPDATE orders SET ParkName = ?,UserId=? TimeOfVisit = ?, NumberOfVisitors = ?, IsConfirmed = ?, IsVisit = ?, IsCanceled = ?, TotalPrice = ?, IsInWaitingList = ? WHERE OrderId = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, msg[2]); // ParkName
-            pstmt.setString(2, msg[3]); // UserId
-            pstmt.setString(3, msg[4]); // TimeOfVisit
-            pstmt.setString(4, msg[5]); // NumberOfVisitors
-            pstmt.setString(5, msg[6]); // IsConfirmed
-            pstmt.setString(6, msg[7]); // IsVisit
-            pstmt.setString(7, msg[8]); // IsCanceled
-            pstmt.setString(8, msg[9]); // TotalPrice
-            pstmt.setString(9, msg[10]); // IsInWaitingList
-            pstmt.setString(10, msg[1]); // OrderId
+    
+    public static int updateOrder(Connection conn, String orderid,String parkname, String date, String time, String numberofvisitors, String discounttype,
+    		String typeacc,String reservationtype) {
+	    	String beforechangedate="";
+	    	String beforechangetime="";
+	    	String beforechangepark="";
+	    	String beforenumberofvisitor="";
+	    	String beforewaitinglist="";
+	    	String beforetotalprice="";
+	    	String sql="Select * FROM orders WHERE OrderId = ?";
+		    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+					pstmt.setString(1, orderid);
+			        try(ResultSet rs = pstmt.executeQuery()) {
+			           if (rs.next()) {	
+			        	   beforechangepark+=rs.getString("ParkName");
+			        	   beforechangedate+=rs.getString("DateOfVisit");
+			        	   beforechangetime+=rs.getString("TimeOfVisit");
+			        	   beforenumberofvisitor+=rs.getString("NumberOfVisitors");
+			        	   beforewaitinglist+=rs.getString("IsInWaitingList");
+			        	   beforetotalprice+=rs.getString("TotalPrice");
+			           }
+				    }catch (SQLException e) {
+				        System.out.println("DbController> Error fetching update order: " + e.getMessage());}    
+		    } catch (SQLException e2) {
+					e2.printStackTrace();}
+	       String beforedwell=checkDwell(conn, beforechangepark);
+		   int price=checkPrice(conn, parkname);
+		   int discount=discountCheck(conn, discounttype);
+		   int updateoldorder=0;
+		   int updateneworder=0;
+		   System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
+					+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
+					+"\nreservationtype "  +reservationtype+"\ndwelltime " +beforedwell+"\nbeforewaitinglist " +beforewaitinglist
+					+"\nbeforetotalprice " +beforetotalprice);
+		   if(beforewaitinglist.equals("NO")) {
+			   updateoldorder =updateTotalTables(conn, beforechangepark, beforechangedate,
+					   beforechangetime, beforenumberofvisitor, typeacc, reservationtype, beforedwell, "-");}
+		   double total=0;
+		   if(Double.parseDouble(beforetotalprice)<0)
+			   total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))+Double.parseDouble(beforetotalprice);//total price
+		   else {			   total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))-Double.parseDouble(beforetotalprice);//total price
+		   }
+	       int available=0;
+	       int checkrow= checkRowExist(conn, typeacc, reservationtype, parkname, date);// return 1 if there is existing row
+		   available=checkAvailable(conn, parkname, numberofvisitors, date, time);//return 1 is can add the number of visitors
+		   System.out.println("checkrow = " +checkrow +"\navailable = " + available);
+           String newdwell=checkDwell(conn, parkname);//checking dwell on the new parkname
+		   if(checkrow==1&&available==1) {//check on db total tables if there is existing row with the same park name and date
+				//and enough spaces for the new number of visitors
+	    		if(discounttype.equals("group")) {
+	    			total=total*0.88;}
+	    		System.out.println("can make update for order~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	    		System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
+	    				+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
+	    				+"\nreservationtype "  +reservationtype+"\ndwelltime " +beforedwell);
+	    		if(beforewaitinglist.equals("NO")) {//case order is not in waiting list at the moment
+		            if(updateoldorder==1) {
+		            	updateneworder=updateTotalTables(conn, parkname, date,
+		                		time, numberofvisitors, typeacc, reservationtype, newdwell, "+");
+		            }
+		            if(updateneworder==1) {
+			            updateneworder =updateOrderNewDetails(conn,orderid,parkname,date,time,numberofvisitors,""+total);
+			            return 1;}
+	    		}
+	    		else {//case order is in waiting list at the moment
+	            	updateneworder=updateTotalTables(conn, parkname, date,
+	                		time, numberofvisitors, typeacc, reservationtype, newdwell, "+");
+		            if(updateneworder==1) {
+			            updateneworder =updateOrderNewDetails(conn,orderid,parkname,date,time,numberofvisitors,""+total);
+			            return 1;}
+				}
+			}
+			else if(checkrow==1&& available==0) {//if there existing row but not enough available spaces on park, 
+				//checking with the park name and date on total capacity tables on db
+	            updateneworder =updateOrderNewDetails(conn,orderid,parkname,date,time,numberofvisitors,""+total);
+				return 10;
+			}
+			else if(checkrow==0&& available==1){
+	            updateneworder =updateOrderNewDetails(conn,orderid,parkname,date,time,numberofvisitors,""+total);
+	            System.out.println("its checkrow =0 and available=1, updateneworder = "+updateneworder);
+	            if(updateoldorder==1&& updateneworder==1&&beforewaitinglist.equals("NO"))
+	            	insertTotalTables(conn, parkname, date, time, numberofvisitors, typeacc, reservationtype, newdwell, "+");
+	            else if(updateneworder==1)
+	            	insertTotalTables(conn, parkname, date, time, numberofvisitors, typeacc, reservationtype, newdwell, "+");
+	            return 1;
+			}else {
+	            updateneworder =updateOrderNewDetails(conn,orderid,parkname,date,time,numberofvisitors,""+total);
+	            return 10;
+			}
+		   return 0;
+	    }
+    
+    
+	//updating order new fields after doing update to the reservation but no available spot so this order going to waiting list
+    public static int updateOrderNewDetails(Connection conn, String orderid,String parkname, String date, String time, String numberofvisitors,
+    		String totalprice) {
+    	double total= Double.parseDouble(totalprice);
+		String sqlorders = "UPDATE orders SET ParkName = ?, DateOfVisit = ?, TimeOfVisit = ?, NumberOfVisitors = ?, IsConfirmed = ?, IsVisit = ?,"
+				+ " IsCanceled = ?, TotalPrice = ?, IsInWaitingList = ? WHERE OrderId = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sqlorders)) {
+            pstmt.setString(1, parkname); 
+            pstmt.setString(2, date); 
+            pstmt.setString(3, time); 
+            pstmt.setString(4, numberofvisitors); 
+            pstmt.setString(5, "YES"); 
+            pstmt.setString(6, "NO"); 
+            pstmt.setString(7,"NO"); 
+            pstmt.setString(8, ""+total); 
+            pstmt.setString(9, "NO"); 
+            pstmt.setInt(10, Integer.parseInt(orderid)); 
             int affectedRows = pstmt.executeUpdate();
             if (affectedRows > 0) {
                 System.out.println("dbController> Order updated successfully.");
+                if (total<0.0)
+                	needvisaalert="yes";
+                //need to take care of the 
                 return 1;
             } else {
                 System.out.println("dbController> Order not found or no change made.");
@@ -156,12 +247,121 @@ public class DbController {
             pstmt.close();
         } catch (SQLException e) {
             System.out.println("Error updating order: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Error parsing integer from message: " + e.getMessage());
         }
-        return 0;
+	
+	return 0;
     }
+    
+    
+    
 
+    
+    
+    
+    /*public static int updateOrder(Connection conn, String orderid,String parkname, String date, String time, String numberofvisitors, String discounttype,
+    		String typeacc,String reservationtype) {
+    	String beforechangedate="";
+    	String beforechangetime="";
+    	String beforechangepark="";
+    	String beforenumberofvisitor="";
+    	String beforewaitinglist="";
+    	String beforetotalprice="";
+		int update=1;
+    	String sql="Select * FROM orders WHERE OrderId = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
+				pstmt.setString(1, orderid);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	   beforechangepark+=rs.getString("ParkName");
+		        	   beforechangedate+=rs.getString("DateOfVisit");
+		        	   beforechangetime+=rs.getString("TimeOfVisit");
+		        	   beforenumberofvisitor+=rs.getString("NumberOfVisitors");
+		        	   beforewaitinglist+=rs.getString("IsInWaitingList");
+		        	   beforetotalprice+=rs.getString("TotalPrice");
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching update order: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}
+        String dwell=checkDwell(conn, beforechangepark);
+		int price=checkPrice(conn, parkname);
+		int discount=discountCheck(conn, discounttype);
+		System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
+				+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
+				+"\nreservationtype "  +reservationtype+"\ndwelltime " +dwell);
+		System.out.println("updateOrder> discount= "+discount);
+		double total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))-Double.parseDouble(beforetotalprice);
+    	int available=0;
+    	int checkrow= checkRowExist(conn, typeacc, reservationtype, parkname, date);
+		available=checkAvailable(conn, parkname, numberofvisitors, date, time);
+		System.out.println("checkrow = " +checkrow + "\navailable= " +available);
+        System.out.println("dwell is: " + dwell);
+		if(checkrow==1&&available==1) {
+    		if(discounttype.equals("group"))
+    			total=total*0.88;
+    		System.out.println("can make update for order~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    		System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
+    				+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
+    				+"\nreservationtype "  +reservationtype+"\ndwelltime " +dwell);
+    		if(beforewaitinglist.equals("NO")) {
+	            update =updateTotalTables(conn, beforechangepark, beforechangedate,
+	            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");}
+            if(update==1) {
+            	dwell=checkDwell(conn, parkname);
+            	int update2=updateTotalTables(conn, parkname, date,
+                		time, numberofvisitors, typeacc, reservationtype, dwell, "+");
+            }
+		}
+
+		else if(checkrow==1&&available==0){
+            update =updateTotalTables(conn, beforechangepark, beforechangedate,
+            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");
+			updateWaitingList(conn, orderid);
+		}
+    	else if(checkrow==0&&available==1){
+    		if(beforewaitinglist.equals("NO")) {
+	            update =updateTotalTables(conn, beforechangepark, beforechangedate,
+	            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");}
+            if(update==1)
+            	insertTotalTables(conn, parkname, date, time, numberofvisitors, typeacc, reservationtype, dwell, "+");
+    	}
+    	else {
+    		return 10;
+    	}
+
+    	if(checkrow==1) {
+    		System.out.println("its the last if~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    		String sqlorders = "UPDATE orders SET ParkName = ?, DateOfVisit = ?, TimeOfVisit = ?, NumberOfVisitors = ?, IsConfirmed = ?, IsVisit = ?,"
+    				+ " IsCanceled = ?, TotalPrice = ?, IsInWaitingList = ? WHERE OrderId = ?";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sqlorders)) {
+	            pstmt.setString(1, parkname); 
+	            pstmt.setString(2, date); 
+	            pstmt.setString(3, time); 
+	            pstmt.setString(4, numberofvisitors); 
+	            pstmt.setString(5, "YES"); 
+	            pstmt.setString(6, "NO"); 
+	            pstmt.setString(7,"NO"); 
+	            pstmt.setString(8, ""+total); 
+	            pstmt.setString(9, "NO"); 
+	            pstmt.setInt(10, Integer.parseInt(orderid)); 
+	            int affectedRows = pstmt.executeUpdate();
+	            if (affectedRows > 0) {
+	                System.out.println("dbController> Order updated successfully.");
+	                if(total<0.0)
+	                	return 20;
+	                return 1;
+	            } else {
+	                System.out.println("dbController> Order not found or no change made.");
+	            }
+	            pstmt.close();
+	        } catch (SQLException e) {
+	            System.out.println("Error updating order: " + e.getMessage());
+	        }
+    	}
+    	return 0;
+    }*/
+    
+    //searching if the user exist on users table on DB
     public static int searchUser(Connection conn, String username, String password) {
         String sql = "SELECT * FROM users WHERE Username = ? AND Password = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -228,23 +428,6 @@ public class DbController {
 	    return 0;
 	}
 
-	/*public static String getParkNames(Connection conn, String names) {
-		String sql="SELECT Parkname FROM park";
-		String parks ="";
-		int i=0;
-	    try (PreparedStatement pstmt = conn.prepareStatement(sql);
-	           ResultSet rs = pstmt.executeQuery()) {
-	           while (rs.next()) {
-	        	   	i++;	
-        		    parks += rs.getString("Parkname")+" ";
-        		    //System.out.println(parks);
-	           }
-	    }catch (SQLException e) {
-	        System.out.println("DbController> Error fetching park names: " + e.getMessage());}    
-        return i+" "+ parks; 
-    }*/
-
-
 	public static ArrayList<Park> park(Connection conn) {
          	ArrayList<Park> parks = new ArrayList<>();
 	        String query = "SELECT * FROM park;";
@@ -305,11 +488,9 @@ public class DbController {
     }
 
 	public static int checkAvailable(Connection conn, String parkname, String numberofvisitors, String date, String time) {
-		System.out.println("------------------------------------------------------------------------------------------------------");
 		int dwell=Integer.parseInt(checkDwell(conn, parkname));
 		System.out.println("dwell is: "+ dwell);
 		String[] st= new String[dwell];
-		int flag=0;
 		for (int i=8;i<20-dwell;i++) {
 			if (time.contains(""+i)) {//inserting into st array the amount of dwell hours of 
 				for(int j=0;j<dwell;j++)
@@ -334,6 +515,26 @@ public class DbController {
 			e2.printStackTrace();}
 	    
 	    //System.out.println("dbcontroller> number of signed visitors: " + numberofsigned);
+	    int capacity=checkCapacity(conn, parkname);
+	    /*String sql2="SELECT CapacityOfVisitors FROM park WHERE Parkname = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql2)){
+				pstmt.setString(1, parkname);
+		        try(ResultSet rs = pstmt.executeQuery()) {
+		           if (rs.next()) {	
+		        	  capacity=Integer.parseInt(rs.getString("CapacityOfVisitors"));
+		           }
+		    }catch (SQLException e) {
+		        System.out.println("DbController> Error fetching capacity total: " + e.getMessage());}    
+	    } catch (SQLException e2) {
+			e2.printStackTrace();}*/
+	    for(int t=0;t<dwell;t++) {
+	    	if(numberofsignedvisitors[t]+Integer.parseInt(numberofvisitors)>capacity)
+	    		return 0;
+	    }
+	    return 1;
+	}
+	//check the maximum capacity in park
+	public static int checkCapacity(Connection conn, String parkname) {
 	    int capacity=0;
 	    String sql2="SELECT CapacityOfVisitors FROM park WHERE Parkname = ?";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql2)){
@@ -346,12 +547,11 @@ public class DbController {
 		        System.out.println("DbController> Error fetching capacity total: " + e.getMessage());}    
 	    } catch (SQLException e2) {
 			e2.printStackTrace();}
-	    for(int t=0;t<dwell;t++) {
-	    	if(numberofsignedvisitors[t]+Integer.parseInt(numberofvisitors)>capacity)
-	    		return 0;
-	    }
-	    return 1;
+	    return capacity;
+		
 	}
+	
+	
 	
 	
 //creating an order and mark the waiting list field as "YES" (which means it on waiting list)
@@ -455,7 +655,7 @@ public class DbController {
 	private static void insertTotalTables(Connection conn, String parkname, String date, String time,
 		String numberofvisitors, String typeacc, String reservationtype, String dwelltime, String sign) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------
-		System.out.println("its insertTotalTables here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		//System.out.println("its insertTotalTables here~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		String t="t";
 		int tfield=0;
 		int ordertime = 0;
@@ -601,39 +801,13 @@ public class DbController {
 		int numbervisitors=Integer.parseInt(numberofvisitors);
 		String sql = "";
 		int dwell=Integer.parseInt(dwelltime);
-		for (int i=8; i<20;i++) {
+		for (int i=8; i<20-dwell;i++) {
 			if(time.contains(""+i)) {
 				tfield=i;
 				ordertime=i;
 			}
 		}
-		/*switch(typeaccount) {// checking if there is any orders at all on this date and park
-		case "customer":
-		case "guest":
-			sql="SELECT * FROM park_used_capacity_individual WHERE Parkname = ? AND date= ? " ;
-			break;
-		case "guide":
-			sql="SELECT * FROM park_used_capacity_groups WHERE Parkname = ? AND date= ? " ;
-			break;
-		case "park employee":
-			if (reservationtype.equals("customer"))
-				sql="SELECT * FROM park_used_capacity_individual  WHERE Parkname = ? AND date= ? " ;
-			else sql="SELECT * FROM park_used_capacity_groups  WHERE Parkname = ? AND date= ? " ;
-			break;	
-		}
-	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
-				pstmt.setString(1, parkname);
-				pstmt.setString(2, date);
-		        try(ResultSet rs = pstmt.executeQuery()) {
-			           if (rs.next()) {	
-			        	   rowexistindb=1;//means there is a row on db with the park name and date
-			           }
-			    }catch (SQLException e) {
-			        System.out.println("DbController> Error fetching capacity total: " + e.getMessage());}    
-		    } catch (SQLException e2) {
-				e2.printStackTrace();}*/
-	    //if(rowexistindb==1) {//means there is a row on db with the park name and date
-		System.out.println("im hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+		System.out.println("im hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee in updateTotalTables~~~~~~~~~~~~~~~``");
 		if(checkRowExist(conn,typeaccount,reservationtype, parkname, date)==1) {
 	    	switch(typeaccount) {//updating table values with the new order number of visitors 
 				case "customer":
@@ -747,10 +921,11 @@ public class DbController {
 
 	public static ArrayList<Order> loadOrderForApproveTable(Connection conn, String userid) {
         ArrayList<Order> approveOrderList = new ArrayList<>();
-        String sql = "SELECT orderId, parkName, dateOfVisit, timeOfVisit, numberOfVisitors FROM orders WHERE userId = ? AND IsInWaitingList = ?";
+        String sql = "SELECT orderId, parkName, dateOfVisit, timeOfVisit, numberOfVisitors FROM orders WHERE userId = ? AND IsInWaitingList = ? AND IsCanceled = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, userid);
             pstmt.setString(2, "NO"); 
+            pstmt.setString(3, "NO");  
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order(
@@ -819,6 +994,7 @@ public class DbController {
 		String date="";
 		String time="";
 		String numberofvisitors="";
+		String iswaitinglist="";
 		String sql="SELECT * FROM orders WHERE OrderId = ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 		    pstmt.setString(1, orderid); 
@@ -827,6 +1003,7 @@ public class DbController {
 		    	parkname = rs.getString("ParkName");
 		    	date = rs.getString("DateOfVisit");
 		    	time = rs.getString("TimeOfVisit");
+		    	iswaitinglist=rs.getString("IsInWaitingList");
 		    	numberofvisitors = rs.getString("NumberOfVisitors");
 		    } else {
 		        System.out.println("DbController> failed to delete order.");
@@ -834,14 +1011,38 @@ public class DbController {
 		} catch (SQLException e) {
 		    e.printStackTrace();}
 		String dwell=checkDwell(conn, parkname);
-		sql = "DELETE FROM orders WHERE OrderId = ?";
-		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-		    // Assuming you have the orderId as a String or change accordingly if it's an integer
-		    pstmt.setString(1, orderid); // Replace orderId with the actual OrderId you want to delete
+		//---------------------------------------------------------------------------------------------------------------------------------
+		String sqlupdate = "UPDATE orders SET IsCanceled = ?, IsInWaitingList = ? WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sqlupdate)) {
+			pstmt.setString(1, "YES");
+			pstmt.setString(2, "NO");
+			pstmt.setString(3, orderid); // Replace orderId with the actual OrderId you want to cancel
 
 		    int rowsAffected = pstmt.executeUpdate();
 		    if (rowsAffected > 0) {
 		    	delete=1;
+		        System.out.println("Order canceled successfully.");
+		    } else {
+		        System.out.println("No row found with the specified OrderId.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		if(iswaitinglist.equals("NO"))
+			updateTotalTables(conn, parkname, date, time, numberofvisitors, typeaccount, reservationtype, dwell, "-");	
+		if (delete==1)
+			return "succeed";
+		return "failed";
+	}
+
+	public static void updateWaitingList(Connection conn, String orderid) {
+		String sqlupdate = "UPDATE orders SET IsConfirmed = ? ,IsInWaitingList = ? WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sqlupdate)) {
+		    pstmt.setString(1, "NO");
+			pstmt.setString(2, "YES");
+			pstmt.setString(3, orderid); // Replace orderId with the actual OrderId you want to cancel
+		    int rowsAffected = pstmt.executeUpdate();
+		    if (rowsAffected > 0) {
 		        System.out.println("Row deleted successfully.");
 		    } else {
 		        System.out.println("No row found with the specified OrderId.");
@@ -849,10 +1050,6 @@ public class DbController {
 		} catch (SQLException e) {
 		    e.printStackTrace();
 		}
-		updateTotalTables(conn, parkname, date, time, numberofvisitors, typeaccount, reservationtype, dwell, "-");	
-		if (delete==1)
-			return "succeed";
-		return "failed";
 	}
 }
 

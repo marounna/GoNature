@@ -6,6 +6,8 @@ import java.util.Optional;
 import client.ChatClient;
 import client.ClientUI;
 import common.StaticClass;
+import common.SwitchScreen;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +27,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Order;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 
 public class UserMenuController {
 
@@ -76,17 +84,16 @@ public class UserMenuController {
 	    @FXML
 	    private TableColumn<Order, String> cancelWaitingList;
 	    
-	    
-	    
 	    @FXML
 	    private Button logoutBtn;
 
 	    @FXML
 	    private Button newReservationBtn;
-	    
-
+	   
 	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
+	    	StaticClass.orderalert=1;
+	    	System.out.println("order alert= "+ StaticClass.orderalert);
 	    	String message="logout "+StaticClass.username;
 			try {
 				ClientUI.chat.accept(message);
@@ -96,23 +103,23 @@ public class UserMenuController {
 			}
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
-		        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        		SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml"
+		        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        		SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml"
         				,"/resources/LoginController.css");
 			}
 	    }
 
 	    @FXML //moving to new reservation screen
 	    void ClickOnNewReservation(ActionEvent event) throws IOException {
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	       //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        System.out.println("----------test---- "+ StaticClass.typeacc);
 	        switch (StaticClass.typeacc) {
 	        	case "customer":
-	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+	        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
 	        				,"/resources/NewReservationForUserController.css");
 	    	        break;
 	        	case "guide":
-	        		SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForGuideController.fxml"
+	        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForGuideController.fxml"
 	        				,"/resources/NewReservationForGuideController.css");
 	    	        break;
 	        }   
@@ -148,43 +155,25 @@ public class UserMenuController {
 	                                StaticClass.orderid=order.getOrderId();
 	                        		FXMLLoader loader = new FXMLLoader();                       		
                                 	ClientUI.chat.accept("loadOrder "+StaticClass.orderid);
-                                	if(StaticClass.typeacc.equals("guide")||(StaticClass.typeacc.equals("park employee")&&StaticClass.reservationtype.equals("eg"))) {
+                                	/*if(StaticClass.typeacc.equals("guide")||(StaticClass.typeacc.equals("park employee")&&StaticClass.reservationtype.equals("eg"))) {
     	                    			loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForGuideController.fxml"));
                                 	}
-                                	else {
-                                		loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));}
+                                	else {*/
+                                	loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));
 									Pane root = null;
 									try {
 										root = loader.load();
 									} catch (IOException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
 	                                Stage stage = (Stage) ApprovedOrdersTableField.getScene().getWindow();
-
-	                                switch (StaticClass.typeacc) {
-		                                case "guest":
-		                                case "customer":
-			                                try {
-				                                UpdateReservationForUserController updateusercontroller = loader.getController();
-				                                updateusercontroller.loadOrder(StaticClass.o1);
-			                                }
-			                                catch (Exception e) {
-
-											}
-		                                	break;
-		                                case "guide":
-			                                UpdateReservationForGuideController updateguidecontroller = loader.getController();
-			                                updateguidecontroller.loadOrder(StaticClass.o1);
-                                			break;
-
-	                                }
+	                                UpdateReservationForUserController updateusercontroller = loader.getController();
+	                                updateusercontroller.loadOrder(StaticClass.o1);
                                     Scene scene = new Scene(root);
-                                    //scene.getStylesheets().add(getClass().getResource("/resources/UpdateReservationForUserController.css").toExternalForm());
+                                    scene.getStylesheets().add(getClass().getResource("/resources/UpdateReservationForUserController.css").toExternalForm());
                                     stage.setScene(scene);
-                                    stage.show();
-	                            
-                        		
+                                    stage.show(); 
+                                    
                 	           });
 	                        }
 	                    }
@@ -217,33 +206,23 @@ public class UserMenuController {
 
                             	// Show the alert and wait for a response
                             	Optional<ButtonType> result = alertpayment.showAndWait();
-                            	ClientUI.chat.accept("maxNumberOrder");
+                            	//ClientUI.chat.accept("maxNumberOrder");
                             	if (result.isPresent()) {
                             		if (result.get() == okButton) {
                             			ClientUI.chat.accept("deleteOrder "+StaticClass.orderid+" "+ StaticClass.typeacc+" "+StaticClass.reservationtype);
-                            	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    		        	SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+                            	        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    		        	SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
                             		        			,"/resources/UserMenuController.css");
 
                             	        }
                             			
                             		}
-                            	
-                                
-	                     
 	                        });
 	                    }
 	                }
 	            };
 	            return cell;
 	        });
-	        // Set the data for the table view
-	        ApprovedOrdersTableField.setItems(FXCollections.observableArrayList(StaticClass.ordersforapprovetable));
-	    	StaticClass.ordersforapprovetable.clear();
-	    	
-	    	
-	    	
-	    	//updateWaitingList  cancelWaitingList
 	    	ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
 	    	orderIdWaitingList.setCellValueFactory(new PropertyValueFactory<>("orderId"));
 	        parkNameWaitingList.setCellValueFactory(new PropertyValueFactory<>("parkName"));
@@ -266,11 +245,11 @@ public class UserMenuController {
                                 StaticClass.orderid=order.getOrderId();
                         		FXMLLoader loader = new FXMLLoader();                       		
                             	ClientUI.chat.accept("loadOrder "+StaticClass.orderid);
-                            	if(StaticClass.typeacc.equals("guide")||(StaticClass.typeacc.equals("park employee")&&StaticClass.reservationtype.equals("eg"))) {
-	                    			loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForGuideController.fxml"));
+                            	if(StaticClass.typeacc.equals("guide")) {
+	                    			//loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForGuideController.fxml"));
+                            		StaticClass.updatelabel="guide";//changing the label variable for the label on update screen 
                             	}
-                            	else {
-                            		loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));}
+                            	loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));
 								Pane root = null;
 								try {
 									root = loader.load();
@@ -279,26 +258,10 @@ public class UserMenuController {
 									e1.printStackTrace();
 								}
                                 Stage stage = (Stage) ApprovedOrdersTableField.getScene().getWindow();
-
-                                switch (StaticClass.typeacc) {
-	                                case "guest":
-	                                case "customer":
-		                                try {
-			                                UpdateReservationForUserController updateusercontroller = loader.getController();
-			                                updateusercontroller.loadOrder(StaticClass.o1);
-		                                }
-		                                catch (Exception e) {
-
-										}
-	                                	break;
-	                                case "guide":
-		                                UpdateReservationForGuideController updateguidecontroller = loader.getController();
-		                                updateguidecontroller.loadOrder(StaticClass.o1);
-                            			break;
-
-                                }
+                                UpdateReservationForUserController updateusercontroller = loader.getController();
+                                updateusercontroller.loadOrder(StaticClass.o1);
                                 Scene scene = new Scene(root);
-                                //scene.getStylesheets().add(getClass().getResource("/resources/UpdateReservationForUserController.css").toExternalForm());
+                                scene.getStylesheets().add(getClass().getResource("/resources/UpdateReservationForUserController.css").toExternalForm());
                                 stage.setScene(scene);
                                 stage.show();
                             
@@ -335,12 +298,12 @@ public class UserMenuController {
 
                         	// Show the alert and wait for a response
                         	Optional<ButtonType> result = alertpayment.showAndWait();
-                        	ClientUI.chat.accept("maxNumberOrder");
+                        	//ClientUI.chat.accept("maxNumberOrder");
                         	if (result.isPresent()) {
                         		if (result.get() == okButton) {
                         			ClientUI.chat.accept("deleteOrder "+StaticClass.orderid+" "+ StaticClass.typeacc+" "+StaticClass.reservationtype);
-                        	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                		        	SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+                        	        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                		        	SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
                         		        			,"/resources/UserMenuController.css");
 
                         	        }
@@ -355,10 +318,59 @@ public class UserMenuController {
             };
             return cell;
         });
-	        
+	       if(StaticClass.orderalert==1) {
+	        	StaticClass.orderalert=0;
+	        	Platform.runLater(() -> {
+	        	   checkOrdersForAlerts();
+	        	});
+	        }
 	        
 	        
 	    }
 
+	    
+	    
+	    private void checkOrdersForAlerts() {
+	    	LocalDate nowDate = LocalDate.now(); // Current date
+	    	LocalTime nowTime = LocalTime.now(); // Current time
+
+	    	DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    	DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Adjust this to match your time format
+
+	    	for (Order order : StaticClass.ordersforapprovetable) {
+	    	    try {
+	    	        LocalDate orderDate = LocalDate.parse(order.getDate(), dateFormatter);
+	    	        LocalTime orderTime = LocalTime.parse(order.getTimeOfVisit(), timeFormatter); // Assuming you have getTimeOfVisit method
+
+	    	        // Check if the order date is tomorrow
+	    	        if (orderDate.isEqual(nowDate.plusDays(1))) {
+	                    // Alert the user about the order scheduled for tomorrow
+	                    Alert alertdate = new Alert(AlertType.INFORMATION);
+	                    alertdate.setTitle("Order Reminder");
+	                    alertdate.setHeaderText(null);
+	                    alertdate.setContentText("Order No. " + order.getOrderId() + " date is tomorrow.\nPlease confirm the order up to two hours from now.");
+	                    alertdate.showAndWait();
+	                } else if (orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime)) {
+	                	ClientUI.chat.accept("deleteOrder "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
+	                    System.out.println("UserMenuController> Order No. " + order.getOrderId() + " has passed its date and time and has been deleted.");
+	                }
+	            } catch (DateTimeParseException e) {
+	                System.err.println("Error parsing date or time from order: " + e.getMessage());
+	            }
+	        }
+	    	for (Order order : StaticClass.ordersforwaitingtable) {
+	    	    try {
+	    	        LocalDate orderDate = LocalDate.parse(order.getDate(), dateFormatter);
+	    	        LocalTime orderTime = LocalTime.parse(order.getTimeOfVisit(), timeFormatter); // Assuming you have getTimeOfVisit method
+
+	    	         if (orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime)) {
+	                	ClientUI.chat.accept("deleteOrder "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
+	                    System.out.println("UserMenuController> Order No. " + order.getOrderId() + " has passed its date and time and has been deleted.");
+	                }
+	            } catch (DateTimeParseException e) {
+	                System.err.println("Error parsing date or time from order: " + e.getMessage());
+	            }
+	        }
+	    }
 
 }

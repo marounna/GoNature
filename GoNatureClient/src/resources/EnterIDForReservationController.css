@@ -1,0 +1,46 @@
+/* Base application styling with a jungle-themed background */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Styling for labels with a contrasting color for visibility */
+.label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #005b2e; /* Light green for visibility against the background */
+}
+
+/* Generic button styling with jungle colors */
+.button {
+    -fx-background-color: #507856; /* Deep green */
+    -fx-text-fill: white;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 15px 15px; /* Adjusted padding for a balanced look */
+    -fx-font-size: 12px; /* Smaller font size for buttons */
+}
+
+.button:hover {
+    -fx-background-color: #3e6147; /* Slightly darker green on hover for interactivity */
+}
+
+/* Focused text field style, including TextArea and ComboBox */
+.text-field:focused, .text-area:focused, .combo-box:focused {
+    -fx-border-color: #74a662; /* Light green border for focused elements */
+    -fx-border-width: 2px;
+}
+
+/* Text field base styling */
+.text-field, .text-area {
+    -fx-prompt-text-fill: #b6b6b6; /* Gray for placeholder text */
+    -fx-background-color: white;
+    -fx-border-color: #74a662; /* Light green border by default */
+    -fx-padding: 2px 5px;
+}
+
+/* Pane that contains buttons should be styled to align them properly */
+.pane {
+    -fx-alignment: center; /* Center alignment for all panes */
+}

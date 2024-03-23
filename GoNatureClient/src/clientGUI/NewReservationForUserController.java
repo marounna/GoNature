@@ -2,6 +2,7 @@ package clientGUI;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.List;
 import client.ChatClient;
 import client.ClientUI;
 import common.StaticClass;
+import common.SwitchScreen;
 import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,12 +21,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class NewReservationForUserController {
-
+	
+    @FXML
+    private Label errorlabel;
 
     @FXML
     private Button backBtn;
@@ -46,19 +51,22 @@ public class NewReservationForUserController {
 
     @FXML
     private ComboBox<String> timeCombo;
-
+    
+    LocalDate currentDate = LocalDate.now();
+    LocalTime currentTime = LocalTime.now();
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // For the time
 
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 	        switch (StaticClass.typeacc) {
 		        case "guide":
 		        case "customer":
-		        	SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+		        	SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
 		        			,"/resources/UserMenuController.css");
 		        	break;
 		        case "guest":
-		    		SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
+		    		SwitchScreen.changeScreen(event,"/clientGUI/EnterIDForReservationController.fxml"
 		    				,"/resources/EnterIDForReservationController.css");
 		    		break;
 	        }
@@ -66,23 +74,39 @@ public class NewReservationForUserController {
 	    }
 	    @FXML
 	    void ClickForPayment(ActionEvent event) throws IOException {
-	    	ClientUI.chat.accept("priceCheck " + parkNameCombo.getValue().toString());
-	    	
-	    	StaticClass.o1.setParkName(parkNameCombo.getValue().toString());//inserting the order data
-	    	StaticClass.o1.setDate(date.getValue().toString());
-	    	StaticClass.o1.setNumberOfVisitors(""+numberOfVisitors.getText());
-	    	StaticClass.o1.setTimeOfVisit(timeCombo.getValue().toString());
-	    	StaticClass.o1.setEmail(textEmail.getText());
-	    	
-	    	//string for the textArea on the next screen
-	    	StaticClass.numberofvisitors=Integer.parseInt(numberOfVisitors.getText());
-	    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
-	    	StaticClass.orderdetails+="\nNumber of visitors: "+StaticClass.numberofvisitors;
-	    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
-	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
-	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    		SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml","/resources/PaymentController.css");
+	        errorlabel.setStyle("-fx-text-fill: red;");
+	        //boolean isValidEmail = textEmail.getText().matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[a-zA-Z]+\\.[a-zA-Z]{2,}");
+		    LocalTime receivedTime = LocalTime.parse(timeCombo.getValue(), timeFormatter);
+		    LocalDate selectedDate = date.getValue();
+	    	if (numberOfVisitors.getText().isEmpty() || 
+	    		    parkNameCombo.getValue() == null || 
+	    		    date.getValue() == null ||
+	    		    textEmail.getText().isEmpty() ||
+	    		    timeCombo.getValue() == null) { // Assuming you also need to check timeCombo
+	    		    errorlabel.setText("*Please fill all fields");
+	    		/*} else if (!isValidEmail) {
+	    		    errorlabel.setText("*Invalid email address");*/
+    		} else if (selectedDate.isBefore(currentDate)) {
+	    		    errorlabel.setText("*Please enter a valid date");
+    		} else if (selectedDate.isEqual(currentDate)&&receivedTime.isBefore(currentTime)) {
+    		       errorlabel.setText("*Please enter a valid time");      
+    		}
+    		else {
+		    	ClientUI.chat.accept("priceCheck " + parkNameCombo.getValue().toString());
+		    	StaticClass.o1.setParkName(parkNameCombo.getValue().toString());//inserting the order data
+		    	StaticClass.o1.setDate(date.getValue().toString());
+		    	StaticClass.o1.setNumberOfVisitors(""+numberOfVisitors.getText());
+		    	StaticClass.o1.setTimeOfVisit(timeCombo.getValue().toString());
+		    	StaticClass.o1.setEmail(textEmail.getText());
+		    	//string for the textArea on the next screen
+		    	StaticClass.numberofvisitors=Integer.parseInt(numberOfVisitors.getText());
+		    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();
+		    	StaticClass.orderdetails+="\nNumber of visitors: "+StaticClass.numberofvisitors;
+		    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
+		    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
+		    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
+	    		SwitchScreen.changeScreen(event,"/clientGUI/PaymentController.fxml","/resources/PaymentController.css");
+    		}
 	    }
 	    
 	    @FXML  //initialize the new reservation screen  date numberOfVisitors parkNameCombo textEmail timeCombo
@@ -97,6 +121,7 @@ public class NewReservationForUserController {
 	        timeCombo.getItems().addAll("8:00", "9:00", "10:00", "11:00", "12:00", "13:00",
 	        		"14:00", "15:00", "16:00", "17:00", "18:00", "19:00");
 	    }
+	    
 	    //getting  hours from DB
 	    private void updateAvailableTimes(String parkName) {
 	        // Find the selected park
@@ -114,6 +139,7 @@ public class NewReservationForUserController {
 	            }
 	        }
 	    }
+	    
 	    
 	    //getting park names from DB
 	    public static ArrayList<String> getParkNames() {

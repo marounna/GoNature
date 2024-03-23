@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import client.ClientUI;
 import common.StaticClass;
+import common.SwitchScreen;
 import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,8 +48,8 @@ public class UpdateReservationForGuideController {
 
     @FXML
     void ClickOnBack(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	    SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+	    SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
 	        			,"/resources/UserMenuController.css");
 
     }

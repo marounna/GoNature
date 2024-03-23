@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import client.ClientUI;
 import common.StaticClass;
+import common.SwitchScreen;
 import entities.Park;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,8 +46,7 @@ public class NewReservationForGuideController {
 	    @FXML //moving back to user menu
 	    void ClickOnBack(ActionEvent event) throws IOException {
 	    	//StaticClass.flagG=0;
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/clientGUI/UserMenuController.fxml"
+	        SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
 	        		,"/resources/UserMenuController.css");
 	    }
 
@@ -65,8 +65,7 @@ public class NewReservationForGuideController {
 	    	StaticClass.orderdetails+="\nDate: "+ date.getValue().toString();
 	    	StaticClass.orderdetails+="\nTime: "+ timeCombo.getValue().toString();
 	    	StaticClass.orderdetails+="\nEmail: " +textEmail.getText();
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        SwitchScreen.changeScreen(stage,"/clientGUI/PaymentController.fxml"
+	        SwitchScreen.changeScreen(event,"/clientGUI/PaymentController.fxml"
 	        		,"/resources/PaymentController.css");
 
 	    }

@@ -2,6 +2,7 @@ package clientGUI;
 
 import client.ChatClient;
 import common.StaticClass;
+import common.SwitchScreen;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,8 +29,7 @@ public class EnterIDForReservationController {
     @FXML
     void ClickBackBtn(ActionEvent event) {
 		try {
-	          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	          SwitchScreen.changeScreen(stage,"/clientGUI/LoginOrNewReservation.fxml"
+	          SwitchScreen.changeScreen(event,"/clientGUI/LoginOrNewReservation.fxml"
 	        		  ,"/resources/LoginOrNewReservation.css");
 
 			  } catch (Exception e) {
@@ -42,8 +42,7 @@ public class EnterIDForReservationController {
     	try {
     		StaticClass.typeacc="guest";
     		StaticClass.reservationtype="customer";
-          Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-		  SwitchScreen.changeScreen(stage,"/clientGUI/NewReservationForUserController.fxml"
+		  SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
 				  ,"/resources/NewReservationForUserController.fxml");
 	  	  } catch (Exception e) {
 		      e.printStackTrace();}

@@ -28,6 +28,11 @@ public class StaticClass {
 	public static String dwelltime;
     public static ArrayList<Order> ordersforapprovetable = new ArrayList<>();
     public static ArrayList<Order> ordersforwaitingtable = new ArrayList<>();
+	public static String discounttype;
+	public static int updatetowaitinglist;
+	public static int visa;
+	public static String updatelabel;
+	public static int orderalert=1;
 
 
 }
