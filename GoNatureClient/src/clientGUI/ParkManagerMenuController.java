@@ -81,11 +81,6 @@ public class ParkManagerMenuController {
     }
 
     @FXML
-    void ClickOnLogoutBtn(ActionEvent event) {
-
-    }
-
-    @FXML
     void ClickOnOkDwell(ActionEvent event) {
 
     }
