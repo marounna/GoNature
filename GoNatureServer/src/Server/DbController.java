@@ -728,9 +728,27 @@ public class DbController {
 //updateTotalTables(Connection conn, String parkname, String date, String time,
 	//String numberofvisitors, String typeaccount,String resevationtype,String dwelltime, String sign)
 	public static void updateyardentable(Connection conn, String OrderId, String numberofvisiter, String typeacc) {
-		   String sql1 = "SELECT TypeUser FROM gonaturedb.orders AS orders JOIN gonaturedb.users AS users ON orders.userid = users.userid WHERE orders.OrderId = ?";
-		   String typeUser = null;
+	    String sql2 = "UPDATE orders SET isVisit = 'YES' WHERE OrderId = ?";
 
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+	        // Set the value for the userID parameter in the query
+	        pstmt.setString(1, OrderId);
+	        
+	        // Execute the update
+	        int affectedRows = pstmt.executeUpdate();
+
+	        // Check if the update was successful
+	        if (affectedRows > 0) {
+	            System.out.println("The isVisit field was successfully updated to 'YES' for OrderId: " + OrderId);
+	        } else {
+	            System.out.println("No record found with OrderId: " + OrderId);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error updating the isVisit field: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+		   String sql1 = "SELECT TypeUser FROM gonaturedb.orders AS orders JOIN gonaturedb.users AS users ON orders.userid = users.userid WHERE orders.OrderId = ?";
+		   String typeUser = null;		   
 		    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
 		        pstmt.setString(1, OrderId);  // Setting the OrderId parameter
 

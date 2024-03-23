@@ -76,10 +76,8 @@ public class EmployeeMenuController {
 		    	    } else {
 		    	        // Update the table only if the amount of people is correct
 		    	        ClientUI.chat.accept("UpdateTable " + OrderId + " " + numberofvisiter + " " + StaticClass.typeacc);
-		    	        System.out.println("==========test==222=======");
 
 		    	        checkOrderLabel.setText("ENJOY YOUR VISIT");
-		    	        System.out.println("==========test===1======");
 		    	    }
 		    	}
 	    	} catch (Exception e) {
