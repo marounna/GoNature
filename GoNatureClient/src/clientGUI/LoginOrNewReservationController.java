@@ -3,6 +3,7 @@ package clientGUI;
 import java.io.IOException;
 
 import client.ClientUI;
+import common.SwitchScreen;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,15 +26,15 @@ public class LoginOrNewReservationController {
     //move to login screen
     @FXML
     void LoginBtnAction(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
+        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
     }
     
     //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        SwitchScreen.changeScreen(stage,"/clientGUI/EnterIDForReservationController.fxml"
+        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        SwitchScreen.changeScreen(event,"/clientGUI/EnterIDForReservationController.fxml"
         		,"/resources/EnterIDForReservationController.css");
     }
     
