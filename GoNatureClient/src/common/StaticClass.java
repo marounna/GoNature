@@ -27,6 +27,9 @@ public class StaticClass {
 	public static String dwelltime;
     public static ArrayList<Order> ordersforapprovetable = new ArrayList<>();
     public static ArrayList<Order> ordersforwaitingtable = new ArrayList<>();
+    public static String amountinparkyarden="";
+    public static int istheorderexist=0;
+    public static int amoutgreaterthenorder=0;
 
 
 }

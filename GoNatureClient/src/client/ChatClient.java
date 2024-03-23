@@ -210,6 +210,22 @@ public void handleMessageFromServer(Object msg1)
           case "userId":
         	  StaticClass.userid=result[1];
         	  break;
+          case "amountInPark":
+        	  StaticClass.amountinparkyarden=result[1];
+        	  break;
+          case "OrderExistYarden":
+        	  StaticClass.istheorderexist=Integer.valueOf(result[1]);
+        	  break;
+          case "checkamountofpeople":
+        	  StaticClass.amoutgreaterthenorder=Integer.valueOf(result[1]);
+        	  break;
+          case "test ":
+        	  System.out.println(result[1]);
+        	  break;
+          default:
+          	  System.out.println("invalid command from chatclient");
+        	  
+        	  
       	  
         	  
 	  }
