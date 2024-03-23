@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import logic.ClientConnectionStatus;
+import Server.DbController;
 import Server.EchoServer;
 import Server.ServerUI;
 import javafx.event.ActionEvent;
@@ -127,6 +128,17 @@ public class ServerPortFrameController implements Initializable{
     void stopServerAction(ActionEvent event) throws Exception {
     	System.exit(0);
     }
+    
+    
+	@FXML
+	void ImportData(ActionEvent event) {
+	    String myDbUrl = dbNameField.getText(); 
+	    String myDbUsername = dbUserNameField.getText(); 
+	    String myDbPassword = dbPasswordField.getText();    
+	    DbController.synchronizeUsers(myDbUrl, myDbPassword,myDbUsername,"jdbc:mysql://localhost:3306/usermanagement?serverTimezone=IST", "Aa123456","root");
+	    
+	    //statusServer.setText("Users synchronized successfully");
+	}
    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

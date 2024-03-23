@@ -60,6 +60,12 @@ public class LoginController {
 			System.out.println("LoginController> User does not exist");
 		}
 		System.out.println("check before if exist login controller");
+		/*if (!StaticClass.isexist)
+			existlabel.setString("Username does not exist");*///need to take care of when user enter not valid user details--------------------------------------------------------------------------------------
+		
+		
+		
+		
 		if (StaticClass.isexist) {
 			StaticClass.username=username;
 			System.out.println("this is loginController> username is: "+StaticClass.username);
@@ -72,10 +78,9 @@ public class LoginController {
 				System.out.println("LoginController> Login Failed");
 			}
 		}	
-		if(!StaticClass.islogged) {
+		if(!StaticClass.islogged&&StaticClass.isexist) {
 			if (StaticClass.isexist){
 				StaticClass.isexist=false;
-		        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		        System.out.println(StaticClass.typeacc);
 		        switch(StaticClass.typeacc) {
 		        	case "customer":
@@ -94,12 +99,13 @@ public class LoginController {
 		        				,"/resources/UserMenuController.css");
 		        		break;
 		        	case "park manager" :
-		        		SwitchScreen.changeScreen(event,"/clientGUI/ParkManagerMenuController.fxml"
-		        				,"/resources/ParkManagerMenuController.css");
+		        		System.out.println("this is login controller park manager switch!\nuser name = " + StaticClass.username);
+		        		SwitchScreen.changeScreen(event,"/clientGUI/ParkManagerMenuController.fxml","/resources/ParkManagerMenuController.css");
+		        		System.out.println("this is login controller park manager switch!2\nuser name = " + StaticClass.username);
 		        		break;
 		        	case "department manager":
-		        		SwitchScreen.changeScreen(event,"/clientGUI/DepartmentManagerMenuController.fxml"
-		        				,"/resources/DepartmentManagerMenuController.css");
+		        		SwitchScreen.changeScreen(event,"/clientGUI/DmMenuController.fxml"
+		        				,"/resources/DmMenuController.css");
 		        		break;
 		        	case "service employee":
 		        		SwitchScreen.changeScreen(event,"/clientGUI/ServiceEmployeeMenuController.fxml"

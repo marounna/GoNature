@@ -5,10 +5,14 @@
 package client;
 
 import client.*;
+import clientGUI.DmVisitReport;
 import clientGUI.EmployeeMenuController;
 import clientGUI.LoginController;
 import clientGUI.NewReservationForGuideController;
 import clientGUI.NewReservationForUserController;
+import clientGUI.ParkManagerMenuController;
+import clientGUI.TotalVisitorsReportsPreparation;
+import clientGUI.UsageReportsPreparation;
 import clientGUI.UserMenuController;
 import common.ChatIF;
 import common.StaticClass;
@@ -109,7 +113,8 @@ public void handleMessageFromServer(Object msg1)
 				  StaticClass.isexist=true;
 				  StaticClass.typeacc=result[3];
 				  if(result[3].equals("park")||result[3].equals("department")||result[3].equals("service"))
-					  StaticClass.typeacc += " " + result[4];				  		
+					  StaticClass.typeacc += " " + result[4];
+				  
 
 				  if(result[2].equals("1"))
 					  StaticClass.islogged=true;}
@@ -186,12 +191,75 @@ public void handleMessageFromServer(Object msg1)
         	  else if(result[1].equals("visaCredit")) {
         		  StaticClass.visa=1;
         	  	System.out.println("chatClient> visa= "+StaticClass.visa);}
-        	  
         	  break;
+          case"getTotalVisitorsByYearAndMonth":
+			  System.out.println("ChatClient>Command:getTotalVisitorsByYearAndMonth");
+			  int[] arr= (int[]) payloadMessage.getPayload();
+			  TotalVisitorsReportsPreparation.res=arr;
+			  break;
+			  
+		  case"getUsageReportByYearAndMonth":
+			  System.out.println("ChatClient>Command:getUsageReportByYearAndMonth");
+			  int[][] arr1=(int[][])payloadMessage.getPayload();
+			  UsageReportsPreparation.res=arr1;
+			  break;
+		  case"getParksMangedByParkManger":
+			  System.out.println("ChatClient>Command:getParksMangedByParkManger");
+			  String[] arr2=(String[])payloadMessage.getPayload();
+			  ParkManagerMenuController.parks=arr2;
+				System.out.println("ChatClient>getParksMangedByParkManger");
+    			
+    				for(int i=0;i<arr2.length;i++) {
+    					System.out.println(""+arr2[i]);
+    				}
+			  break;
+		  case"getParkVisitTimeLimit":
+			  System.out.println("ChatClient>getParkVisitTimeLimit");
+			  DmVisitReport.parkVisitTimeLimit=(int)payloadMessage.getPayload();
+			  
+			  break;
+		  case"getParkMaxCapacity":
+			  System.out.println("ChatClient>getParkMaxCapacity");
+			  DmVisitReport.parkCapacityOfVisitors=(int)payloadMessage.getPayload();
+			  break;
+		  case"getGroupTimeEntryVisitors":
+			  System.out.println("ChatClient>getGroupTimeEntryVisitors");
+			  DmVisitReport.resGroup=(int[])payloadMessage.getPayload();
+			  
+			  break;
+		  case"getIndTimeEntryVisitors":
+			  System.out.println("ChatClient>getIndTimeEntryVisitors");
+			  DmVisitReport.resInd=(int[])payloadMessage.getPayload();
+			  break;
+		  case "updateRole":
+			 break;
       	  
         	  
 	  }
 	  
+  }
+  
+  
+  public void handleMessageFromClientUIObj(Object message)  {
+    try{
+    	openConnection();//in order to send more than one message
+       	awaitResponse = true;
+    	sendToServer(message);
+		// wait for response
+		while (awaitResponse) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+    }
+    catch(IOException e)
+    {
+    	e.printStackTrace();
+      clientUI.display("Could not send message to server: Terminating client."+ e);
+      quit();
+    }
   }
 
   /**

@@ -55,6 +55,11 @@ public class ClientController implements ChatIF
   }
 
   
+  public void acceptObj(Object obj) 
+  {
+	  client.handleMessageFromClientUIObj(obj);
+  }
+  
   //Instance methods ************************************************
   
   /**

@@ -1,0 +1,67 @@
+/* Base application styling with a jungle-themed background */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Styling for labels with a contrasting color for visibility */
+.label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #005b2e; /* Light green for contrast against the soft background */
+}
+
+/* Generic button styling with jungle colors and appropriate sizing */
+.button {
+    -fx-background-color: #507856; /* Deep green for a lush jungle feel */
+    -fx-text-fill: white;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 15px; /* Comfortable padding for button text */
+    -fx-font-size: 12px; /* Optimal font size for readability */
+}
+
+.button:hover {
+    -fx-background-color: #3e6147; /* A slightly darker green for hover effect */
+}
+
+/* Focused text field style, applicable to TextArea as well */
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #74a662; /* Light green border to highlight focus */
+    -fx-border-width: 2px;
+}
+
+.text-field, .text-area {
+    -fx-prompt-text-fill: #b6b6b6; /* Grey color for placeholder text */
+    -fx-background-color: white; /* Ensuring the text field background is white for readability */
+    -fx-border-color: #74a662; /* Light green border matching the theme */
+}
+
+/* Styling for table cells, if any */
+.table-cell {
+    -fx-text-fill: #000000; /* Standard black text for best visibility */
+    -fx-padding: 7px; /* Padding for better readability and aesthetics */
+}
+
+/* ComboBox styling, maintaining the theme consistency */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #74a662; /* Light green border for a soft, nature-inspired edge */
+    -fx-padding: 2px 5px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #005b2e; /* Light green text for items in the combo box, enhancing the theme */
+}
+
+/* DatePicker styling, aligned with the overall jungle theme */
+.date-picker {
+    -fx-background-color: white;
+    -fx-border-color: #74a662; /* Consistent light green border */
+}
+
+/* Pane styling to center-align the contained buttons and labels */
+.pane {
+    -fx-alignment: center;
+}

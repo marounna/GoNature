@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import Server.DbController;
 import entities.Park;
@@ -43,6 +44,7 @@ public class EchoServer extends AbstractServer {
      * @param client The connection from which the message originated.
      */
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
+        try {
         System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
         String returnmsg="";
         String message = (String) msg.toString();
@@ -57,7 +59,118 @@ public class EchoServer extends AbstractServer {
         if(result[0].equals("park")) {
         	System.out.println("its park!~~~~~~~~~~~~~~~~");
         	result[0]="park";}
+        if (msg instanceof Message) {
+    		Message msgObject=((Message)msg);
+    		String command=msgObject.getCommand();
+    		Object payLoad=msgObject.getPayload();
+    		System.out.println("EchoServer>Command and payload recived from client");
+    		System.out.println("EchoServer>"+((Message)msg).getCommand()+","+((Message)msg).getPayload());
+    		//getUsageReportByYearAndMonth
+    		switch (command) {
+			case "getTotalVisitorsByYearAndMonth": {
+				try {
+					if(payLoad instanceof ArrayList) {
+						ArrayList<Object> monthYear=(ArrayList<Object>)payLoad;
+						int year=(int)monthYear.remove(2);
+		    			int month=(int)monthYear.remove(1);
+		    			String parkNname=(String)monthYear.remove(0);
+		    			int[] arr=getTotalVisitorsByYearAndMonth(conn,parkNname,month,year);
+		    			if(arr!=null) {
+		    			Message res=new Message(((Message)msg).getCommand(), arr);
+						client.sendToClient(res);
+		    			}
+		    			else
+		    			{
+		    				  handleErrorMessage(client, "returned null integer[] from db ");
+		    			}
+					}
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+				
+			}
+			////getParksMangedByParkManger
+			case "getUsageReportByYearAndMonth": {
+				try {
+					if(payLoad instanceof ArrayList) {
+						ArrayList<Object> monthYear=(ArrayList<Object>)payLoad;
+						int year=(int)monthYear.remove(2);
+		    			int month=(int)monthYear.remove(1);
+		    			String parkNname=(String)monthYear.remove(0);
+		    			int[][] arr=getUsageReportByYearAndMonth(conn,parkNname,month,year);
+		    			if(arr!=null) {
+		    			Message res=new Message(((Message)msg).getCommand(), arr);
+						client.sendToClient(res);
+		    			}
+		    			else
+		    			{
+		    				  handleErrorMessage(client, "returned null integer[][]  from db ");
+		    			}
+					}
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;		
+			}
+			case "getParkVisitTimeLimit":{
+				int parkVisitTimeLimit=DbController.getParkVisitTimeLimit(conn,(String)payLoad);//by parkName
+				Message res=new Message(((Message)msg).getCommand(), parkVisitTimeLimit);
+				client.sendToClient(res);
+				break;
+			}
+			case "getParkMaxCapacity":{
+				int getParkMaxCapacity=DbController.getParkMaxCapacity(conn,(String)payLoad);//by parkName
+				Message res=new Message(((Message)msg).getCommand(), getParkMaxCapacity);
+				client.sendToClient(res);
+				break;
+			}
+			case "getGroupTimeEntryVisitors":{
+				@SuppressWarnings("unchecked")
+				ArrayList<Object> data=(ArrayList<Object>)payLoad;
+				LocalDate chosenDate=(LocalDate)data.remove(1);
+    			String parkNname=(String)data.remove(0);
+    			int[] GroupTimeEntryVisitors=DbController.getGroupTimeEntryVisitors(conn,parkNname,chosenDate);
+    			Message res=new Message(((Message)msg).getCommand(), GroupTimeEntryVisitors);
+    			client.sendToClient(res);
+				break;
+			}
+			case "getIndTimeEntryVisitors":{
+				ArrayList<Object> data=(ArrayList<Object>)payLoad;
+				LocalDate chosenDate=(LocalDate)data.remove(1);
+    			String parkNname=(String)data.remove(0);
+    			int[] IndTimeEntryVisitors=DbController.getIndTimeEntryVisitors(conn,parkNname,chosenDate);
+    			Message res=new Message(((Message)msg).getCommand(), IndTimeEntryVisitors);
+    			client.sendToClient(res);
+				break;
+			}
+			default:
+				handleErrorMessage(client, "Invalid command in instance of message");
+				throw new IllegalArgumentException("Unexpected value: " + command);
+			}
+    	} 
+        else {
         switch (result[0]) {
+			case "getParksMangedByParkManger": {
+					String[] arr=getParksMangedByParkManger(conn,result[1]);
+					System.out.println("EchoServer>getParksMangedByParkManger");
+	    			if(arr!=null) {
+	    				for(int i=0;i<arr.length;i++) {
+	    					System.out.println("EchoSrver> "+arr[i]);
+	    				}
+	    			Message res=new Message("getParksMangedByParkManger", arr);
+					client.sendToClient(res);
+	    			}
+	    			else
+	    			{
+	    				handleErrorMessage(client, "returned null String[]  from db ");
+	    			}
+				break;
+			}
         	case "connect":
             	String Ip = client.toString() + " " ;
             	String[] clientIp=Ip.split(" ");
@@ -90,7 +203,7 @@ public class EchoServer extends AbstractServer {
                 else {
                     sendToClient(client, "updateOrder failed");
                 }
-                //need to finish those if blocks so chat client will receive the visa value, and to change on ddbcontroller
+                //need to finish those if blocks so chat client will receive the visa value, and to change on dbcontroller
                 //the total calculation, (when the total is less than zero, need to plus instead minus
                 break;
             case "orderExist":
@@ -218,10 +331,59 @@ public class EchoServer extends AbstractServer {
             	DbController.updateWaitingList(conn,result[1]);
             	sendToClient(client, "updateWaitingList succeed");
             	break;
+            case "updateGuideRole":
+            	try {
+            		boolean isSucessfull = DbController.updateGuideRole(conn, result[1]);
+            		Message payloadforupdaterole = new Message("updateRole", isSucessfull);
+            		client.sendToClient(payloadforupdaterole);
+				} catch (Exception e) {
+					e.printStackTrace(); 
+				}
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
         }
+        }
+        }    catch(IOException e) {
+       	 handleErrorMessage(client, "Invalid command");
+       	 e.printStackTrace();
+       	}
     }
+    
+    
+	private String[] getParksMangedByParkManger(Connection conn, String username) {
+		System.out.println("EchoServersending sql to db username="+username);
+		try {
+			return DbController.getParksMangedByParkManger(conn,username);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private int[][] getUsageReportByYearAndMonth(Connection conn, String parkNname, int month, int year) {
+		System.out.println("EchoServersending sql to db month="+month+" year="+year);
+		try {
+			return DbController.getUsageByYearAndMonth(conn,parkNname,month,year);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private int[] getTotalVisitorsByYearAndMonth(Connection conn,String parkName,int month, int year) {
+		System.out.println("EchoServersending sql to db month="+month+" year="+year);
+		
+		try {
+			return DbController.getTotalVisitorsByYearAndMonth(conn,parkName,month,year);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
     
 
 	private ArrayList<Order> loadOrderForWaitingListTable(Connection conn, String userid) {

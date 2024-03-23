@@ -1,0 +1,55 @@
+/* Base styling for the AnchorPane */
+.anchor-pane {
+    -fx-background-color: #f4f4f4; /* Neutral background for minimalistic design */
+}
+
+/* Styling for main title label */
+.label {
+    -fx-text-fill: #2c3e50; /* Dark blue for elegance and readability */
+    -fx-font-family: 'Bell MT Bold'; /* Maintain your custom font choice */
+    -fx-font-size: 16px; /* Emphasize the main title */
+    -fx-alignment: center; /* Ensure the title is centered */
+}
+
+/* Secondary labels styling, such as 'ID:' */
+.secondary-label {
+    -fx-text-fill: #34495e; /* Slightly lighter shade for subtlety */
+    -fx-font-size: 14px; /* Smaller font size for less emphasis */
+}
+
+/* Styling for text fields */
+.text-field {
+    -fx-font-size: 12px; /* Comfortable reading size */
+    -fx-border-color: #bdc3c7; /* Soft border color */
+    -fx-border-width: 1px; /* Thin borders for a refined look */
+    -fx-background-color: #ecf0f1; /* Light background for the text field */
+    -fx-text-fill: #2c3e50; /* Dark text for contrast and readability */
+}
+
+.text-field:focused {
+    -fx-border-color: #3498db; /* Highlighted border color when focused */
+}
+
+/* Generic button styling */
+.button {
+    -fx-background-color: #3498db; /* Vibrant blue for a modern feel */
+    -fx-text-fill: white; /* White text for clarity */
+    -fx-border-radius: 5px; /* Slightly rounded edges for a modern look */
+    -fx-background-radius: 5px; /* Consistency with border radius */
+    -fx-padding: 5px 10px; /* Adequate padding for clickability */
+    -fx-font-family: 'System Italic'; /* Italic font for a touch of style */
+    -fx-font-size: 10px; /* Smaller font size for concise buttons */
+}
+
+.button:hover {
+    -fx-background-color: #2980b9; /* Darker shade on hover for interactivity */
+}
+
+/* Specific styling for the back button, to distinguish it from other actions */
+#BackBtn {
+    -fx-background-color: #e74c3c; /* Red to signify a cautionary or alternate action */
+}
+
+#BackBtn:hover {
+    -fx-background-color: #c0392b; /* Darker red on hover for visual feedback */
+}

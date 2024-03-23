@@ -1,0 +1,51 @@
+/* Base application styling with a jungle-themed background */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
+}
+
+/* Styling for labels with a contrasting color for visibility */
+.label {
+    -fx-font-size: 14px; /* Slightly larger font size for clarity */
+    -fx-font-weight: bold;
+    -fx-text-fill: #005b2e; /* Jungle green for a natural look and contrast */
+    -fx-padding: 5px; /* Padding for better label visibility */
+    -fx-background-color: #dceef1aa; /* Light background with opacity for label readability */
+    -fx-background-radius: 5px; /* Soft rounded corners for label background */
+}
+
+/* Generic button styling with emphasis on readability and interaction */
+.button {
+    -fx-background-color: #507856; /* Deep green for a vibrant jungle look */
+    -fx-text-fill: white;
+    -fx-font-size: 12px; /* Optimal font size for button text */
+    -fx-wrap-text: true; /* Ensure long text is wrapped inside buttons */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px; /* Ample padding for a balanced button layout */
+}
+
+.button:hover {
+    -fx-background-color: #3e6147; /* A darker shade for hover effect */
+}
+
+/* Specific styling for the logout button to signify a cautionary or final action */
+#logOutBtn {
+    -fx-background-color: #c0392b; /* A strong red to highlight the logout action */
+    -fx-font-weight: bold; /* Bold text for emphasis */
+}
+
+#logOutBtn:hover {
+    -fx-background-color: #a93226; /* Darker red on hover for an interactive feel */
+}
+
+/* Styling for buttons that might change or require emphasis later */
+#somethingelseBtn, #reportPreperationBtn {
+    -fx-background-color: #f39c12; /* A warm orange for attention-grabbing buttons */
+    -fx-text-fill: #ffffff; /* White text for contrast */
+}
+
+#somethingelseBtn:hover, #reportPreperationBtn:hover {
+    -fx-background-color: #d35400; /* A darker shade of orange on hover */
+}

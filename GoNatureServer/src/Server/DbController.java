@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 
 
 
@@ -83,20 +84,6 @@ public class DbController {
         } catch (SQLException e) {
         System.out.println("Error loading order: " + e.getMessage());}
         return orderDetails;
-        /**try {
-            // Ensure orderDetails has all necessary elements
-            if (orderDetails.size() == 7) {
-                order = new Order(orderDetails.get(0), orderDetails.get(1), orderDetails.get(2), orderDetails.get(3), orderDetails.get(4), orderDetails.get(5),
-                		orderDetails.get(6));
-                //System.out.println("dbController> " + order);
-                return order;
-            } else {
-                System.out.println("dbController> Invalid orderDetails retrieved from database.");
-            }
-        } catch (Exception e) {
-            System.out.println("dbController> Error creating Order object: " + e.getMessage());
-            e.printStackTrace();
-        }*/
     }
  
 
@@ -391,10 +378,8 @@ public class DbController {
 		String sql = "UPDATE users SET IsLogged = ? WHERE Username = ?";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setString(1, "1");
-	        pstmt.setString(2, username);
-	        
+	        pstmt.setString(2, username);	        
 	        int rowsAffected = pstmt.executeUpdate();
-	        
 	        if (rowsAffected > 0) {
 	            System.out.println("dbController> login succeed, rows affected: " + rowsAffected);
 	            return 1;
@@ -1051,6 +1036,314 @@ public class DbController {
 		    e.printStackTrace();
 		}
 	}
+	public static void synchronizeUsers(String MyUrl, String MyPassword, String MyUserName, String ExternalUrl, String ExternalPassword, String ExternalUserName) {
+        String selectQuery = "SELECT Fname, Lname, Email, OrganizationalRoleOrAffiliation, EmployeeNumber, Username, Password FROM usermanagement.users_external";
+        String mergeQuery = "INSERT INTO gonaturedb.users (UserId, Fname, Lname, Username, Password, Email, TypeUser) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                            "ON DUPLICATE KEY UPDATE " +
+                            "UserId = VALUES(UserId), " +
+                            "Lname = VALUES(Lname), " +
+                            "Fname = VALUES(Fname), " +
+                            "Email = VALUES(Email), " +
+                            "TypeUser = VALUES(TypeUser), " +
+                            "Password = VALUES(Password), " +
+                            "Username = VALUES(Username)";
+
+        ResultSet resultSet = null;
+        Connection conn = null;
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+            System.out.println("Driver definition succeed");
+
+            conn = DriverManager.getConnection(MyUrl, MyUserName, MyPassword);
+
+            PreparedStatement selectStatement = null;
+            PreparedStatement mergeStatement = null;
+
+            try {
+                Connection externalConn = DriverManager.getConnection(ExternalUrl, ExternalUserName, ExternalPassword);
+
+                selectStatement = externalConn.prepareStatement(selectQuery);
+                resultSet = selectStatement.executeQuery();
+
+                mergeStatement = conn.prepareStatement(mergeQuery);
+
+                while (resultSet.next()) {
+                    int userId = resultSet.getInt("EmployeeNumber");
+                    String fname = resultSet.getString("Fname");
+                    String lname = resultSet.getString("Lname");
+                    String email = resultSet.getString("Email");
+                    String typeUser = resultSet.getString("OrganizationalRoleOrAffiliation");
+                    String username = resultSet.getString("Username");
+                    String password = resultSet.getString("Password");
+
+                    mergeStatement.setInt(1, userId);
+                    mergeStatement.setString(2, fname);
+                    mergeStatement.setString(3, lname);
+                    mergeStatement.setString(4, username);
+                    mergeStatement.setString(5, password);
+                    mergeStatement.setString(6, email);
+                    mergeStatement.setString(7, typeUser); 
+
+                    mergeStatement.executeUpdate();
+                }
+                System.out.println("Data import and update completed successfully.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                if (resultSet != null) resultSet.close();
+                if (selectStatement != null) selectStatement.close();
+                if (mergeStatement != null) mergeStatement.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Driver definition failed");
+        }
+    
+	}
+	
+	
+	public static boolean updateGuideRole(Connection conn, String id) {
+		if(id.isEmpty()) {
+			return false; 
+		}
+		String sql = "UPDATE users SET TypeUser = ? WHERE UserId = ? AND TypeUser IS null";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, "guide");
+	        pstmt.setString(2, id);
+	        int rowsAffected = pstmt.executeUpdate();
+	        
+	        if (rowsAffected > 0) { 
+	        	return true; 
+	        }
+	        return false;
+	    } catch (SQLException e) {
+	        System.out.println("dbController> Error updating user logout status: " + e.getMessage());
+	    }
+	    return false;
+	}
+	
+
+	public static int getParkMaxCapacity(Connection conn, String parkName) {
+	    int maxCapacity = 0;
+
+	    try (PreparedStatement stmt = conn.prepareStatement("SELECT CapacityOfVisitors FROM gonaturedb.park WHERE Parkname=?")) {
+	        stmt.setString(1, parkName);
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                maxCapacity = rs.getInt("CapacityOfVisitors");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return maxCapacity;
+	}
+	
+	
+	
+	
+	/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+	
+	
+	public static int getParkVisitTimeLimit(Connection conn, String parkName) {
+		int visitTimeLimit = 0;
+		try (PreparedStatement stmt = conn.prepareStatement("SELECT visitTimeLimit FROM gonaturedb.park WHERE Parkname=?")) {
+	        stmt.setString(1, parkName);
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                visitTimeLimit = rs.getInt("visitTimeLimit");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return visitTimeLimit;
+		
+	}
+	
+	/*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+	
+	
+    public static int[] getTotalVisitorsByYearAndMonth(Connection conn, String parkName, int month, int year) throws SQLException {
+        int[] visitor = new int[2]; // Array to store total_group_visitors and total_personal_visitors
+
+        String sql = "SELECT " +
+                     "SUM(CASE WHEN SaleType = 'group' OR SaleType = 'casual_group' THEN NumberOfVisitors ELSE 0 END) AS total_group_visitors, " +
+                     "SUM(CASE WHEN SaleType = 'personal' OR SaleType = 'casual_personal' THEN NumberOfVisitors ELSE 0 END) AS total_personal_visitors " +
+                     "FROM orders " +
+                     "WHERE ParkName = ? AND YEAR(dateOfVisit) = ? AND MONTH(dateOfVisit) = ? AND  IsConfirmed= ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, parkName);
+            stmt.setInt(2, year);
+            stmt.setInt(3, month);
+            stmt.setString(4, "YES");
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+            	visitor[0] = rs.getInt("total_group_visitors");
+            	visitor[1] = rs.getInt("total_personal_visitors");
+            }
+        }
+        
+        System.out.println("DbController>visitor=total_group_visitors = "+visitor[0]+" total_personal_visitors="+visitor[1]);
+        return visitor;
+    }
+    
+    
+    
+    
+    public static String getDayOfMonth(String dateString) {
+        LocalDate date = LocalDate.parse(dateString);
+        System.out.println(date);
+        String dayOfMonth = String.format("%02d", date.getDayOfMonth());
+        System.out.println(dayOfMonth);
+        
+        return dayOfMonth;
+    }
+    
+    //gets parkname and year and month and return array of 0/1 where 1 tells that park was not in complete cappacity in that hour 
+    public static int[][] getUsageByYearAndMonth(Connection conn, String parkName, int month, int year) throws SQLException {
+    	//seperate sql statmente toget the max capacity of the park 
+    	 int maxCapacity = 0;
+    	 String query = "SELECT CapacityOfVisitors FROM gonaturedb.park WHERE ParkName = ?";
+    	 try (PreparedStatement stmt = conn.prepareStatement(query)) {
+             stmt.setString(1, parkName);
+             try (ResultSet rs = stmt.executeQuery()) {
+                 if (rs.next()) {
+                	 maxCapacity = rs.getInt("CapacityOfVisitors");
+                 }
+             }
+         }
+    	System.out.println("DbController>The max capacity in park"+parkName+" is "+maxCapacity);
+
+    	String sql = "SELECT * FROM gonaturedb.park_used_capacity_total WHERE YEAR(date) = ? AND MONTH(date) = ? AND Parkname = ? ORDER BY DATE_FORMAT(date, '%Y-%m-%d')";
+    	int[][] matrixRes = new int[31][12];//31 days in month and 12 hours
+    	try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, year);
+            stmt.setInt(2, month);
+            stmt.setString(3, parkName);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+            	int dayOfMonth=Integer.parseInt(getDayOfMonth(rs.getString("date")));
+                int[] hourValues = {
+                    rs.getInt("t8"), rs.getInt("t9"), rs.getInt("t10"),
+                    rs.getInt("t11"), rs.getInt("t12"), rs.getInt("t13"),
+                    rs.getInt("t14"), rs.getInt("t15"), rs.getInt("t16"),
+                    rs.getInt("t17"), rs.getInt("t18"), rs.getInt("t19")
+                };
+				/*
+				 * System.out.println("dayOfMonth "+dayOfMonth); for (int i = 0; i <
+				 * hourValues.length; i++) { System.out.print(", "+hourValues[i]); }
+				 * System.out.println();
+				 */
+                
+                // Update the matrix hour values
+                for (int i = 0; i < hourValues.length; i++) {
+                    if (hourValues[i] < maxCapacity) {
+                    	if( matrixRes[dayOfMonth - 1][i]!=1)
+                        matrixRes[dayOfMonth - 1][i] = 1; // Set value to 1 if less than maxCapacity
+                    } else {
+                        matrixRes[dayOfMonth - 1][i] = 0; // Set value to 0 if not
+                    }
+                }
+            }
+        }
+    	catch (SQLException e) {
+    		 System.out.println("error "+e.getMessage());
+		}
+    	
+    	for (int i = 0; i < 31; i++) {
+    	    System.out.print("Day " + (i + 1) + ": ");
+    	    for (int j = 0; j < 12; j++) {
+    	        System.out.print(matrixRes[i][j] + " ");
+    	    }
+    	    System.out.println();
+    	}
+        return matrixRes;
+
+    }
+
+    //gets username and returns parks manged by that user 
+	public static String[] getParksMangedByParkManger(Connection conn, String username) throws SQLException {
+	    ArrayList<String> parkNames = new ArrayList<>();
+	    String query = "SELECT parkname FROM gonaturedb.park " +
+	                   "WHERE parkmangerid = (SELECT userid FROM gonaturedb.users WHERE username = ?)";
+
+	    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+	        stmt.setString(1, username);
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            while (rs.next()) {
+	                parkNames.add(rs.getString("parkname"));
+	            }
+	        }
+	    }
+
+	    // Convert the ArrayList to an array of strings
+	    
+	    String[] parkNamesArray = new String[parkNames.size()];
+	    
+	    for (int i = 0; i < parkNames.size(); i++) {
+	    	parkNamesArray[i] = parkNames.get(i);
+        }
+
+	    return parkNamesArray;
+	}
+
+	public static int[] getGroupTimeEntryVisitors(Connection conn, String parkName, LocalDate chosenDate) {
+	    int[] GroupTimeEntryVisitors = new int[12]; 
+
+	    String sql = "SELECT t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19 FROM gonaturedb.park_used_capacity_groups WHERE Parkname=? AND date=?";
+	    
+	    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setString(1, parkName);
+	        stmt.setDate(2, java.sql.Date.valueOf(chosenDate));
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                for (int i = 0; i < 12; i++) {
+	                	GroupTimeEntryVisitors[i] = rs.getInt(i + 1); 
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return GroupTimeEntryVisitors;
+	}
+
+
+	public static int[] getIndTimeEntryVisitors(Connection conn, String parkName, LocalDate chosenDate) {
+		int[] IndTimeEntryVisitors = new int[12]; 
+
+	    String sql = "SELECT t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19 FROM gonaturedb.park_used_capacity_individual WHERE Parkname=? AND date=?";
+	    
+	    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        stmt.setString(1, parkName);
+	        stmt.setDate(2, java.sql.Date.valueOf(chosenDate));
+
+	        try (ResultSet rs = stmt.executeQuery()) {
+	            if (rs.next()) {
+	                for (int i = 0; i < 12; i++) {
+	                	IndTimeEntryVisitors[i] = rs.getInt(i + 1); 
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return IndTimeEntryVisitors;
+	}
+	
+	
+	
 }
 
 
