@@ -109,11 +109,14 @@ public class ParkManagerMenuController {
 
     @FXML
     void clickOnTotalBtn(ActionEvent event) {
-
+    	System.out.println("TotalVistorsBtn");
+    	SwitchScreen.changeScreen(event, "/clientGUI/TotalVisitorsReportsPreparation.fxml", "TotalVisitorsReportsPreparation.css");
     }
 
     @FXML
     void clickOnUsageReport(ActionEvent event) {
+	System.out.println("UsageBtn");
+    	SwitchScreen.changeScreen(event, "/clientGUI/UsageReportsPreparation.fxml", "UsageReportsPreparation.css");
 
     }
 

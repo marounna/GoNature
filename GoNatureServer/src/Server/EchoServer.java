@@ -46,20 +46,8 @@ public class EchoServer extends AbstractServer {
      */
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
-        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
-        String returnmsg="";
-        String message = (String) msg.toString();
-        System.out.println("EchoServer> " + message);
-        String[] result = message.split(" ");
-        System.out.println(result[0]);
-        if (result.length < 1) {
-            handleErrorMessage(client, "Invalid message format");
-            return;
-        }
-        Connection conn = DbController.createDbConnection();
-        if(result[0].equals("park")) {
-        	System.out.println("its park!~~~~~~~~~~~~~~~~");
-        	result[0]="park";}
+        	System.out.println("EchoServer>handleMessageFromClient");
+        	 Connection conn = DbController.createDbConnection();
         if (msg instanceof Message) {
     		Message msgObject=((Message)msg);
     		String command=msgObject.getCommand();
@@ -156,6 +144,21 @@ public class EchoServer extends AbstractServer {
     	} 
         //normal command not massage
         else {
+        	
+        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
+        String returnmsg="";
+        String message = (String) msg.toString();
+        System.out.println("EchoServer> " + message);
+        String[] result = message.split(" ");
+        System.out.println(result[0]);
+        if (result.length < 1) {
+            handleErrorMessage(client, "Invalid message format");
+            return;
+        }
+       
+        if(result[0].equals("park")) {
+        	System.out.println("its park!~~~~~~~~~~~~~~~~");
+        	result[0]="park";}	
         switch (result[0]) {
 			case "getParksMangedByParkManger": {
 					String[] arr=getParksMangedByParkManger(conn,result[1]);

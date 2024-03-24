@@ -66,7 +66,7 @@ public class UsageReportsPreparation {
 
         int[][] result = getUsageReport(parkName, month, year);
 
-      
+      if(result!=null) {
 		// Clear previous data from scatter chart
         scatterChart.getData().clear();
 
@@ -100,6 +100,10 @@ public class UsageReportsPreparation {
         }
 
         System.out.println("UsageReport>End");
+}
+      else {
+    	  System.out.println("UsageReports>data was null");
+      }
     }
 
     
