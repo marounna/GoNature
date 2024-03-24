@@ -158,7 +158,6 @@ CREATE TABLE gonaturedb.orders (
     IsInWaitingList VARCHAR(255),
     SaleType VARCHAR(255),
     FOREIGN KEY (Parkname) REFERENCES park(Parkname),
-    FOREIGN KEY (UserId) REFERENCES users(UserId),
     FOREIGN KEY (SaleType) REFERENCES sales(SaleType)
 );
 
