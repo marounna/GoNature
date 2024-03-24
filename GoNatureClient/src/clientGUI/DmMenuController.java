@@ -54,8 +54,10 @@ public class DmMenuController {
 
 	    
 	    @FXML
-	    public void initialize() {
+	    public void initialize() {   
+		    if(StaticClass.parks.isEmpty()) {
 	    	  ClientUI.chat.accept("park");
+	    	}
 	    	  parks=new String[StaticClass.parks.size()];
 	    	  for(int i=0;i<StaticClass.parks.size();i++) {
 	    		  parks[i]=StaticClass.parks.get(i).getParkString();
