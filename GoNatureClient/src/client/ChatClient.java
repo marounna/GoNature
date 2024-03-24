@@ -237,6 +237,16 @@ public void handleMessageFromServer(Object msg1)
           case "test ":
         	  System.out.println(result[1]);
         	  break;
+          case "amountInPark":
+        	  StaticClass.amountinparkyarden=result[1];
+        	  break;
+          case "OrderExistYarden":
+        	  StaticClass.istheorderexist=Integer.valueOf(result[1]);
+        	  break;
+          case "checkamountofpeople":
+        	  StaticClass.amoutgreaterthenorder=Integer.valueOf(result[1]);
+        	  break;
+
           case"updatechangeparkdwelltime":
         	  ArrayList<ParkForChange> sendarrArrayList = (ArrayList<ParkForChange>) payloadMessage.getPayload();
         	  StaticClass.changeparkdwelltime.addAll(sendarrArrayList);

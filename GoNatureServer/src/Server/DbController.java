@@ -16,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 
@@ -90,8 +92,8 @@ public class DbController {
  
 
     public static int searchOrder(Connection conn, String order_number) {
-        String sql = "SELECT * FROM orders WHERE OrderNumber = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    	String sql = "SELECT * FROM orders WHERE OrderId = ?";
+    	try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, order_number);
             try (ResultSet rs = pstmt.executeQuery()) {
                 // Check if the order exists
@@ -1570,6 +1572,129 @@ public class DbController {
 	        e.printStackTrace();
 	    }
 		
+	}
+	public static String getamountinpark(Connection conn, String userid) {
+	    System.out.println("========"+userid);
+	    String sql = "SELECT park_name FROM park_workers WHERE idpark_workers = ?";
+	    String parkName = "";
+	    LocalDateTime now = LocalDateTime.now();
+	    String currentDate = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+	    String currentHourColumn = "t" + now.getHour();
+	    int currentCapacity = 0;
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, userid);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            parkName = rs.getString("park_name");
+	            System.out.println("Park Name is: " + parkName);
+	        } else {
+	            System.out.println("No park found with the provided idpark_workers.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    String sql1 = "SELECT " + currentHourColumn + " FROM park_used_capacity_total WHERE Parkname = ? AND date = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+	        pstmt.setString(1, parkName);
+	        pstmt.setString(2, currentDate);
+
+	        ResultSet rs1 = pstmt.executeQuery();
+
+	        if (rs1.next()) {
+	            currentCapacity = rs1.getInt(currentHourColumn);
+	            System.out.println("Current capacity for " + parkName + " at " + currentHourColumn + " is: " + currentCapacity);
+	        } else {
+	            System.out.println("No capacity data found for " + parkName + " at " + currentHourColumn + " on " + currentDate);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    System.out.println(String.valueOf(currentCapacity)+"-----currentHourColumn-----"+currentHourColumn+"----currentDate------"+currentDate);
+	    return String.valueOf(currentCapacity);
+
+
+
+	}
+
+	public static int checkamountofpeople(Connection conn, String orderId, String amountofpeople) {
+	    String sql = "SELECT NumberOfVisitors FROM orders WHERE OrderId = ?";
+	    String numberOfVisitors="";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, orderId); // Set the OrderId parameter
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            numberOfVisitors = rs.getString("NumberOfVisitors");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    if(Integer.parseInt(numberOfVisitors)>=Integer.parseInt(amountofpeople)) {
+	    	return 1;
+	    }
+	    return 0;
+	}
+//updateTotalTables(Connection conn, String parkname, String date, String time,
+	//String numberofvisitors, String typeaccount,String resevationtype,String dwelltime, String sign)
+	public static void updateyardentable(Connection conn, String OrderId, String numberofvisiter, String typeacc) {
+	    String sql2 = "UPDATE orders SET isVisit = 'YES' WHERE OrderId = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+	        // Set the value for the userID parameter in the query
+	        pstmt.setString(1, OrderId);
+
+	        // Execute the update
+	        int affectedRows = pstmt.executeUpdate();
+
+	        // Check if the update was successful
+	        if (affectedRows > 0) {
+	            System.out.println("The isVisit field was successfully updated to 'YES' for OrderId: " + OrderId);
+	        } else {
+	            System.out.println("No record found with OrderId: " + OrderId);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error updating the isVisit field: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+		   String sql1 = "SELECT TypeUser FROM gonaturedb.orders AS orders JOIN gonaturedb.users AS users ON orders.userid = users.userid WHERE orders.OrderId = ?";
+		   String typeUser = null;		   
+		    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+		        pstmt.setString(1, OrderId);  // Setting the OrderId parameter
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                typeUser = rs.getString("TypeUser");  // Retrieve the TypeUser
+		            } else {
+		                System.out.println("No matching user found for the provided OrderId.");
+		            }
+		        }
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+		    System.out.println(typeUser+"=============================================sss");
+		String sql = "SELECT ParkName, dateOfVisit, timeOfVisit, NumberOfVisitors FROM orders WHERE OrderId = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, OrderId);
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                // Extract data from result set and store in OrderInfo object
+	                String parkName = rs.getString("ParkName");
+	                String dateOfVisit = rs.getString("dateOfVisit");
+	                String timeOfVisit = rs.getString("timeOfVisit");
+	                String numberOfVisitors = rs.getString("NumberOfVisitors");
+	                String dwllString= checkDwell(conn, parkName);
+	                int amount= Integer.valueOf(numberOfVisitors)-Integer.valueOf(numberofvisiter);	        	  
+	                updateTotalTables(conn, parkName, dateOfVisit, timeOfVisit,Integer.toString(amount), "park employee" ,typeUser ,dwllString, "-");
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
 	}
 		
 	}

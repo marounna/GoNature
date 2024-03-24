@@ -379,6 +379,23 @@ public class EchoServer extends AbstractServer {
             	DbController.declineMaxCap(conn,result[1],result[2]);
         		client.sendToClient("test");
         		break;
+            case"amountInPark":
+            	String amountinpark=DbController.getamountinpark(conn,result[1]);
+            	sendToClient(client,"amountInPark " +amountinpark);
+            	break;
+            case"orderexistYarden":
+
+            	int Exist=DbController.searchOrder(conn,result[1]);
+            	sendToClient(client,"OrderExistYarden "+ Exist);
+            	break;
+            case"checkamountofpeople":
+            	int greatorless =DbController.checkamountofpeople(conn,result[1],result[2]);
+            	sendToClient(client, "checkamountofpeople "+ greatorless);
+            	break;
+            case"UpdateTable":
+            	DbController.updateyardentable(conn,result[1],result[2],result[3]);
+            	sendToClient(client, "test "+ "test11111111111111111111111");
+            	break;
             	
 
 

@@ -36,6 +36,9 @@ public class StaticClass {
 	public static int orderalert=1;
 	public static ArrayList<ParkForChange> changeparkdwelltime = new ArrayList<>();
 	public static ArrayList<ParkForChange> changeparkmaxcap = new ArrayList<>();
+    public static String amountinparkyarden="";
+    public static int istheorderexist=0;
+    public static int amoutgreaterthenorder=0;
 
 
 }
