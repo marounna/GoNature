@@ -92,6 +92,10 @@ public class UserMenuController {
 	   
 	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
+	    	if(StaticClass.typeacc.equals("guest")) {
+	    		SwitchScreen.changeScreen(event, "/clientGUI/LoginOrNewReservation.fxml","/resources/LoginOrNewReservation.css");
+
+	    	}
 	    	StaticClass.orderalert=1;
 	    	System.out.println("order alert= "+ StaticClass.orderalert);
 	    	String message="logout "+StaticClass.username;
@@ -115,6 +119,7 @@ public class UserMenuController {
 	        System.out.println("----------test---- "+ StaticClass.typeacc);
 	        switch (StaticClass.typeacc) {
 	        	case "customer":
+	        	case "guest":
 	        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
 	        				,"/resources/NewReservationForUserController.css");
 	    	        break;
@@ -154,11 +159,7 @@ public class UserMenuController {
 	                                Order order = getTableView().getItems().get(getIndex());
 	                                StaticClass.orderid=order.getOrderId();
 	                        		FXMLLoader loader = new FXMLLoader();                       		
-                                	ClientUI.chat.accept("loadOrder "+StaticClass.orderid);
-                                	/*if(StaticClass.typeacc.equals("guide")||(StaticClass.typeacc.equals("park employee")&&StaticClass.reservationtype.equals("eg"))) {
-    	                    			loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForGuideController.fxml"));
-                                	}
-                                	else {*/
+                                	ClientUI.chat.accept("loadOrder "+StaticClass.orderid+" "+StaticClass.typeacc);
                                 	loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));
 									Pane root = null;
 									try {

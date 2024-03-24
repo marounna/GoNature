@@ -45,6 +45,7 @@ public class PaymentController {
 	public String type;
 	String msg="";
 	int flag=0;
+	String simulation="";
 
     @FXML
     void clickOnBack(ActionEvent event) throws IOException {
@@ -111,24 +112,40 @@ public class PaymentController {
     	        	Optional<ButtonType> resultWaitingList = alertwaitinglist.showAndWait();
     	        	if (resultWaitingList.isPresent()) {
     	        	    if (resultWaitingList.get() == okWaitingListButton) {//enter into waiting list 
-    	        	    	//ClientUI.chat.accept("maxNumberOrder");
+    	        	    	ClientUI.chat.accept("maxNumberOrder");
+    	        	    	System.out.println("PaymentController> type account = "+ StaticClass.typeacc);
+    	    	    		if(StaticClass.typeacc.equals("guest")) {
+    	    	    			ClientUI.chat.accept("waitingList " + StaticClass.o1.getParkName() + " " +StaticClass.userid + " " + StaticClass.o1.getDate() + " " +
+        	        	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice)+" "+StaticClass.o1.getEmail()
+        	        	    			+" "+StaticClass.typeacc);
+    	    	    		}
+    	    	    		else {
     	        	    	ClientUI.chat.accept("waitingList " + StaticClass.o1.getParkName() + " " +StaticClass.username + " " + StaticClass.o1.getDate() + " " +
-    	        	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice));
+    	        	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice)+" "+StaticClass.o1.getEmail()
+    	        	    			+" "+StaticClass.typeacc);}
     	        	    }
     	        	}
     	    	}
     	    	else {
     	    		ClientUI.chat.accept("dwellTime " + StaticClass.o1.getParkName());
-    	    	ClientUI.chat.accept("saveOrder " + StaticClass.o1.getParkName() + " " +StaticClass.username + " " + StaticClass.o1.getDate() + " " +
+    	    		if(StaticClass.typeacc.equals("guest")) {
+    	    			ClientUI.chat.accept("saveOrder " + StaticClass.o1.getParkName() + " " +StaticClass.userid + " " + StaticClass.o1.getDate() + " " +
+    	    	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice) + " "
+    	    	    			+StaticClass.typeacc+" "+ StaticClass.reservationtype+" " +StaticClass.dwelltime+" "+StaticClass.o1.getEmail());
+    	    		}
+    	    		else {
+    	    			ClientUI.chat.accept("saveOrder " + StaticClass.o1.getParkName() + " " +StaticClass.username + " " + StaticClass.o1.getDate() + " " +
     	    			StaticClass.o1.getTimeOfVisit() + " " +StaticClass.o1.getNumberOfVisitors()+" " + (StaticClass.maxorderid) + " " +(""+totalprice) + " "
-    	    			+StaticClass.typeacc+" "+ StaticClass.reservationtype+" " +StaticClass.dwelltime);
+    	    			+StaticClass.typeacc+" "+ StaticClass.reservationtype+" " +StaticClass.dwelltime+" "+StaticClass.o1.getEmail());
+    	    		}
     	    	
     	    	}
     	    	
 	        	Alert alertsimulation = new Alert(AlertType.INFORMATION);
 	        	alertsimulation.setTitle("Simulation");
 	        	alertsimulation.setHeaderText(null);
-	        	String combinedText = "Order Details:\n" + this.msg;
+	        	simulation+="\nTotal price after discount: " + totalprice;
+	        	String combinedText = "Order Details:\n" + simulation;
 	        	alertsimulation.setContentText(combinedText);
 	        	ButtonType okSimulationButton = new ButtonType("OK", ButtonData.OK_DONE);
 	        	alertsimulation.getButtonTypes().setAll(okSimulationButton);
@@ -138,12 +155,9 @@ public class PaymentController {
 		    	    	switch(StaticClass.typeacc) {
 		        	    	case "customer":
 		        	    	case "guide":
+		        	    	case "guest":
 		        	    		SwitchScreen.changeScreen(event, "/clientGUI/UserMenuController.fxml"
 		        	    				,"/resources/UserMenuController.css");
-		        	    		break;
-		        	    	case "guest":
-		        	    		SwitchScreen.changeScreen(event,"/clientGUI/GuestMenuController.fxml"
-		        	    				,"/resources/GuestMenuController.css");
 		        	    		break;
 		        	    	case "park employee":
 		        	    		SwitchScreen.changeScreen(event, "/clientGUI/EmployeeMenuController.fxml"
@@ -187,6 +201,7 @@ public class PaymentController {
     	System.out.println(StaticClass.orderdetails);
     	msg+=StaticClass.orderdetails+"\nTotal price before discount: " +StaticClass.numberofvisitors*StaticClass.parkprice ;
     	msg+="\nDiscount: "+ (int)StaticClass.discount+"%";
+    	simulation = msg;
     	totalprice=StaticClass.parkprice*(1-(0.01*StaticClass.discount))*StaticClass.numberofvisitors;
     	msg+="\nTotal price after discount: " + totalprice;
     	orderDetailsArea.setText(msg);

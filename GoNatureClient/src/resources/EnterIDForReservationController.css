@@ -16,9 +16,9 @@
 .button {
     -fx-background-color: #507856; /* Deep green */
     -fx-text-fill: white;
-    -fx-border-radius: 15px;
-    -fx-background-radius: 15px;
-    -fx-padding: 15px 15px; /* Adjusted padding for a balanced look */
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 15px; /* Adjusted padding for a balanced look */
     -fx-font-size: 12px; /* Smaller font size for buttons */
 }
 

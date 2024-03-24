@@ -58,19 +58,8 @@ public class NewReservationForUserController {
 
 	    @FXML
 	    void ClickOnBack(ActionEvent event) throws IOException {
-	        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        switch (StaticClass.typeacc) {
-		        case "guide":
-		        case "customer":
-		        	SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
+	        SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
 		        			,"/resources/UserMenuController.css");
-		        	break;
-		        case "guest":
-		    		SwitchScreen.changeScreen(event,"/clientGUI/EnterIDForReservationController.fxml"
-		    				,"/resources/EnterIDForReservationController.css");
-		    		break;
-	        }
-
 	    }
 	    @FXML
 	    void ClickForPayment(ActionEvent event) throws IOException {
@@ -98,6 +87,7 @@ public class NewReservationForUserController {
 		    	StaticClass.o1.setNumberOfVisitors(""+numberOfVisitors.getText());
 		    	StaticClass.o1.setTimeOfVisit(timeCombo.getValue().toString());
 		    	StaticClass.o1.setEmail(textEmail.getText());
+		    	
 		    	//string for the textArea on the next screen
 		    	StaticClass.numberofvisitors=Integer.parseInt(numberOfVisitors.getText());
 		    	StaticClass.orderdetails+="Park name: "+ parkNameCombo.getValue().toString();

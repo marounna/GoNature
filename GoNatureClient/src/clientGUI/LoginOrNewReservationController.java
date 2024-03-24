@@ -14,8 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class LoginOrNewReservationController {
-    @FXML
-    private Button ExitButton;
 	
     @FXML
     private Button LoginBtn;
@@ -26,20 +24,18 @@ public class LoginOrNewReservationController {
     //move to login screen
     @FXML
     void LoginBtnAction(ActionEvent event) throws IOException {
-        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
     }
     
     //move to enterID screen
     @FXML
     void NewReservationBtnAction(ActionEvent event) throws IOException {
-        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         SwitchScreen.changeScreen(event,"/clientGUI/EnterIDForReservationController.fxml"
         		,"/resources/EnterIDForReservationController.css");
     }
     
     @FXML
-    void ClickOnExitButton(ActionEvent event) {
+    void clickOnClose(ActionEvent event) {
     	ClientUI.chat.accept("disconnect");
     	System.exit(0);
     }

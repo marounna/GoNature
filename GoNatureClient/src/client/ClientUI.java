@@ -64,6 +64,6 @@ public class ClientUI extends Application {
     
     @FXML
     void clickOnClose(ActionEvent event) {
-
+    	System.exit(0);
     }
 }

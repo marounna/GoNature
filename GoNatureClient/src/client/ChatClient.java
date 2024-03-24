@@ -233,7 +233,21 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "updateRole":
 			 break;
-      	  
+          case "registerUser":
+        	  if(result[1].equals("succeed")) {
+        		  StaticClass.userregistration=1;
+        	  }
+        	  break;
+          case "checkExternalUser":
+        	  if(result[1].equals("exist")) {
+        		  StaticClass.externaluser="1";
+        	  }
+        	  break;
+          case "addExternalUser":
+        	  if(result[1].equals("succeed")) {
+        		  StaticClass.addexternaluser=1;
+        	  }
+        	  break;
         	  
 	  }
 	  

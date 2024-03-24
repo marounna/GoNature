@@ -191,6 +191,7 @@ public class EchoServer extends AbstractServer {
             case "updateOrder":
                 int update =updateOrderDetails(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8]) ;
                 if(update==1) {
+                	System.out.println("updateOrder case, update =" +update + "\nvisa = "+DbController.needvisaalert);
                     if(DbController.needvisaalert.equals("yes")) {
                     	sendToClient(client, "updateOrder visaCredit");
                     	DbController.needvisaalert="no";
@@ -222,7 +223,9 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
+                System.out.println("test in loadOrder case");
                 ArrayList<String> order = DbController.loadOrder(conn, result[1]);  
+                System.out.println("test in loadOrder case");
                 if(order!=null) {
                 	returnmsg="loadOrder "+order.get(0)+" "+ order.get(1) + " " +
                 order.get(2)+" "+ order.get(3)+" "+order.get(4)+" "+order.get(5)+" "
@@ -284,7 +287,7 @@ public class EchoServer extends AbstractServer {
             	
             	break;
             case "waitingList":
-            	int waitingList = enterWaitingList(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7]);
+            	int waitingList = enterWaitingList(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9]);
             	sendToClient(client, "waitingList "+waitingList);
             	break;
             case "maxNumberOrder":
@@ -292,7 +295,7 @@ public class EchoServer extends AbstractServer {
             	sendToClient(client, "maxNumberOrder "+max );
             	break;	
             case "saveOrder":
-            	int save = saveOrder(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8], result[9],result[10]);
+            	int save = saveOrder(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8], result[9],result[10],result[11]);
             	sendToClient(client, "saveOrder " + save );
             	break;
             case "dwellTime":
@@ -340,10 +343,30 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); 
 				}
             	break;
+            /*case "registerUser":
+            	int register=DbController.registerUser(conn, result[1],result[2],result[3],result[4],result[5],result[6]);
+            	if (register==1)
+            		sendToClient(client,"registerUser succeed");
+            	else { sendToClient(client,"registerUser failed");}
+            	break;*/
+            case "checkExternalUser":
+            	int externalexist=DbController.checkExternalUser(conn,result[1]);
+            	if(externalexist==1) {
+            		sendToClient(client,"checkExternalUser exist");
+            	}
+            	else {sendToClient(client,"checkExternalUser notExist");}
+            	break;
+            case "addExternalUser":
+            	int addexternal=DbController.addExternalUser(conn,result[1]);
+            	if(addexternal==1) {
+            		sendToClient(client,"addExternalUser succeed");
+            	}
+            	else {sendToClient(client,"addExternalUser failed");}
+            	break;
             default:
                 handleErrorMessage(client, "Invalid command");
-        }
-        }
+        	}
+    	}
         }    catch(IOException e) {
        	 handleErrorMessage(client, "Invalid command");
        	 e.printStackTrace();
@@ -395,14 +418,14 @@ public class EchoServer extends AbstractServer {
 	}
 
 	private int saveOrder(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors,String orderId,String totalprice, String typeacc,String reservationtype,String dwelltime) {
-			int saveorder=DbController.saveOrder(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice, typeacc,reservationtype,dwelltime);
+			String numberofvisitors,String orderId,String totalprice, String typeacc,String reservationtype,String dwelltime,String email) {
+			int saveorder=DbController.saveOrder(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice, typeacc,reservationtype,dwelltime,email);
 			return saveorder;
 	}
 
 	private int enterWaitingList(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors,String orderId,String totalprice) {
-		int waitinglist=DbController.waitingList(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice);
+			String numberofvisitors,String orderId,String totalprice,String email,String typeacc) {
+		int waitinglist=DbController.waitingList(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice,email, typeacc);
 		return waitinglist;
 	}
 
