@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import Server.DbController;
 import entities.Park;
+import entities.ParkForChange;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.ClientConnectionStatus;
@@ -153,6 +154,7 @@ public class EchoServer extends AbstractServer {
 				throw new IllegalArgumentException("Unexpected value: " + command);
 			}
     	} 
+        //normal command not massage
         else {
         switch (result[0]) {
 			case "getParksMangedByParkManger": {
@@ -340,11 +342,57 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); 
 				}
             	break;
+            case"requastToChangevisit":
+        		DbController.requastToChangevisit(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"requastToChangeMaxCapcitiy":
+        		DbController.requastToChangeMaxCapcitiy(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"parkChangesVisit":
+            	ArrayList<ParkForChange> waitforchange = new ArrayList<>();
+            	waitforchange = DbController.LoadparkForChangevisittime(conn);
+        		Message payloadfordmchange = new Message("updatechangeparkdwelltime", waitforchange);
+        		client.sendToClient(payloadfordmchange);
+        		break;
+            case"parkMaxCap":
+            	ArrayList<ParkForChange> waitforchange1 = new ArrayList<>();
+            	waitforchange1 = DbController.LoadparkForMaxcap(conn);
+        		Message payloadfordmchange1 = new Message("updateparkMaxCap", waitforchange1);
+        		client.sendToClient(payloadfordmchange1);
+        		break;
+            	
+            case"approveVisitTime":
+            	DbController.approveVisitTime(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineVisitTime":
+            	DbController.decline(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"approveMaxCapacity":
+            	DbController.approveMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineMaxCapacity":
+            	DbController.declineMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            	
+
+
+            	
+
+
+            	
             default:
                 handleErrorMessage(client, "Invalid command");
-        }
-        }
-        }    catch(IOException e) {
+        }//switch end
+        
+        }//else end
+        }  
+        catch(IOException e) {
        	 handleErrorMessage(client, "Invalid command");
        	 e.printStackTrace();
        	}

@@ -17,6 +17,7 @@ import clientGUI.UserMenuController;
 import common.ChatIF;
 import common.StaticClass;
 import entities.Park;
+import entities.ParkForChange;
 import logic.Message;
 import logic.Order;
 import ocsf.client.AbstractClient;
@@ -233,6 +234,18 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "updateRole":
 			 break;
+          case "test ":
+        	  System.out.println(result[1]);
+        	  break;
+          case"updatechangeparkdwelltime":
+        	  ArrayList<ParkForChange> sendarrArrayList = (ArrayList<ParkForChange>) payloadMessage.getPayload();
+        	  StaticClass.changeparkdwelltime.addAll(sendarrArrayList);
+        	  break;
+          case"updateparkMaxCap":
+        	  ArrayList<ParkForChange> sendarrArrayList1 = (ArrayList<ParkForChange>) payloadMessage.getPayload();
+        	  StaticClass.changeparkmaxcap.addAll(sendarrArrayList1);
+        	  break;
+        	  
       	  
         	  
 	  }

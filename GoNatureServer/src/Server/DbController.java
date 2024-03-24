@@ -2,9 +2,11 @@ package Server;
 
 
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.jar.Attributes.Name;
 
 import entities.Park;
+import entities.ParkForChange;
 import logic.Order;
 
 import java.sql.Connection;
@@ -1341,10 +1343,241 @@ public class DbController {
 
 	    return IndTimeEntryVisitors;
 	}
+
+	public static void requastToChangevisit(Connection conn, String parkname, String visitTime) {
+		// Step 1: Check for an existing row
+	    String checkSql = "SELECT 1 FROM visit_time_max_table WHERE parkname = ? AND max_cap IS NULL";
+	    boolean exists = false;
+
+	    try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+	        checkStmt.setString(1, parkname);
+	        try (ResultSet rs = checkStmt.executeQuery()) {
+	            if (rs.next()) {
+	                exists = true;  // A matching row exists
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error checking for existing row: " + e.getMessage());
+	    }
+
+	    // Step 2: Insert a new row if no matching row exists
+	    if (!exists) {
+	        String insertSql = "INSERT INTO visit_time_max_table (parkname, visit_time, max_cap) VALUES (?, ?, NULL)";
+	        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+	            insertStmt.setString(1, parkname);
+	            insertStmt.setString(2, visitTime);
+
+	            insertStmt.executeUpdate();
+	            System.out.println("Inserted new row for park: " + parkname);
+	        } catch (SQLException e) {
+	            System.out.println("Error inserting new row: " + e.getMessage());
+	        }
+	    } else {
+	        System.out.println("A row with the same parkname and NULL max_cap already exists. Skipping insertion.");
+	    }
+	}
+
+	public static void requastToChangeMaxCapcitiy(Connection conn, String parkname, String maxCapacity) {
+	    // Step 1: Check for an existing row with the same parkname and NULL visit_time
+	    String checkSql = "SELECT 1 FROM visit_time_max_table WHERE parkname = ? AND visit_time IS NULL";
+	    boolean exists = false;
+
+	    try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+	        checkStmt.setString(1, parkname);
+	        try (ResultSet rs = checkStmt.executeQuery()) {
+	            if (rs.next()) {
+	                exists = true;  // A matching row exists
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error checking for existing row: " + e.getMessage());
+	    }
+
+	    // Step 2: Insert a new row only if no matching row exists
+	    if (!exists) {
+	        String insertSql = "INSERT INTO visit_time_max_table (parkname, visit_time, max_cap) VALUES (?, NULL, ?)";
+	        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+	            insertStmt.setString(1, parkname);  // Set parkName
+	            insertStmt.setString(2, maxCapacity);  // Set maxCapacity
+
+	            insertStmt.executeUpdate();
+	            System.out.println("Inserted new row for park: " + parkname);
+	        } catch (SQLException e) {
+	            System.out.println("Error occurred during insertion: " + e.getMessage());
+	        }
+	    } else {
+	        System.out.println("A row with the same parkname and NULL visit_time already exists. Skipping insertion.");
+	    }
+	}
+
+	public static ArrayList<ParkForChange> LoadparkForChangevisittime(Connection conn) {
+
+		ArrayList<ParkForChange> sendarrArrayList = new ArrayList<>();
+	    String sql = "SELECT parkName, visit_time FROM visit_time_max_table WHERE visit_time IS NOT NULL";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String parkName = rs.getString("parkName");
+	            String visitTimeafter = rs.getString("visit_time");
+			    String sql1 = "SELECT visitTimeLimit FROM park WHERE parkName = ?";
+			    try (PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
+			        pstmt1.setString(1, parkName);
+			        ResultSet rs1 = pstmt1.executeQuery();
+
+			        if (rs1.next()) {
+			            String visitTimeLimitbefore = rs1.getString("visitTimeLimit");
+			             //public ParkForChange(String parkName, String dwellBefore, String dwellAfter, String maxCapacityBefore, String maxCapacityAfter) 
+			            ParkForChange parktoaddChange = new ParkForChange(parkName, visitTimeLimitbefore, visitTimeafter, null, null);
+			            sendarrArrayList.add(parktoaddChange);
+			        }
+			        
+			    } 
+			    catch (SQLException e) {
+			        e.printStackTrace();
+			    }  
+	        }
+	    } 
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	   	return sendarrArrayList;
+	}
+
+	public static void approveVisitTime(Connection conn, String parkname, String newdwelltime) {
+		String sql = "UPDATE park SET visitTimeLimit = ? WHERE ParkName = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, newdwelltime);  // Set new visit time limit
+	        pstmt.setString(2, parkname);  // Set the park name
+
+	        // Execute the update
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    String sql1 = "DELETE FROM visit_time_max_table WHERE parkName = ? AND visit_time = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, parkname);  // Set the park name
+	        pstmt.setString(2, newdwelltime);  // Set the visit time
+
+	        // Execute the deletion
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+	}
+
+	public static void decline(Connection conn, String parkname, String visittime) {
+	    String sql1 = "DELETE FROM visit_time_max_table WHERE parkName = ? AND visit_time = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, parkname);  // Set the park name
+	        pstmt.setString(2, visittime);  // Set the visit time
+
+	        // Execute the deletion
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+	}
+
+	public static ArrayList<ParkForChange> LoadparkForMaxcap(Connection conn) {
+		ArrayList<ParkForChange> sendarrArrayList = new ArrayList<>();
+	    String sql = "SELECT parkName, max_cap FROM visit_time_max_table WHERE max_cap IS NOT NULL";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String parkName = rs.getString("parkName");
+	            String max_cap_after = rs.getString("max_cap");
+			    String sql1 = "SELECT CapacityOfVisitors FROM park WHERE parkName = ?";
+			    try (PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
+			        pstmt1.setString(1, parkName);
+			        ResultSet rs1 = pstmt1.executeQuery();
+
+			        if (rs1.next()) {
+			            String max_cap_before = rs1.getString("CapacityOfVisitors");
+			             //public ParkForChange(String parkName, String dwellBefore, String dwellAfter, String maxCapacityBefore, String maxCapacityAfter) 
+			            ParkForChange parktoaddChange = new ParkForChange(parkName, null, null, max_cap_before, max_cap_after);
+			            sendarrArrayList.add(parktoaddChange);
+			        }
+			        
+			    } 
+			    catch (SQLException e) {
+			        e.printStackTrace();
+			    }  
+	        }
+	    } 
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	   	return sendarrArrayList;
+	
+	}
+
+	public static void approveMaxCap(Connection conn, String ParkName, String CapacityOfVisitors) {
+		String sql = "UPDATE park SET CapacityOfVisitors = ? WHERE ParkName = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, CapacityOfVisitors);  // Set new visit time limit
+	        pstmt.setString(2, ParkName);  // Set the park name
+
+	        // Execute the update
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    String sql1 = "DELETE FROM visit_time_max_table WHERE parkName = ? AND max_cap = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, ParkName);  // Set the park name
+	        pstmt.setString(2, CapacityOfVisitors);  // Set the visit time
+
+	        // Execute the deletion
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+	}
+
+	public static void declineMaxCap(Connection conn, String parkname, String maxcap) {
+	    String sql1 = "DELETE FROM visit_time_max_table WHERE parkName = ? AND max_cap = ?";
+
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
+	        // Set the parameters for the query
+	        pstmt.setString(1, parkname);  // Set the park name
+	        pstmt.setString(2, maxcap);  // Set the visit time
+
+	        // Execute the deletion
+	        pstmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+	}
+		
+	}
+		
+
 	
 	
 	
-}
 
 
 	

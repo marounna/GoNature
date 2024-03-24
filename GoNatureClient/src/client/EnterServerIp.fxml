@@ -13,7 +13,7 @@
         </children>
     </Pane>
     <Label layoutX="105.0" layoutY="53.0" text="Enter Server IP" />
-    <TextField fx:id="enterHostIP" layoutX="61.0" layoutY="87.0" prefHeight="25.0" prefWidth="165.0" text="10.0.0.13" />
+    <TextField fx:id="enterHostIP" layoutX="61.0" layoutY="87.0" prefHeight="25.0" prefWidth="165.0" text="192.168.151.220" />
     <Button fx:id="okBtn" layoutX="117.0" layoutY="130.0" mnemonicParsing="false" onAction="#OkAction" text="OK" />
 </children>
 </Pane>

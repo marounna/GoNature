@@ -82,13 +82,30 @@ public class ParkManagerMenuController {
 
     @FXML
     void ClickOnOkDwell(ActionEvent event) {
+    	String visitTime = dwellTimeText.getText();
+    	String selectedPark = parkNameCombo.getValue();
+		try {
+			ClientUI.chat.accept("requastToChangevisit " + selectedPark+ " " + visitTime);
+
+		} catch (Exception e) {
+	        System.out.println("Error occurred" + e.getMessage());
+		}
 
     }
 
     @FXML
     void clickOnOkMaxCapacity(ActionEvent event) {
+    	String maxCapacity = maxCapacityText.getText();
+    	String selectedPark = parkNameCombo.getValue();
+		try {
+			ClientUI.chat.accept("requastToChangeMaxCapcitiy " + selectedPark+ " " + maxCapacity);
+
+		} catch (Exception e) {
+	        System.out.println("Error occurred" + e.getMessage());
+		}
 
     }
+   
 
     @FXML
     void clickOnTotalBtn(ActionEvent event) {
