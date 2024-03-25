@@ -442,7 +442,6 @@ public class DbController {
 	public static int waitingList(Connection conn, String parkname, String username, String date, String time,
 			String numberofvisitors,String orderid,String totalprice,String email,String typeacc) {
 		int ordernumber=Integer.parseInt(orderid);
-		ordernumber++;
 		System.out.println("new order number: "+ ordernumber);
 		String userid=username;
 		if(!typeacc.equals("guest")) {
@@ -923,6 +922,55 @@ public class DbController {
 			return "succeed";
 		return "failed";
 	}
+	
+	public static String DeleteOrderAuto(Connection conn, String orderid, String typeaccount, String reservationtype) {
+		int delete=0;
+		String parkname="";
+		String date="";
+		String time="";
+		String numberofvisitors="";
+		String iswaitinglist="";
+		String sql="SELECT * FROM orders WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, orderid); 
+		    ResultSet rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		    	parkname = rs.getString("ParkName");
+		    	date = rs.getString("DateOfVisit");
+		    	time = rs.getString("TimeOfVisit");
+		    	iswaitinglist=rs.getString("IsInWaitingList");
+		    	numberofvisitors = rs.getString("NumberOfVisitors");
+		    } else {
+		        System.out.println("DbController> failed to delete order.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();}
+		String dwell=checkDwell(conn, parkname);
+		//---------------------------------------------------------------------------------------------------------------------------------
+		String sqlupdate = "UPDATE orders SET IsCanceled = ?, IsInWaitingList = ?, IsCanceledAuto = ? WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sqlupdate)) {
+			pstmt.setString(1, "YES");
+			pstmt.setString(2, "NO");
+			pstmt.setString(3, "YES");
+			pstmt.setString(4, orderid); // Replace orderId with the actual OrderId you want to cancel
+
+		    int rowsAffected = pstmt.executeUpdate();
+		    if (rowsAffected > 0) {
+		    	delete=1;
+		        System.out.println("Order canceled successfully.");
+		    } else {
+		        System.out.println("No row found with the specified OrderId.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		int update=0;
+		if(iswaitinglist.equals("NO")) {
+			update =updateTotalTables(conn, parkname, date, time, numberofvisitors, typeaccount, reservationtype, dwell, "-");	}
+		if (delete==1) {
+			return "succeed";}
+		return "failed";
+	}
 
 	public static void updateWaitingList(Connection conn, String orderid) {
 		String sqlupdate = "UPDATE orders SET IsConfirmed = ? ,IsInWaitingList = ? WHERE OrderId = ?";
@@ -1274,7 +1322,7 @@ public class DbController {
 		return 0;
 	}*/
 	
-	public static int checkMaxUserId(Connection conn) {//checking the max order number 
+	/*public static int checkMaxUserId(Connection conn) {//checking the max order number 
 		int max=1;
 		String sql="SELECT MAX(CAST(UserId AS UNSIGNED)) FROM users";
         try (Statement stmt = conn.createStatement(); 
@@ -1288,7 +1336,7 @@ public class DbController {
 		}
         System.out.println("max order id is: " +max);
 		return max;
-	}
+	}*/
 
 	public static int checkExternalUser(Connection conn, String id) {
 	    String sql = "SELECT * FROM external_users WHERE UserId = ?";

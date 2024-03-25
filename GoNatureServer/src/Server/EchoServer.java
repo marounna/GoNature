@@ -330,6 +330,10 @@ public class EchoServer extends AbstractServer {
             	String delete = DbController.DeleteOrder(conn, result[1],result[2],result[3]);
             	sendToClient(client, "deleteOrder "+delete);
             	break;
+            case "deleteOrderAuto":
+            	String deleteauto = DbController.DeleteOrderAuto(conn, result[1],result[2],result[3]);
+            	sendToClient(client, "deleteOrderAuto "+deleteauto);
+            	break;
             case "updateWaitingList":
             	DbController.updateWaitingList(conn,result[1]);
             	sendToClient(client, "updateWaitingList succeed");
@@ -343,12 +347,6 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); 
 				}
             	break;
-            /*case "registerUser":
-            	int register=DbController.registerUser(conn, result[1],result[2],result[3],result[4],result[5],result[6]);
-            	if (register==1)
-            		sendToClient(client,"registerUser succeed");
-            	else { sendToClient(client,"registerUser failed");}
-            	break;*/
             case "checkExternalUser":
             	int externalexist=DbController.checkExternalUser(conn,result[1]);
             	if(externalexist==1) {
@@ -363,6 +361,7 @@ public class EchoServer extends AbstractServer {
             	}
             	else {sendToClient(client,"addExternalUser failed");}
             	break;
+            	
             default:
                 handleErrorMessage(client, "Invalid command");
         	}

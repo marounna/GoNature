@@ -14,7 +14,7 @@ public class StaticClass {
     public static String orderid;
     public static boolean islogout =false;
     public static Order o1 = new Order(null, null, null, null, null, null,null);
-    public static String typeacc;
+    public static String typeacc="";
 	public static boolean isexist;
 	public static boolean islogged;
     public static ArrayList<Park> parks = new ArrayList<>();

@@ -183,6 +183,12 @@ public void handleMessageFromServer(Object msg1)
         	  else {
         		  System.out.println("ChatClient> delete order failed");
         	  }
+          case "deleteOrderAuto":
+        	  if(result[1].equals("succeed"))
+        		  System.out.println("ChatClient> auto delete order succeed");
+        	  else {
+        		  System.out.println("ChatClient> auto delete order failed");
+        	  }
     		  break;
           case "updateOrder":
         	  if(result[1].equals("waitinglist")) {

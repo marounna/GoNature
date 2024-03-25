@@ -10,7 +10,7 @@
             <Button fx:id="closeBtn" layoutX="244.0" mnemonicParsing="false" onAction="#clickOnClose" text="X" />
         </children>
     </Pane>
-      <Button fx:id="LoginBtn" layoutX="23.0" layoutY="80.0" mnemonicParsing="false" onAction="#LoginBtnAction" prefHeight="25.0" prefWidth="105.0" text="Login" />
-      <Button fx:id="NewReservationBtn" layoutX="168.0" layoutY="80.0" mnemonicParsing="false" onAction="#NewReservationBtnAction" text="New Reservation" />
+      <Button fx:id="LoginBtn" layoutX="32.0" layoutY="80.0" mnemonicParsing="false" onAction="#LoginBtnAction" prefHeight="25.0" prefWidth="96.0" text="User login" />
+      <Button fx:id="NewReservationBtn" layoutX="151.0" layoutY="80.0" mnemonicParsing="false" onAction="#NewReservationBtnAction" text="New reservation" />
    </children>
 </Pane>

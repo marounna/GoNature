@@ -124,7 +124,7 @@ public class LoginController {
     
     @FXML
     private void initialize() {
-    	if (StaticClass.typeacc.equals(null)) {
+    	if (StaticClass.typeacc.equals("")) {
     		StaticClass.typeacc="customer";
     	}
     }

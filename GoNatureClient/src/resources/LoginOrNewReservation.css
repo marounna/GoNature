@@ -32,7 +32,7 @@
     -fx-text-fill: white; /* White text for the "X" */
     -fx-font-weight: bold; /* Make the "X" bold */
     -fx-background-radius: 0; /* No rounded corners for the close button */
-    -fx-padding:  7px  7px; /* Padding for the close button */
+    -fx-padding:  10px 10px; /* Padding for the close button */
 }
 
 #closeBtn:hover {
