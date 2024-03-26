@@ -7,7 +7,7 @@ CREATE TABLE gonaturedb.user_types (
 );
 
 INSERT INTO gonaturedb.user_types (TypeUser) VALUES 
-(''), 
+(' '), 
 ('department manager'), 
 ('park manager'), 
 ('guide'), 
