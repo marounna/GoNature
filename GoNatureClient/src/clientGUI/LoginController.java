@@ -78,7 +78,6 @@ public class LoginController {
 				StaticClass.isexist=false;
 		        System.out.println(StaticClass.typeacc);
 		        switch(StaticClass.typeacc) {
-		        	case "customer":
 		        	case "guide":
 		        		if(StaticClass.typeacc.equals("customer")) {
 		        			StaticClass.reservationtype="customer";
@@ -109,6 +108,8 @@ public class LoginController {
 		        		SwitchScreen.changeScreen(event,"/clientGUI/EmployeeMenuController.fxml"
 		        				,"/resources/EmployeeMenuController.css");
 		        		break;
+		        	default:
+		        		userNotExist.setText("User is not defined");
 		        }
 	        }
 		}		
@@ -122,12 +123,12 @@ public class LoginController {
 		}
     }
     
-    @FXML
+   /* @FXML
     private void initialize() {
     	if (StaticClass.typeacc.equals("")) {
     		StaticClass.typeacc="customer";
     	}
-    }
+    }*/
     
 }
 

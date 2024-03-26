@@ -31,6 +31,7 @@ public class EchoServer extends AbstractServer {
 	public static String is_logged="";
 	public static String type;
     public  String dbCMessage="";
+	static int importdata=0;
     // Constructor
     public EchoServer(int port) {
         super(port);
@@ -540,5 +541,13 @@ public class EchoServer extends AbstractServer {
 	}
 	public static String getClientIp(ConnectionToClient client) {
 	    return client.getInetAddress().getHostAddress();
+	}
+
+	public static void importData() {
+        Connection conn = DbController.createDbConnection();
+		if(importdata==0) {
+			importdata=1;
+			DbController.importData(conn);
+		}
 	}
 }

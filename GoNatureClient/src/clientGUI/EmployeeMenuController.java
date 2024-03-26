@@ -81,6 +81,7 @@ public class EmployeeMenuController {
 			}
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
+				StaticClass.typeacc="";
 	      		SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml","/resources/LoginController.css");
 
 			}

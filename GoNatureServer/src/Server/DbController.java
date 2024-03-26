@@ -1057,14 +1057,11 @@ public class DbController {
 	
 	
 	public static boolean updateGuideRole(Connection conn, String id) {
-		if(id.isEmpty()) {
-			return false; 
-		}
-		String sql = "UPDATE users SET TypeUser = ? WHERE UserId = ? AND (TypeUser IS null OR TypeUser = 'customer') ";
+		String sql = "UPDATE users SET TypeUser = ? WHERE UserId = ? AND (TypeUser IS NULL OR TypeUser = '')";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setString(1, "guide");
 	        pstmt.setString(2, id);
-	        //pstmt.setString(3, "ácustomer");
+	        //pstmt.setString(3, "customer");
 	        int rowsAffected = pstmt.executeUpdate();
 	        
 	        if (rowsAffected > 0) { 
@@ -1364,6 +1361,34 @@ public class DbController {
 		    e.printStackTrace();
 	}
 		return 0;
+	}
+
+	public static void importData(Connection conn) {
+	    String sql = "INSERT INTO gonaturedb.users (UserId, Fname, Lname, Username, Password, Email, PhoneNumber, TypeUser)"
+	            +"VALUES (3148138267, 'Ava', 'Smith', 'depm1', '123456', 'avasmith@gmail.com', '0522222222', 'department manager'),"
+	            +"(314, 'Liam', 'Johnson', 'safarim1', '123456', 'liamjohnson@gmail.com', '0523333333', 'park manager'),"
+	            +"(3148, 'Olivia', 'Williams', 'service1', '123456', 'oliviawilliams@gmail.com', '0524444444', 'service employee'),"
+	            +"(31481, 'Noah', 'Brown', 'guide1', '123456', 'noahbrown@gmail.com', '0525555555', ''),"
+	            +"(314813, 'Emma', 'Jones', 'guide21', '123456', 'emmajones@gmail.com', '0526666666', ''),"
+	            +"(3148138, 'Oliver', 'Garcia', 'guide31', '123456', 'olivergarcia@gmail.com', '0527777777', ''),"
+	            +"(1, 'customer', 'customeri', 'customer', '123456', 'customer@gmail.com', '12345645', ''),"
+	            +"(314813825, 'Hamza', 'Abunimer', 'hamzaabunimer', '123456', 'hamzaabunimer@gmail.com', '0521111111', ''),"
+	            +"(314813826, 'Ava', 'Smith', 'depm', '123456', 'avasmith@gmail.com', '0522222222', 'department manager'),"
+	            +"(314813827, 'Liam', 'Johnson', 'safarim', '123456', 'liamjohnson@gmail.com', '0523333333', 'park manager'),"
+	            +"(314813828, 'Olivia', 'Williams', 'service', '123456', 'oliviawilliams@gmail.com', '0524444444', 'service employee'),"
+	            +"(314813829, 'Noah', 'Brown', 'guide', '123456', 'noahbrown@gmail.com', '0525555555', ''),"
+	            +"(314813830, 'Emma', 'Jones', 'guide2', '123456', 'emmajones@gmail.com', '0526666666', ''),"
+	            +"(314813831, 'Oliver', 'Garcia', 'guide3', '123456', 'olivergarcia@gmail.com', '0527777777', ''),"
+	            +"(314813832, 'Isabella', 'Martinez', 'customer1', '123456', 'isabellamartinez@gmail.com', '0528888888', ''),"
+	            +"(314813833, 'Mason', 'Rodriguez', 'customer2', '123456', 'masonrodriguez@gmail.com', '0529999999', ''),"
+	            +"(314813834, 'Sophia', 'Lopez', 'customer3', '123456', 'sophialopez@gmail.com', '0530000000', ''),"
+	            +"(5, 'israel', 'israeli', 'parke', '123456', 'parke@gmail.com', '02522555546', 'park employee')";
+	    try (Statement stmt = conn.createStatement()) {
+	        int rowsAffected = stmt.executeUpdate(sql); 
+	        System.out.println(rowsAffected + " rows inserted.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 }

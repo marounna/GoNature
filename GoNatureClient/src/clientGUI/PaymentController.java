@@ -171,10 +171,6 @@ public class PaymentController {
     	
     }
     
-    @FXML //user decide to pay in park
-    void clickOnPayInPark(ActionEvent event) {
-    	StaticClass.orderdetails="";
-    }
     
     
     @FXML//initialize the order details textArea field with the order details from the last screen

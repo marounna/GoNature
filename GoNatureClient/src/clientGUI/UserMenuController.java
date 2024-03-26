@@ -103,6 +103,7 @@ public class UserMenuController {
 	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
 	    	if(StaticClass.typeacc.equals("guest")) {
+	    		StaticClass.typeacc="";
 	    		SwitchScreen.changeScreen(event, "/clientGUI/LoginOrNewReservation.fxml","/resources/LoginOrNewReservation.css");
 
 	    	}
@@ -117,7 +118,7 @@ public class UserMenuController {
 			}
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
-		        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				StaticClass.typeacc="";
         		SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml"
         				,"/resources/LoginController.css");
 			}
