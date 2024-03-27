@@ -55,10 +55,6 @@ public class EmployeeMenuController {
 	    	String OrderId = orderIDTxt.getText();
 	    	String numberofvisiter = numberVisitorsTxt.getText();
 	    	ClientUI.chat.accept("orderexistYarden "+ OrderId);
-	        //ClientUI.chat.accept("UpdateTable " + OrderId + " " + numberofvisiter + " " + StaticClass.typeacc);
-	        checkOrderLabel.setText("ENJOY YOUR VISIT");
-
-
 	    	try {
 		    	if (StaticClass.istheorderexist == 0) {
 		    	    checkOrderLabel.setText("no order found");
