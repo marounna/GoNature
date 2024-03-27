@@ -1,7 +1,6 @@
 package clientGUI;
 
 import client.ChatClient;
-import client.ClientUI;
 import common.StaticClass;
 import common.SwitchScreen;
 import javafx.event.ActionEvent;
@@ -40,20 +39,11 @@ public class EnterIDForReservationController {
     @FXML
     void ClickNextBtn(ActionEvent event) {
     	String userId=idField.getText();
-		StaticClass.typeacc="guest";
     	try {
+    		StaticClass.typeacc="guest";
     		StaticClass.reservationtype="customer";
-			StaticClass.discounttype="personal";
-    		String id=idField.getText();
-    		ClientUI.chat.accept("checkExternalUser "+ id);
-    		if(StaticClass.externaluser.equals("0")) {
-    			ClientUI.chat.accept("addExternalUser "+id);
-    		}
-    		if(StaticClass.addexternaluser==1||StaticClass.externaluser.equals("1")) {
-    			StaticClass.userid=userId;
-    			  SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
-    					  ,"/resources/UserMenuController.css");
-    		}
+		  SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
+				  ,"/resources/NewReservationForUserController.fxml");
 	  	  } catch (Exception e) {
 		      e.printStackTrace();}
     	

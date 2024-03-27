@@ -26,19 +26,6 @@
     -fx-background-color: #3e6147;
 }
 
-/* Styling for the close button */
-#closeBtn {
-    -fx-background-color: #ff4f4f; /* Red background for the close button */
-    -fx-text-fill: white; /* White text for the "X" */
-    -fx-font-weight: bold; /* Make the "X" bold */
-    -fx-background-radius: 0; /* No rounded corners for the close button */
-    -fx-padding:  10px 10px; /* Padding for the close button */
-}
-
-#closeBtn:hover {
-    -fx-background-color: #D60000; /* Slightly darker red on hover */
-}
-
 /* Focused text field style, applies to TextArea as well */
 .text-field:focused, .text-area:focused {
     -fx-border-color: #74a662;
