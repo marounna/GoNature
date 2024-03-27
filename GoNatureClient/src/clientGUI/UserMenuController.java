@@ -89,9 +89,24 @@ public class UserMenuController {
 
 	    @FXML
 	    private Button newReservationBtn;
+	    
+	    @FXML
+	    private Button refreshBtn;
+	    
+	    @FXML
+	    void ClickOnRefresh(ActionEvent event) {
+	        SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
+        			,"/resources/UserMenuController.css");
+	    }
+	    
 	   
 	    @FXML //user logs out, moving to login screen
 	    void ClickOnLogOut(ActionEvent event) throws IOException {
+	    	if(StaticClass.typeacc.equals("guest")) {
+	    		StaticClass.typeacc="";
+	    		SwitchScreen.changeScreen(event, "/clientGUI/LoginOrNewReservation.fxml","/resources/LoginOrNewReservation.css");
+
+	    	}
 	    	StaticClass.orderalert=1;
 	    	System.out.println("order alert= "+ StaticClass.orderalert);
 	    	String message="logout "+StaticClass.username;
@@ -103,7 +118,7 @@ public class UserMenuController {
 			}
 			if(StaticClass.islogout) {
 				StaticClass.islogout=false;
-		        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				StaticClass.typeacc="";
         		SwitchScreen.changeScreen(event,"/clientGUI/LoginController.fxml"
         				,"/resources/LoginController.css");
 			}
@@ -115,6 +130,7 @@ public class UserMenuController {
 	        System.out.println("----------test---- "+ StaticClass.typeacc);
 	        switch (StaticClass.typeacc) {
 	        	case "customer":
+	        	case "guest":
 	        		SwitchScreen.changeScreen(event,"/clientGUI/NewReservationForUserController.fxml"
 	        				,"/resources/NewReservationForUserController.css");
 	    	        break;
@@ -134,6 +150,17 @@ public class UserMenuController {
 	    	if(!StaticClass.typeacc.equals("guest")) {
 	    		ClientUI.chat.accept("userId " + StaticClass.username);}
 	    	ClientUI.chat.accept("loadOrderForApproveTable " + StaticClass.userid);
+	    	ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
+	    	
+        	//Platform.runLater(() -> {
+          	   System.out.println("checkOrders test");
+         	   checkOrdersForAlerts();
+    	        	ApprovedOrdersTableField.setItems(FXCollections.observableArrayList(StaticClass.ordersforapprovetable));
+    	        	ApprovedOrdersTableField.refresh();
+         	//});
+	    	
+	    	
+	    	
 	        approvedOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
 	        approvedParkName.setCellValueFactory(new PropertyValueFactory<>("parkName"));
 	        approvedDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -154,11 +181,7 @@ public class UserMenuController {
 	                                Order order = getTableView().getItems().get(getIndex());
 	                                StaticClass.orderid=order.getOrderId();
 	                        		FXMLLoader loader = new FXMLLoader();                       		
-                                	ClientUI.chat.accept("loadOrder "+StaticClass.orderid);
-                                	/*if(StaticClass.typeacc.equals("guide")||(StaticClass.typeacc.equals("park employee")&&StaticClass.reservationtype.equals("eg"))) {
-    	                    			loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForGuideController.fxml"));
-                                	}
-                                	else {*/
+                                	ClientUI.chat.accept("loadOrder "+StaticClass.orderid+" "+StaticClass.typeacc);
                                 	loader = new FXMLLoader(getClass().getResource("/clientGUI/UpdateReservationForUserController.fxml"));
 									Pane root = null;
 									try {
@@ -213,7 +236,6 @@ public class UserMenuController {
                             	        //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     		        	SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
                             		        			,"/resources/UserMenuController.css");
-
                             	        }
                             			
                             		}
@@ -223,7 +245,7 @@ public class UserMenuController {
 	            };
 	            return cell;
 	        });
-	    	ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
+	    	//ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
 	    	orderIdWaitingList.setCellValueFactory(new PropertyValueFactory<>("orderId"));
 	        parkNameWaitingList.setCellValueFactory(new PropertyValueFactory<>("parkName"));
 	        dateWaitingList.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -318,19 +340,14 @@ public class UserMenuController {
             };
             return cell;
         });
-	       if(StaticClass.orderalert==1) {
-	        	StaticClass.orderalert=0;
-	        	Platform.runLater(() -> {
-	        	   checkOrdersForAlerts();
-	        	});
-	        }
-	        
+       
 	        
 	    }
 
 	    
 	    
 	    private void checkOrdersForAlerts() {
+      	   System.out.println("checkOrders 357");
 	    	LocalDate nowDate = LocalDate.now(); // Current date
 	    	LocalTime nowTime = LocalTime.now(); // Current time
 
@@ -338,6 +355,7 @@ public class UserMenuController {
 	    	DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Adjust this to match your time format
 
 	    	for (Order order : StaticClass.ordersforapprovetable) {
+          	   System.out.println("checkOrders 358");
 	    	    try {
 	    	        LocalDate orderDate = LocalDate.parse(order.getDate(), dateFormatter);
 	    	        LocalTime orderTime = LocalTime.parse(order.getTimeOfVisit(), timeFormatter); // Assuming you have getTimeOfVisit method
@@ -345,14 +363,17 @@ public class UserMenuController {
 	    	        // Check if the order date is tomorrow
 	    	        if (orderDate.isEqual(nowDate.plusDays(1))) {
 	                    // Alert the user about the order scheduled for tomorrow
+		             	   System.out.println("checkOrders test date date +1");
 	                    Alert alertdate = new Alert(AlertType.INFORMATION);
 	                    alertdate.setTitle("Order Reminder");
 	                    alertdate.setHeaderText(null);
 	                    alertdate.setContentText("Order No. " + order.getOrderId() + " date is tomorrow.\nPlease confirm the order up to two hours from now.");
 	                    alertdate.showAndWait();
-	                } else if (orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime)) {
-	                	ClientUI.chat.accept("deleteOrder "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
+	                } else if ((orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime))||orderDate.isBefore(nowDate)) {
+	             	   System.out.println("checkOrders test date passed");
+	                	ClientUI.chat.accept("deleteOrderAuto "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
 	                    System.out.println("UserMenuController> Order No. " + order.getOrderId() + " has passed its date and time and has been deleted.");
+
 	                }
 	            } catch (DateTimeParseException e) {
 	                System.err.println("Error parsing date or time from order: " + e.getMessage());
@@ -363,13 +384,14 @@ public class UserMenuController {
 	    	        LocalDate orderDate = LocalDate.parse(order.getDate(), dateFormatter);
 	    	        LocalTime orderTime = LocalTime.parse(order.getTimeOfVisit(), timeFormatter); // Assuming you have getTimeOfVisit method
 
-	    	         if (orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime)) {
-	                	ClientUI.chat.accept("deleteOrder "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
+	    	         if ((orderDate.isEqual(nowDate)&& orderTime.isBefore(nowTime))||orderDate.isBefore(nowDate)) {
+	                	ClientUI.chat.accept("deleteOrderAuto "+order.getOrderId()+" "+StaticClass.typeacc+ " "+ StaticClass.reservationtype);
 	                    System.out.println("UserMenuController> Order No. " + order.getOrderId() + " has passed its date and time and has been deleted.");
 	                }
 	            } catch (DateTimeParseException e) {
 	                System.err.println("Error parsing date or time from order: " + e.getMessage());
 	            }
+
 	        }
 	    }
 

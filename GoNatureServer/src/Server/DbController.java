@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DbController {
     public static Order order;
-    public static String needvisaalert;
+    public static String needvisaalert="no";
     
     //connect to MySQL
     @SuppressWarnings("unused")
@@ -57,10 +57,12 @@ public class DbController {
     public static ArrayList<String> loadOrder(Connection conn, String order_number) {
         System.out.println("dbController> Order number = " + order_number);
         String sql = "SELECT * FROM orders WHERE OrderId = ?";
+        System.out.println("test in LoadOrder");
+        int orderid=Integer.parseInt(order_number);
         ArrayList<String> orderDetails = new ArrayList<>();
         orderDetails.add(order_number);
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, order_number);
+            pstmt.setInt(1, orderid);
             try (ResultSet rs = pstmt.executeQuery()) {
                 //System.out.println("Select * was executed");
                 if (rs.next()) {
@@ -69,13 +71,18 @@ public class DbController {
                     orderDetails.add((rs.getString("DateOfVisit")));
                     orderDetails.add(rs.getString("TimeOfVisit"));
                     orderDetails.add((rs.getString("NumberOfVisitors")));
+                    orderDetails.add((rs.getString("Email")));
+                    System.out.println("test in preparedstatement");
                 }
                 pstmt.close();
             }
         } catch (SQLException e) {
             System.out.println("Error loading order: " + e.getMessage());
         }
-        String sql1 = "SELECT * FROM users WHERE UserId = ?";
+        /*String sql1="";
+        if(typeacc.equals("guest"))
+        	sql1 = "SELECT * FROM external_users WHERE UserId = ?";
+        else{ sql1 = "SELECT * FROM users WHERE UserId = ?";}
         try (PreparedStatement pstmt = conn.prepareStatement(sql1)) {
             pstmt.setString(1, orderDetails.get(2));
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -86,7 +93,7 @@ public class DbController {
             pstmt.close();
         
         } catch (SQLException e) {
-        System.out.println("Error loading order: " + e.getMessage());}
+        System.out.println("Error loading order: " + e.getMessage());}*/
         return orderDetails;
     }
  
@@ -155,7 +162,7 @@ public class DbController {
 		   double total=0;
 		   if(Double.parseDouble(beforetotalprice)<0)
 			   total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))+Double.parseDouble(beforetotalprice);//total price
-		   else {			   total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))-Double.parseDouble(beforetotalprice);//total price
+		   else {total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))-Double.parseDouble(beforetotalprice);//total price
 		   }
 	       int available=0;
 	       int checkrow= checkRowExist(conn, typeacc, reservationtype, parkname, date);// return 1 if there is existing row
@@ -242,115 +249,7 @@ public class DbController {
 	
 	return 0;
     }
-    
-    
-    
-
-    
-    
-    
-    /*public static int updateOrder(Connection conn, String orderid,String parkname, String date, String time, String numberofvisitors, String discounttype,
-    		String typeacc,String reservationtype) {
-    	String beforechangedate="";
-    	String beforechangetime="";
-    	String beforechangepark="";
-    	String beforenumberofvisitor="";
-    	String beforewaitinglist="";
-    	String beforetotalprice="";
-		int update=1;
-    	String sql="Select * FROM orders WHERE OrderId = ?";
-	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){
-				pstmt.setString(1, orderid);
-		        try(ResultSet rs = pstmt.executeQuery()) {
-		           if (rs.next()) {	
-		        	   beforechangepark+=rs.getString("ParkName");
-		        	   beforechangedate+=rs.getString("DateOfVisit");
-		        	   beforechangetime+=rs.getString("TimeOfVisit");
-		        	   beforenumberofvisitor+=rs.getString("NumberOfVisitors");
-		        	   beforewaitinglist+=rs.getString("IsInWaitingList");
-		        	   beforetotalprice+=rs.getString("TotalPrice");
-		           }
-		    }catch (SQLException e) {
-		        System.out.println("DbController> Error fetching update order: " + e.getMessage());}    
-	    } catch (SQLException e2) {
-			e2.printStackTrace();}
-        String dwell=checkDwell(conn, beforechangepark);
-		int price=checkPrice(conn, parkname);
-		int discount=discountCheck(conn, discounttype);
-		System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
-				+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
-				+"\nreservationtype "  +reservationtype+"\ndwelltime " +dwell);
-		System.out.println("updateOrder> discount= "+discount);
-		double total=(price*Integer.parseInt(numberofvisitors)*(1-(0.01*discount)))-Double.parseDouble(beforetotalprice);
-    	int available=0;
-    	int checkrow= checkRowExist(conn, typeacc, reservationtype, parkname, date);
-		available=checkAvailable(conn, parkname, numberofvisitors, date, time);
-		System.out.println("checkrow = " +checkrow + "\navailable= " +available);
-        System.out.println("dwell is: " + dwell);
-		if(checkrow==1&&available==1) {
-    		if(discounttype.equals("group"))
-    			total=total*0.88;
-    		System.out.println("can make update for order~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    		System.out.println("beforepark " +beforechangepark+"\nbeforedate " +beforechangedate
-    				+"\nbeforetime " +beforechangetime + "\nbeforenumberofvisitors " +beforenumberofvisitor + "\ntypeaccount " +typeacc
-    				+"\nreservationtype "  +reservationtype+"\ndwelltime " +dwell);
-    		if(beforewaitinglist.equals("NO")) {
-	            update =updateTotalTables(conn, beforechangepark, beforechangedate,
-	            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");}
-            if(update==1) {
-            	dwell=checkDwell(conn, parkname);
-            	int update2=updateTotalTables(conn, parkname, date,
-                		time, numberofvisitors, typeacc, reservationtype, dwell, "+");
-            }
-		}
-
-		else if(checkrow==1&&available==0){
-            update =updateTotalTables(conn, beforechangepark, beforechangedate,
-            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");
-			updateWaitingList(conn, orderid);
-		}
-    	else if(checkrow==0&&available==1){
-    		if(beforewaitinglist.equals("NO")) {
-	            update =updateTotalTables(conn, beforechangepark, beforechangedate,
-	            		beforechangetime, beforenumberofvisitor, typeacc, reservationtype, dwell, "-");}
-            if(update==1)
-            	insertTotalTables(conn, parkname, date, time, numberofvisitors, typeacc, reservationtype, dwell, "+");
-    	}
-    	else {
-    		return 10;
-    	}
-
-    	if(checkrow==1) {
-    		System.out.println("its the last if~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    		String sqlorders = "UPDATE orders SET ParkName = ?, DateOfVisit = ?, TimeOfVisit = ?, NumberOfVisitors = ?, IsConfirmed = ?, IsVisit = ?,"
-    				+ " IsCanceled = ?, TotalPrice = ?, IsInWaitingList = ? WHERE OrderId = ?";
-	        try (PreparedStatement pstmt = conn.prepareStatement(sqlorders)) {
-	            pstmt.setString(1, parkname); 
-	            pstmt.setString(2, date); 
-	            pstmt.setString(3, time); 
-	            pstmt.setString(4, numberofvisitors); 
-	            pstmt.setString(5, "YES"); 
-	            pstmt.setString(6, "NO"); 
-	            pstmt.setString(7,"NO"); 
-	            pstmt.setString(8, ""+total); 
-	            pstmt.setString(9, "NO"); 
-	            pstmt.setInt(10, Integer.parseInt(orderid)); 
-	            int affectedRows = pstmt.executeUpdate();
-	            if (affectedRows > 0) {
-	                System.out.println("dbController> Order updated successfully.");
-	                if(total<0.0)
-	                	return 20;
-	                return 1;
-	            } else {
-	                System.out.println("dbController> Order not found or no change made.");
-	            }
-	            pstmt.close();
-	        } catch (SQLException e) {
-	            System.out.println("Error updating order: " + e.getMessage());
-	        }
-    	}
-    	return 0;
-    }*/
+  
     
     //searching if the user exist on users table on DB
     public static int searchUser(Connection conn, String username, String password) {
@@ -545,28 +444,29 @@ public class DbController {
 	
 //creating an order and mark the waiting list field as "YES" (which means it on waiting list)
 	public static int waitingList(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors,String orderid,String totalprice) {
+			String numberofvisitors,String orderid,String totalprice,String email,String typeacc) {
 		int ordernumber=Integer.parseInt(orderid);
-		ordernumber++;
 		System.out.println("new order number: "+ ordernumber);
-		String userid="";
-		String sqlusers="SELECT * FROM users WHERE Username = ?";
-	    try (PreparedStatement pstmt = conn.prepareStatement(sqlusers)){
-				pstmt.setString(1, username);
-		        try(ResultSet rs = pstmt.executeQuery()) {
-			           if (rs.next()) {	
-			        	   userid=rs.getString("UserId");
-			           }
-			    }catch (SQLException e) {
-			        System.out.println("DbController> Error fetching orders: " + e.getMessage());}    
-		    } catch (SQLException e2) {
-				e2.printStackTrace();}
+		String userid=username;
+		if(!typeacc.equals("guest")) {
+			String sqlusers="SELECT * FROM users WHERE Username = ?";
+		    try (PreparedStatement pstmt = conn.prepareStatement(sqlusers)){
+					pstmt.setString(1, username);
+			        try(ResultSet rs = pstmt.executeQuery()) {
+				           if (rs.next()) {	
+				        	   userid=rs.getString("UserId");
+				           }
+				    }catch (SQLException e) {
+				        System.out.println("DbController> Error fetching orders: " + e.getMessage());}    
+			    } catch (SQLException e2) {
+					e2.printStackTrace();}
+		}
 	    String sqlorders = "INSERT INTO orders (OrderId, ParkName, UserId, DateOfVisit, "
-	    		+ "TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    		+ "TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList, Email) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sqlorders)){
 				pstmt.setInt(1, ordernumber);
 				pstmt.setString(2, parkname);
-				pstmt.setString(3, userid);
+				pstmt.setString(3, username);
 				pstmt.setString(4, date);
 				pstmt.setString(5, time);
 				pstmt.setString(6, numberofvisitors);
@@ -575,6 +475,7 @@ public class DbController {
 				pstmt.setString(9, "NO");
 				pstmt.setString(10, totalprice);
 				pstmt.setString(11, "YES");
+				pstmt.setString(12, email);
 			    pstmt.executeUpdate();
 				System.out.println("insert into orders succeed~~~~");
 				return 1;
@@ -597,27 +498,28 @@ public class DbController {
 			e.printStackTrace();
 		}
         System.out.println("max order id is: " +max);
-		return max;
+		return ++max;
 	}
 //saving in DB the order details
 	public static int saveOrder(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors, String orderId, String totalprice, String typeacc,String reservationtype,String dwelltime) {
+			String numberofvisitors, String orderId, String totalprice, String typeacc,String reservationtype,String dwelltime, String email) {
 		int ordernumber=Integer.parseInt(orderId);
-		ordernumber++;
 		String userid="";
-		String sqlusers="SELECT * FROM users WHERE Username = ?";
-	    try (PreparedStatement pstmt = conn.prepareStatement(sqlusers)){
-				pstmt.setString(1, username);
-		        try(ResultSet rs = pstmt.executeQuery()) {
-			           if (rs.next()) {	
-			        	   userid=rs.getString("UserId");
-			           }
-			    }catch (SQLException e) {
-			        System.out.println("DbController> Error fetching orders: " + e.getMessage());}    
-		    } catch (SQLException e2) {
-				e2.printStackTrace();}
+		if(!typeacc.equals("guest")) {
+			String sqlusers="SELECT * FROM users WHERE Username = ?";
+		    try (PreparedStatement pstmt = conn.prepareStatement(sqlusers)){
+					pstmt.setString(1, username);
+			        try(ResultSet rs = pstmt.executeQuery()) {
+				           if (rs.next()) {	
+				        	   userid=rs.getString("UserId");
+				           }
+				    }catch (SQLException e) {
+				        System.out.println("DbController> Error fetching orders: " + e.getMessage());}    
+			    } catch (SQLException e2) {
+					e2.printStackTrace();}}
+		else {userid=username;}
 	    String sql = "INSERT INTO orders (OrderId, ParkName, UserId, DateOfVisit, "
-	    		+ "TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    		+ "TimeOfVisit, NumberOfVisitors, IsConfirmed, IsVisit, IsCanceled, TotalPrice, IsInWaitingList, Email) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)){//insert into orders table the order details
 				pstmt.setInt(1, ordernumber);
 				pstmt.setString(2, parkname);
@@ -630,6 +532,7 @@ public class DbController {
 				pstmt.setString(9, "NO");
 				pstmt.setString(10, totalprice);
 				pstmt.setString(11, "NO");
+				pstmt.setString(12, email);
 			    pstmt.executeUpdate();
 			    int update = updateTotalTables(conn,parkname,date,time,numberofvisitors, typeacc,reservationtype,dwelltime,"+");
 			    if(update==0) {
@@ -1023,6 +926,55 @@ public class DbController {
 			return "succeed";
 		return "failed";
 	}
+	
+	public static String DeleteOrderAuto(Connection conn, String orderid, String typeaccount, String reservationtype) {
+		int delete=0;
+		String parkname="";
+		String date="";
+		String time="";
+		String numberofvisitors="";
+		String iswaitinglist="";
+		String sql="SELECT * FROM orders WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, orderid); 
+		    ResultSet rs = pstmt.executeQuery();
+		    if (rs.next()) {
+		    	parkname = rs.getString("ParkName");
+		    	date = rs.getString("DateOfVisit");
+		    	time = rs.getString("TimeOfVisit");
+		    	iswaitinglist=rs.getString("IsInWaitingList");
+		    	numberofvisitors = rs.getString("NumberOfVisitors");
+		    } else {
+		        System.out.println("DbController> failed to delete order.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();}
+		String dwell=checkDwell(conn, parkname);
+		//---------------------------------------------------------------------------------------------------------------------------------
+		String sqlupdate = "UPDATE orders SET IsCanceled = ?, IsInWaitingList = ?, IsCanceledAuto = ? WHERE OrderId = ?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sqlupdate)) {
+			pstmt.setString(1, "YES");
+			pstmt.setString(2, "NO");
+			pstmt.setString(3, "YES");
+			pstmt.setString(4, orderid); // Replace orderId with the actual OrderId you want to cancel
+
+		    int rowsAffected = pstmt.executeUpdate();
+		    if (rowsAffected > 0) {
+		    	delete=1;
+		        System.out.println("Order canceled successfully.");
+		    } else {
+		        System.out.println("No row found with the specified OrderId.");
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		int update=0;
+		if(iswaitinglist.equals("NO")) {
+			update =updateTotalTables(conn, parkname, date, time, numberofvisitors, typeaccount, reservationtype, dwell, "-");	}
+		if (delete==1) {
+			return "succeed";}
+		return "failed";
+	}
 
 	public static void updateWaitingList(Connection conn, String orderid) {
 		String sqlupdate = "UPDATE orders SET IsConfirmed = ? ,IsInWaitingList = ? WHERE OrderId = ?";
@@ -1109,13 +1061,11 @@ public class DbController {
 	
 	
 	public static boolean updateGuideRole(Connection conn, String id) {
-		if(id.isEmpty()) {
-			return false; 
-		}
-		String sql = "UPDATE users SET TypeUser = ? WHERE UserId = ? AND TypeUser IS null";
+		String sql = "UPDATE users SET TypeUser = ? WHERE UserId = ? AND (TypeUser IS NULL OR TypeUser = '')";
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 	        pstmt.setString(1, "guide");
 	        pstmt.setString(2, id);
+	        //pstmt.setString(3, "customer");
 	        int rowsAffected = pstmt.executeUpdate();
 	        
 	        if (rowsAffected > 0) { 
@@ -1346,6 +1296,32 @@ public class DbController {
 	    return IndTimeEntryVisitors;
 	}
 
+	/*public static int registerUser(Connection conn, String fname, String lname, String username, String password,
+			String email, String telephone) {
+		int userid=checkMaxUserId(conn);
+		userid++;
+		String sql = "INSERT INTO users (UserId, Fname, Lname, Username, Password, Email, PhoneNumber, TypeUser, IsLogged) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, userid);
+	        pstmt.setString(2, fname);
+	        pstmt.setString(3, lname);
+	        pstmt.setString(4, username);
+	        pstmt.setString(5, password);
+	        pstmt.setString(6, email);
+	        pstmt.setString(7, telephone);
+	        pstmt.setString(8, "customer");
+	        pstmt.setString(9, "0");
+	        int rowsAffected = pstmt.executeUpdate();
+	        if (rowsAffected > 0) { 
+	        	System.out.println("DbController> userRegistration succeed");
+	        	return 1; 
+	        }
+	    }catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+		return 0;
+	}*/=======
 	public static void requastToChangevisit(Connection conn, String parkname, String visitTime) {
 		// Step 1: Check for an existing row
 	    String checkSql = "SELECT 1 FROM visit_time_max_table WHERE parkname = ? AND max_cap IS NULL";
@@ -1701,7 +1677,77 @@ public class DbController {
 		
 
 	
-	
+	/*public static int checkMaxUserId(Connection conn) {//checking the max order number 
+		int max=1;
+		String sql="SELECT MAX(CAST(UserId AS UNSIGNED)) FROM users";
+        try (Statement stmt = conn.createStatement(); 
+        		  ResultSet rs = stmt.executeQuery(sql)){ 
+        			if (rs.next()) {
+        				max=rs.getInt("MAX(CAST(UserId AS UNSIGNED))");
+        			}  
+        } catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+        System.out.println("max order id is: " +max);
+		return max;
+	}*/
+
+	public static int checkExternalUser(Connection conn, String id) {
+	    String sql = "SELECT * FROM external_users WHERE UserId = ?";
+	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, id);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) { // If rs.next() returns true, then there is at least one row in the result set
+	                System.out.println("DbController> externalUser exists");
+	                return 1;
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return 0;
+	}
+
+	public static int addExternalUser(Connection conn, String id) {
+		String sql = "INSERT INTO external_users (UserId) VALUES (?);";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		    pstmt.setString(1, id);
+		    pstmt.executeUpdate();
+		    return 1;
+		} catch (SQLException e) {
+		    e.printStackTrace();
+	}
+		return 0;
+	}
+
+	public static void importData(Connection conn) {
+	    String sql = "INSERT INTO gonaturedb.users (UserId, Fname, Lname, Username, Password, Email, PhoneNumber, TypeUser)"
+	            +"VALUES (3148138267, 'Ava', 'Smith', 'depm1', '123456', 'avasmith@gmail.com', '0522222222', 'department manager'),"
+	            +"(314, 'Liam', 'Johnson', 'safarim1', '123456', 'liamjohnson@gmail.com', '0523333333', 'park manager'),"
+	            +"(3148, 'Olivia', 'Williams', 'service1', '123456', 'oliviawilliams@gmail.com', '0524444444', 'service employee'),"
+	            +"(31481, 'Noah', 'Brown', 'guide1', '123456', 'noahbrown@gmail.com', '0525555555', ''),"
+	            +"(314813, 'Emma', 'Jones', 'guide21', '123456', 'emmajones@gmail.com', '0526666666', ''),"
+	            +"(3148138, 'Oliver', 'Garcia', 'guide31', '123456', 'olivergarcia@gmail.com', '0527777777', ''),"
+	            +"(1, 'customer', 'customeri', 'customer', '123456', 'customer@gmail.com', '12345645', ''),"
+	            +"(314813825, 'Hamza', 'Abunimer', 'hamzaabunimer', '123456', 'hamzaabunimer@gmail.com', '0521111111', ''),"
+	            +"(314813826, 'Ava', 'Smith', 'depm', '123456', 'avasmith@gmail.com', '0522222222', 'department manager'),"
+	            +"(314813827, 'Liam', 'Johnson', 'safarim', '123456', 'liamjohnson@gmail.com', '0523333333', 'park manager'),"
+	            +"(314813828, 'Olivia', 'Williams', 'service', '123456', 'oliviawilliams@gmail.com', '0524444444', 'service employee'),"
+	            +"(314813829, 'Noah', 'Brown', 'guide', '123456', 'noahbrown@gmail.com', '0525555555', ''),"
+	            +"(314813830, 'Emma', 'Jones', 'guide2', '123456', 'emmajones@gmail.com', '0526666666', ''),"
+	            +"(314813831, 'Oliver', 'Garcia', 'guide3', '123456', 'olivergarcia@gmail.com', '0527777777', ''),"
+	            +"(314813832, 'Isabella', 'Martinez', 'customer1', '123456', 'isabellamartinez@gmail.com', '0528888888', ''),"
+	            +"(314813833, 'Mason', 'Rodriguez', 'customer2', '123456', 'masonrodriguez@gmail.com', '0529999999', ''),"
+	            +"(314813834, 'Sophia', 'Lopez', 'customer3', '123456', 'sophialopez@gmail.com', '0530000000', ''),"
+	            +"(5, 'israel', 'israeli', 'parke', '123456', 'parke@gmail.com', '02522555546', 'park employee')";
+	    try (Statement stmt = conn.createStatement()) {
+	        int rowsAffected = stmt.executeUpdate(sql); 
+	        System.out.println(rowsAffected + " rows inserted.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 
 

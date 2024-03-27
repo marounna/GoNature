@@ -1,38 +1,50 @@
-/* Base styling for the AnchorPane */
-.anchor-pane {
-    -fx-background-color: #f0f4f7; /* Light grey background for a subtle, professional look */
+/* Base styling for the application with a jungle-themed aesthetic */
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6);
+    -fx-background-size: cover;
+    -fx-font-family: 'Arial', sans-serif;
 }
 
-/* Styling for labels */
+/* Label styling with a contrasting dark green color for clear visibility */
 .label {
-    -fx-text-fill: #333; /* Dark grey text for high contrast and readability */
-    -fx-font-family: 'Bell MT Bold'; /* Custom font family */
-    -fx-font-size: 16px; /* Slightly larger font size for emphasis */
-    -fx-background-color: #ddeeff; /* Soft blue background for the label */
-    -fx-padding: 10px; /* Padding around the text for better spacing */
-    -fx-alignment: center; /* Center text alignment */
+    -fx-font-size: 14px; /* Slightly larger for main menu titles */
+    -fx-font-weight: bold;
+    -fx-text-fill: #005b2e; /* Dark green for contrast against light background */
 }
 
-/* Generic button styling */
+/* Generic button styling with jungle theme colors and sizing */
 .button {
-    -fx-background-color: #507856; /* Deep green for a nature-inspired, calming effect */
-    -fx-text-fill: white; /* White text for maximum contrast and readability */
-    -fx-font-family: 'System Italic'; /* Italic system font for a touch of elegance */
-    -fx-padding: 5px 10px; /* Padding for a balanced, comfortable click area */
-    -fx-border-radius: 5px; /* Slightly rounded corners for a modern, friendly appearance */
-    -fx-background-radius: 5px; /* Match the border radius for consistency */
+    -fx-background-color: #507856; /* Deep green for the button background */
+    -fx-text-fill: white; /* White text for contrast */
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 8px 20px; /* Slightly larger padding for better touch targets */
+    -fx-font-size: 13px; /* Slightly larger font size for button text */
 }
 
+/* Hover effect for buttons to provide interactive feedback */
 .button:hover {
-    -fx-background-color: #3e6147; /* Darker green on hover for interactive feedback */
+    -fx-background-color: #3e6147; /* Slightly darker green on hover */
 }
 
-/* Specific styling for the logout (back) button */
-#LogOutBtn {
-    -fx-background-color: #cc3333; /* Red color to signify a cautionary action */
-    -fx-font-size: 10px; /* Smaller font size for less emphasis compared to other buttons */
+/* Focused state styling for text fields, text areas, combo boxes, and password fields */
+.text-field:focused, .text-area:focused, .combo-box:focused, .password-field:focused {
+    -fx-border-color: #74a662; /* Light green for focused state border */
+    -fx-border-width: 2px; /* Thicker border for emphasis */
 }
 
-#LogOutBtn:hover {
-    -fx-background-color: #992222; /* Darker red on hover to maintain the cautionary theme */
+/* Default styling for text fields, text areas, combo boxes, and password fields */
+.text-field, .text-area, .combo-box, .password-field {
+    -fx-prompt-text-fill: #b6b6b6; /* Grey color for prompt text */
+    -fx-background-color: white; /* White background for input fields */
+    -fx-border-color: #74a662; /* Light green border color */
+    -fx-padding: 2px 5px; /* Padding for text alignment */
 }
+
+/* Pane styling for alignment and layout */
+.pane {
+    -fx-alignment: center; /* Center alignment for button groups and other elements */
+}
+
+/* Additional specific styling if needed, based on ID or class */
+/* Add here */

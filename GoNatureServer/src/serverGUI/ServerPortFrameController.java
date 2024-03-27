@@ -70,11 +70,17 @@ public class ServerPortFrameController implements Initializable{
     @FXML
     private TableColumn<ClientConnectionStatus, String> statusColumn;
     
-    
+    @FXML
+    private Button importDataBtn;
         
 	private String getport() {
 		return portField.getText();			
 	}
+	
+    @FXML
+    void ClickOnImportData(ActionEvent event) {
+    	EchoServer.importData();
+    }
 
     @FXML
 	public void handleStartServerAction(ActionEvent event) {

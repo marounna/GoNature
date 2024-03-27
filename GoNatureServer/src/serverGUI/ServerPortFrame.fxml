@@ -43,6 +43,6 @@
       <Circle fx:id="Circle" fill="#ff2b1f" layoutX="691.0" layoutY="327.0" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
       <TextField fx:id="ipAddress" layoutX="164.0" layoutY="104.0" />
       <PasswordField fx:id="dbPasswordField" layoutX="164.0" layoutY="254.0" />
-      <Button layoutX="164.0" layoutY="368.0" mnemonicParsing="false" onAction="#ImportData" text="Import Data" />
+      <Button fx:id="importDataBtn" layoutX="164.0" layoutY="368.0" mnemonicParsing="false" onAction="#ClickOnImportData" text="Import Data" />
    </children>
 </Pane>

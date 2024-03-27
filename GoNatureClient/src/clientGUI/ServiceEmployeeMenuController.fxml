@@ -2,22 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.Pane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="clientGUI.ServiceEmployeeMenuController">
-	<children>
-      <Label alignment="CENTER" prefHeight="56.0" prefWidth="160.0" text="MENU">
-         <font>
-            <Font name="Bell MT Bold" size="16.0" />
-         </font></Label>
-      <Button fx:id="DefineGuide" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="43.0" mnemonicParsing="false" onAction="#defineGuideRole" prefHeight="11.0" prefWidth="117.0" text="Define guide role">
-         <font>
-            <Font name="System Italic" size="12.0" />
-         </font></Button>
-      <Button fx:id="LogOutBtn" layoutX="64.0" layoutY="85.0" mnemonicParsing="false" onAction="#clickOnLogout" text="BACK">
-         <font>
-            <Font name="System Italic" size="10.0" />
-         </font></Button>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="394.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.ServiceEmployeeMenuController">
+   <children>
+      <Label layoutX="134.0" layoutY="34.0" text="Service employee menu" />
+      <Button fx:id="defineGuideBtn" layoutX="112.0" layoutY="112.0" mnemonicParsing="false" onAction="#clickOnDefineGuide" prefHeight="25.0" prefWidth="181.0" text="Define guide" />
+      <Button fx:id="logoutBtn" layoutX="33.0" layoutY="183.0" mnemonicParsing="false" onAction="#clickOnLogout" text="Logout" />
    </children>
-</AnchorPane>
+</Pane>
