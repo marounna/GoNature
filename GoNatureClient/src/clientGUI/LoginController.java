@@ -39,6 +39,7 @@ public class LoginController {
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
+
 	          //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
       		  SwitchScreen.changeScreen(event,"/clientGUI/LoginOrNewReservation.fxml"
       				  ,"/resources/LoginOrNewReservation.css");
@@ -61,6 +62,10 @@ public class LoginController {
 		System.out.println("check before if exist login controller");
 		/*if (!StaticClass.isexist)
 			existlabel.setString("Username does not exist");*///need to take care of when user enter not valid user details--------------------------------------------------------------------------------------
+		
+		
+		
+		
 		if (StaticClass.isexist) {
 			StaticClass.username=username;
 			System.out.println("this is loginController> username is: "+StaticClass.username);
@@ -78,6 +83,7 @@ public class LoginController {
 				StaticClass.isexist=false;
 		        System.out.println(StaticClass.typeacc);
 		        switch(StaticClass.typeacc) {
+		        	case "customer":
 		        	case "guide":
 		        		if(StaticClass.typeacc.equals("customer")) {
 		        			StaticClass.reservationtype="customer";
@@ -86,7 +92,8 @@ public class LoginController {
 		        		
 		        		else { 
 		        			StaticClass.reservationtype="guide";
-		        			StaticClass.discounttype="guide";	
+		        			StaticClass.discounttype="guide";
+		        		
 		        		}
 		        		SwitchScreen.changeScreen(event,"/clientGUI/UserMenuController.fxml"
 		        				,"/resources/UserMenuController.css");
@@ -108,13 +115,10 @@ public class LoginController {
 		        		SwitchScreen.changeScreen(event,"/clientGUI/EmployeeMenuController.fxml"
 		        				,"/resources/EmployeeMenuController.css");
 		        		break;
-		        	default:
-		        		userNotExist.setText("User is not defined");
 		        }
 	        }
 		}		
 		else {
-			userNotExist.setStyle("-fx-text-fill: red;");
 			if(StaticClass.islogged) { 
 				StaticClass.islogged=false;
 				userNotExist.setText("User already logged in");}
@@ -122,13 +126,6 @@ public class LoginController {
 				userNotExist.setText("User details are not valid");
 		}
     }
-    
-   /* @FXML
-    private void initialize() {
-    	if (StaticClass.typeacc.equals("")) {
-    		StaticClass.typeacc="customer";
-    	}
-    }*/
     
 }
 

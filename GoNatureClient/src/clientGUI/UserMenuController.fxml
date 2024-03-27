@@ -34,6 +34,5 @@
         </columns>
       </TableView>
       <Label layoutX="394.0" layoutY="335.0" text="Orders on waiting list" />
-      <Button fx:id="refreshBtn" layoutX="402.0" layoutY="647.0" mnemonicParsing="false" onAction="#ClickOnRefresh" text="Refresh Table" />
    </children>
 </Pane>

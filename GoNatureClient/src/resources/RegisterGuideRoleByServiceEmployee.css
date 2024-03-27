@@ -1,50 +1,55 @@
-/* Base styling for the Pane */
-.root {
-    -fx-background-color: linear-gradient(to bottom right, #dceef1, #c4dfe6); /* Light blue gradient */
-    -fx-font-family: 'Arial', sans-serif; /* Standard font for readability */
-    -fx-background-size: cover; /* Ensure the background covers the entire Pane */
+/* Base styling for the AnchorPane */
+.anchor-pane {
+    -fx-background-color: #f4f4f4; /* Neutral background for minimalistic design */
 }
 
-/* Styling for all Label elements */
+/* Styling for main title label */
 .label {
-    -fx-font-size: 14px; /* Enhanced size for readability */
-    -fx-font-weight: bold; /* Bold font to make labels stand out */
-    -fx-text-fill: #005b2e; /* Dark green, reminiscent of jungle foliage */
-    -fx-padding: 5px; /* Padding around text for better visibility */
-    -fx-background-color: #dceef1aa; /* Semi-transparent background for labels */
-    -fx-background-radius: 5px; /* Rounded corners for a softer look */
+    -fx-text-fill: #2c3e50; /* Dark blue for elegance and readability */
+    -fx-font-family: 'Bell MT Bold'; /* Maintain your custom font choice */
+    -fx-font-size: 16px; /* Emphasize the main title */
+    -fx-alignment: center; /* Ensure the title is centered */
 }
 
-/* Styling for TextField elements */
+/* Secondary labels styling, such as 'ID:' */
+.secondary-label {
+    -fx-text-fill: #34495e; /* Slightly lighter shade for subtlety */
+    -fx-font-size: 14px; /* Smaller font size for less emphasis */
+}
+
+/* Styling for text fields */
 .text-field {
-    -fx-font-size: 12px; /* Optimal size for text entry */
-    -fx-text-fill: #005b2e; /* Consistent dark green text color */
-    -fx-background-color: #ffffff; /* White background for clarity */
-    -fx-border-color: #005b2e; /* Border color to match the text and theme */
-    -fx-border-radius: 5px; /* Rounded borders for aesthetic consistency */
+    -fx-font-size: 12px; /* Comfortable reading size */
+    -fx-border-color: #bdc3c7; /* Soft border color */
+    -fx-border-width: 1px; /* Thin borders for a refined look */
+    -fx-background-color: #ecf0f1; /* Light background for the text field */
+    -fx-text-fill: #2c3e50; /* Dark text for contrast and readability */
 }
 
-/* Generic styling for buttons */
+.text-field:focused {
+    -fx-border-color: #3498db; /* Highlighted border color when focused */
+}
+
+/* Generic button styling */
 .button {
-    -fx-background-color: #507856; /* Deep, vibrant green for buttons */
-    -fx-text-fill: #ffffff; /* White text for clear legibility */
-    -fx-font-size: 12px; /* Appropriately sized text for buttons */
-    -fx-background-radius: 5px; /* Rounded corners for a modern look */
-    -fx-padding: 10px; /* Adequate padding for a balanced appearance */
+    -fx-background-color: #3498db; /* Vibrant blue for a modern feel */
+    -fx-text-fill: white; /* White text for clarity */
+    -fx-border-radius: 5px; /* Slightly rounded edges for a modern look */
+    -fx-background-radius: 5px; /* Consistency with border radius */
+    -fx-padding: 5px 10px; /* Adequate padding for clickability */
+    -fx-font-family: 'System Italic'; /* Italic font for a touch of style */
+    -fx-font-size: 10px; /* Smaller font size for concise buttons */
 }
 
-/* Hover effect for buttons for added interactivity */
 .button:hover {
-    -fx-background-color: #3e6147; /* Darker shade of green upon hover */
+    -fx-background-color: #2980b9; /* Darker shade on hover for interactivity */
 }
 
-/* Special styling for the Back button to differentiate it */
-#backBtn {
-    -fx-background-color: #507856; /* Warm orange to make the button stand out */
-    -fx-text-fill: #ffffff; /* White text for contrast and readability */
+/* Specific styling for the back button, to distinguish it from other actions */
+#BackBtn {
+    -fx-background-color: #e74c3c; /* Red to signify a cautionary or alternate action */
 }
 
-/* Hover effect for the Back button */
-#backBtn:hover {
-    -fx-background-color: #3e6147; /* A deeper shade of orange for hover effect */
+#BackBtn:hover {
+    -fx-background-color: #c0392b; /* Darker red on hover for visual feedback */
 }

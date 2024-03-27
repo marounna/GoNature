@@ -184,12 +184,6 @@ public void handleMessageFromServer(Object msg1)
         	  else {
         		  System.out.println("ChatClient> delete order failed");
         	  }
-          case "deleteOrderAuto":
-        	  if(result[1].equals("succeed"))
-        		  System.out.println("ChatClient> auto delete order succeed");
-        	  else {
-        		  System.out.println("ChatClient> auto delete order failed");
-        	  }
     		  break;
           case "updateOrder":
         	  if(result[1].equals("waitinglist")) {
@@ -240,21 +234,6 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "updateRole":
 			 break;
-          case "registerUser":
-        	  if(result[1].equals("succeed")) {
-        		  StaticClass.userregistration=1;
-        	  }
-        	  break;
-          case "checkExternalUser":
-        	  if(result[1].equals("exist")) {
-        		  StaticClass.externaluser="1";
-        	  }
-        	  break;
-          case "addExternalUser":
-        	  if(result[1].equals("succeed")) {
-        		  StaticClass.addexternaluser=1;
-        	  }
-        	  break;
           case "test ":
         	  System.out.println(result[1]);
         	  break;

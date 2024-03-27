@@ -14,11 +14,11 @@
 
 /* Styling for the close button */
 #closeBtn {
-    -fx-background-color: #ff4f4f; /* Red background for the close button */
+    -fx-background-color: #FF0000; /* Red background for the close button */
     -fx-text-fill: white; /* White text for the "X" */
     -fx-font-weight: bold; /* Make the "X" bold */
     -fx-background-radius: 0; /* No rounded corners for the close button */
-    -fx-padding:  10px  10px; /* Padding for the close button */
+    -fx-padding: 0 5px 0 5px; /* Padding for the close button */
 }
 
 #closeBtn:hover {
