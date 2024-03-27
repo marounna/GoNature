@@ -3,6 +3,7 @@ package common;
 import java.util.ArrayList;
 
 import entities.Park;
+import entities.ParkForChange;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -36,6 +37,11 @@ public class StaticClass {
 	public static int userregistration;
 	public static String externaluser= "0";
 	public static int addexternaluser;
+	public static ArrayList<ParkForChange> changeparkdwelltime = new ArrayList<>();
+	public static ArrayList<ParkForChange> changeparkmaxcap = new ArrayList<>();
+    public static String amountinparkyarden="";
+    public static int istheorderexist=0;
+    public static int amoutgreaterthenorder=0;
 
 
 }

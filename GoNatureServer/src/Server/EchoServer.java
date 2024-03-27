@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import Server.DbController;
 import entities.Park;
+import entities.ParkForChange;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.ClientConnectionStatus;
@@ -46,20 +47,8 @@ public class EchoServer extends AbstractServer {
      */
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
-        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
-        String returnmsg="";
-        String message = (String) msg.toString();
-        System.out.println("EchoServer> " + message);
-        String[] result = message.split(" ");
-        System.out.println(result[0]);
-        if (result.length < 1) {
-            handleErrorMessage(client, "Invalid message format");
-            return;
-        }
-        Connection conn = DbController.createDbConnection();
-        if(result[0].equals("park")) {
-        	System.out.println("its park!~~~~~~~~~~~~~~~~");
-        	result[0]="park";}
+        	System.out.println("EchoServer>handleMessageFromClient");
+        	 Connection conn = DbController.createDbConnection();
         if (msg instanceof Message) {
     		Message msgObject=((Message)msg);
     		String command=msgObject.getCommand();
@@ -154,7 +143,23 @@ public class EchoServer extends AbstractServer {
 				throw new IllegalArgumentException("Unexpected value: " + command);
 			}
     	} 
+        //normal command not massage
         else {
+        	
+        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
+        String returnmsg="";
+        String message = (String) msg.toString();
+        System.out.println("EchoServer> " + message);
+        String[] result = message.split(" ");
+        System.out.println(result[0]);
+        if (result.length < 1) {
+            handleErrorMessage(client, "Invalid message format");
+            return;
+        }
+       
+        if(result[0].equals("park")) {
+        	System.out.println("its park!~~~~~~~~~~~~~~~~");
+        	result[0]="park";}	
         switch (result[0]) {
 			case "getParksMangedByParkManger": {
 					String[] arr=getParksMangedByParkManger(conn,result[1]);
@@ -368,6 +373,75 @@ public class EchoServer extends AbstractServer {
         	}
     	}
         }    catch(IOException e) {
+
+            case"requastToChangevisit":
+        		DbController.requastToChangevisit(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"requastToChangeMaxCapcitiy":
+        		DbController.requastToChangeMaxCapcitiy(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"parkChangesVisit":
+            	ArrayList<ParkForChange> waitforchange = new ArrayList<>();
+            	waitforchange = DbController.LoadparkForChangevisittime(conn);
+        		Message payloadfordmchange = new Message("updatechangeparkdwelltime", waitforchange);
+        		client.sendToClient(payloadfordmchange);
+        		break;
+            case"parkMaxCap":
+            	ArrayList<ParkForChange> waitforchange1 = new ArrayList<>();
+            	waitforchange1 = DbController.LoadparkForMaxcap(conn);
+        		Message payloadfordmchange1 = new Message("updateparkMaxCap", waitforchange1);
+        		client.sendToClient(payloadfordmchange1);
+        		break;
+            	
+            case"approveVisitTime":
+            	DbController.approveVisitTime(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineVisitTime":
+            	DbController.decline(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"approveMaxCapacity":
+            	DbController.approveMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineMaxCapacity":
+            	DbController.declineMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"amountInPark":
+            	String amountinpark=DbController.getamountinpark(conn,result[1]);
+            	sendToClient(client,"amountInPark " +amountinpark);
+            	break;
+            case"orderexistYarden":
+
+            	int Exist=DbController.searchOrder(conn,result[1]);
+            	sendToClient(client,"OrderExistYarden "+ Exist);
+            	break;
+            case"checkamountofpeople":
+            	int greatorless =DbController.checkamountofpeople(conn,result[1],result[2]);
+            	sendToClient(client, "checkamountofpeople "+ greatorless);
+            	break;
+            case"UpdateTable":
+            	DbController.updateyardentable(conn,result[1],result[2],result[3]);
+            	sendToClient(client, "test "+ "test11111111111111111111111");
+            	break;
+            	
+
+
+            	
+
+
+            	
+            default:
+                handleErrorMessage(client, "Invalid command");
+        }//switch end
+        
+        }//else end
+        }  
+        catch(IOException e) {
        	 handleErrorMessage(client, "Invalid command");
        	 e.printStackTrace();
        	}
@@ -550,4 +624,6 @@ public class EchoServer extends AbstractServer {
 			DbController.importData(conn);
 		}
 	}
+}
+
 }
