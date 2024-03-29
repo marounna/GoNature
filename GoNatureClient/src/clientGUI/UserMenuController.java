@@ -152,12 +152,12 @@ public class UserMenuController {
 	    	ClientUI.chat.accept("loadOrderForApproveTable " + StaticClass.userid);
 	    	ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
 	    	
-        	//Platform.runLater(() -> {
+        	Platform.runLater(() -> {
           	   System.out.println("checkOrders test");
          	   checkOrdersForAlerts();
     	        	ApprovedOrdersTableField.setItems(FXCollections.observableArrayList(StaticClass.ordersforapprovetable));
     	        	ApprovedOrdersTableField.refresh();
-         	//});
+         	});
 	    	
 	    	
 	    	
@@ -347,7 +347,6 @@ public class UserMenuController {
 	    
 	    
 	    private void checkOrdersForAlerts() {
-      	   System.out.println("checkOrders 357");
 	    	LocalDate nowDate = LocalDate.now(); // Current date
 	    	LocalTime nowTime = LocalTime.now(); // Current time
 
@@ -355,7 +354,6 @@ public class UserMenuController {
 	    	DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm"); // Adjust this to match your time format
 
 	    	for (Order order : StaticClass.ordersforapprovetable) {
-          	   System.out.println("checkOrders 358");
 	    	    try {
 	    	        LocalDate orderDate = LocalDate.parse(order.getDate(), dateFormatter);
 	    	        LocalTime orderTime = LocalTime.parse(order.getTimeOfVisit(), timeFormatter); // Assuming you have getTimeOfVisit method
@@ -363,7 +361,6 @@ public class UserMenuController {
 	    	        // Check if the order date is tomorrow
 	    	        if (orderDate.isEqual(nowDate.plusDays(1))) {
 	                    // Alert the user about the order scheduled for tomorrow
-		             	   System.out.println("checkOrders test date date +1");
 	                    Alert alertdate = new Alert(AlertType.INFORMATION);
 	                    alertdate.setTitle("Order Reminder");
 	                    alertdate.setHeaderText(null);
