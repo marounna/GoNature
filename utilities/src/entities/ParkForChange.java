@@ -60,4 +60,4 @@ public class ParkForChange implements Serializable {
     public void setMaxCapacityAfter(String maxCapacityAfter) {
         this.maxCapacityAfter = maxCapacityAfter;
     }
-}
+

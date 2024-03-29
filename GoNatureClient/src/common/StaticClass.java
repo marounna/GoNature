@@ -34,6 +34,11 @@ public class StaticClass {
 	public static int visa;
 	public static String updatelabel;
 	public static int orderalert=1;
+
+	public static int userregistration;
+	public static String externaluser= "0";
+	public static int addexternaluser;
+
 	public static ArrayList<ParkForChange> changeparkdwelltime = new ArrayList<>();
 	public static ArrayList<ParkForChange> changeparkmaxcap = new ArrayList<>();
     public static String amountinparkyarden="";

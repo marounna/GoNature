@@ -40,7 +40,6 @@ public class LoginController {
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
 
-	          //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
       		  SwitchScreen.changeScreen(event,"/clientGUI/LoginOrNewReservation.fxml"
       				  ,"/resources/LoginOrNewReservation.css");
 
