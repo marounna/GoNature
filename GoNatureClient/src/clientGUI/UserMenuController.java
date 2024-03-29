@@ -134,6 +134,16 @@ public class UserMenuController {
 	    	if(!StaticClass.typeacc.equals("guest")) {
 	    		ClientUI.chat.accept("userId " + StaticClass.username);}
 	    	ClientUI.chat.accept("loadOrderForApproveTable " + StaticClass.userid);
+	    	ClientUI.chat.accept("loadOrderForWaitingTable " + StaticClass.userid);
+	    	
+        	Platform.runLater(() -> {
+          	   System.out.println("checkOrders test");
+         	   checkOrdersForAlerts();
+    	        	ApprovedOrdersTableField.setItems(FXCollections.observableArrayList(StaticClass.ordersforapprovetable));
+    	        	ApprovedOrdersTableField.refresh();
+         	});
+	    	
+	    	
 	        approvedOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
 	        approvedParkName.setCellValueFactory(new PropertyValueFactory<>("parkName"));
 	        approvedDate.setCellValueFactory(new PropertyValueFactory<>("date"));
