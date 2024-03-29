@@ -39,7 +39,6 @@ public class LoginController {
     @FXML //return to the previous screen
     void ClickOnBackBtn(ActionEvent event) throws IOException {
 		try {
-	          //Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
       		  SwitchScreen.changeScreen(event,"/clientGUI/LoginOrNewReservation.fxml"
       				  ,"/resources/LoginOrNewReservation.css");
 
