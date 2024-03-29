@@ -17,6 +17,7 @@ import clientGUI.UserMenuController;
 import common.ChatIF;
 import common.StaticClass;
 import entities.Park;
+import entities.ParkForChange;
 import logic.Message;
 import logic.Order;
 import ocsf.client.AbstractClient;
@@ -183,12 +184,6 @@ public void handleMessageFromServer(Object msg1)
         	  else {
         		  System.out.println("ChatClient> delete order failed");
         	  }
-          case "deleteOrderAuto":
-        	  if(result[1].equals("succeed"))
-        		  System.out.println("ChatClient> auto delete order succeed");
-        	  else {
-        		  System.out.println("ChatClient> auto delete order failed");
-        	  }
     		  break;
           case "updateOrder":
         	  if(result[1].equals("waitinglist")) {
@@ -239,21 +234,29 @@ public void handleMessageFromServer(Object msg1)
 			  break;
 		  case "updateRole":
 			 break;
-          case "registerUser":
-        	  if(result[1].equals("succeed")) {
-        		  StaticClass.userregistration=1;
-        	  }
+          case "test ":
+        	  System.out.println(result[1]);
         	  break;
-          case "checkExternalUser":
-        	  if(result[1].equals("exist")) {
-        		  StaticClass.externaluser="1";
-        	  }
+          case "amountInPark":
+        	  StaticClass.amountinparkyarden=result[1];
         	  break;
-          case "addExternalUser":
-        	  if(result[1].equals("succeed")) {
-        		  StaticClass.addexternaluser=1;
-        	  }
+          case "OrderExistYarden":
+        	  StaticClass.istheorderexist=Integer.valueOf(result[1]);
         	  break;
+          case "checkamountofpeople":
+        	  StaticClass.amoutgreaterthenorder=Integer.valueOf(result[1]);
+        	  break;
+
+          case"updatechangeparkdwelltime":
+        	  ArrayList<ParkForChange> sendarrArrayList = (ArrayList<ParkForChange>) payloadMessage.getPayload();
+        	  StaticClass.changeparkdwelltime.addAll(sendarrArrayList);
+        	  break;
+          case"updateparkMaxCap":
+        	  ArrayList<ParkForChange> sendarrArrayList1 = (ArrayList<ParkForChange>) payloadMessage.getPayload();
+        	  StaticClass.changeparkmaxcap.addAll(sendarrArrayList1);
+        	  break;
+        	  
+      	  
         	  
 	  }
 	  

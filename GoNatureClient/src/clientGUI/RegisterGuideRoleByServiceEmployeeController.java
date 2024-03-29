@@ -12,21 +12,19 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class RegisterGuideRoleByServiceEmployeeController {
+ 	@FXML
+    private Button UpdateBtn;
+    
+    @FXML
+    private Button BackBtn;
+    @FXML
+    private TextField IDOfGuideField;
 
     @FXML
-    private Button backBtn;
-
-    @FXML
-    private TextField idField;
-
-    @FXML
-    private Button updateBtn;
-
-    @FXML
-    void ClickOnBack(ActionEvent event)  throws IOException {
+    void backBtn(ActionEvent event) throws IOException {
     	try {
     		  SwitchScreen.changeScreen(event,"/clientGUI/ServiceEmployeeMenuController.fxml"
-    				  ,"/resources/ServiceEmployeeMenuController.css");
+    				  ,"/clientGUI/ServiceEmployeeMenuController.css");
 
 			  } catch (Exception e) {
 			      e.printStackTrace();}
@@ -34,9 +32,9 @@ public class RegisterGuideRoleByServiceEmployeeController {
     
     
     @FXML
-    void ClickOnUpdate(ActionEvent event) throws IOException {
+    void UpdateBtn(ActionEvent event) throws IOException {
     	
-    	String id = idField.getText();
+    	String id = IDOfGuideField.getText();
     	if(id!=null&&!id.isEmpty()) {
     		String message = "updateGuideRole " + id;
     		try {

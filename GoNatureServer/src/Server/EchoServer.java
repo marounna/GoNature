@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import Server.DbController;
 import entities.Park;
+import entities.ParkForChange;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import logic.ClientConnectionStatus;
@@ -31,7 +32,6 @@ public class EchoServer extends AbstractServer {
 	public static String is_logged="";
 	public static String type;
     public  String dbCMessage="";
-	static int importdata=0;
     // Constructor
     public EchoServer(int port) {
         super(port);
@@ -46,20 +46,8 @@ public class EchoServer extends AbstractServer {
      */
     public void handleMessageFromClient(Object msg, ConnectionToClient client) {
         try {
-        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
-        String returnmsg="";
-        String message = (String) msg.toString();
-        System.out.println("EchoServer> " + message);
-        String[] result = message.split(" ");
-        System.out.println(result[0]);
-        if (result.length < 1) {
-            handleErrorMessage(client, "Invalid message format");
-            return;
-        }
-        Connection conn = DbController.createDbConnection();
-        if(result[0].equals("park")) {
-        	System.out.println("its park!~~~~~~~~~~~~~~~~");
-        	result[0]="park";}
+        	System.out.println("EchoServer>handleMessageFromClient");
+        	 Connection conn = DbController.createDbConnection();
         if (msg instanceof Message) {
     		Message msgObject=((Message)msg);
     		String command=msgObject.getCommand();
@@ -154,7 +142,23 @@ public class EchoServer extends AbstractServer {
 				throw new IllegalArgumentException("Unexpected value: " + command);
 			}
     	} 
+        //normal command not massage
         else {
+        	
+        System.out.println("EchoServer> Message received: " + (String)msg + " from " + client);
+        String returnmsg="";
+        String message = (String) msg.toString();
+        System.out.println("EchoServer> " + message);
+        String[] result = message.split(" ");
+        System.out.println(result[0]);
+        if (result.length < 1) {
+            handleErrorMessage(client, "Invalid message format");
+            return;
+        }
+       
+        if(result[0].equals("park")) {
+        	System.out.println("its park!~~~~~~~~~~~~~~~~");
+        	result[0]="park";}	
         switch (result[0]) {
 			case "getParksMangedByParkManger": {
 					String[] arr=getParksMangedByParkManger(conn,result[1]);
@@ -192,7 +196,6 @@ public class EchoServer extends AbstractServer {
             case "updateOrder":
                 int update =updateOrderDetails(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8]) ;
                 if(update==1) {
-                	System.out.println("updateOrder case, update =" +update + "\nvisa = "+DbController.needvisaalert);
                     if(DbController.needvisaalert.equals("yes")) {
                     	sendToClient(client, "updateOrder visaCredit");
                     	DbController.needvisaalert="no";
@@ -224,9 +227,7 @@ public class EchoServer extends AbstractServer {
                     handleErrorMessage(client, "Invalid message format");
                     return;
                 }
-                System.out.println("test in loadOrder case");
                 ArrayList<String> order = DbController.loadOrder(conn, result[1]);  
-                System.out.println("test in loadOrder case");
                 if(order!=null) {
                 	returnmsg="loadOrder "+order.get(0)+" "+ order.get(1) + " " +
                 order.get(2)+" "+ order.get(3)+" "+order.get(4)+" "+order.get(5)+" "
@@ -288,7 +289,7 @@ public class EchoServer extends AbstractServer {
             	
             	break;
             case "waitingList":
-            	int waitingList = enterWaitingList(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9]);
+            	int waitingList = enterWaitingList(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7]);
             	sendToClient(client, "waitingList "+waitingList);
             	break;
             case "maxNumberOrder":
@@ -296,7 +297,7 @@ public class EchoServer extends AbstractServer {
             	sendToClient(client, "maxNumberOrder "+max );
             	break;	
             case "saveOrder":
-            	int save = saveOrder(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8], result[9],result[10],result[11]);
+            	int save = saveOrder(conn,result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8], result[9],result[10]);
             	sendToClient(client, "saveOrder " + save );
             	break;
             case "dwellTime":
@@ -331,10 +332,6 @@ public class EchoServer extends AbstractServer {
             	String delete = DbController.DeleteOrder(conn, result[1],result[2],result[3]);
             	sendToClient(client, "deleteOrder "+delete);
             	break;
-            case "deleteOrderAuto":
-            	String deleteauto = DbController.DeleteOrderAuto(conn, result[1],result[2],result[3]);
-            	sendToClient(client, "deleteOrderAuto "+deleteauto);
-            	break;
             case "updateWaitingList":
             	DbController.updateWaitingList(conn,result[1]);
             	sendToClient(client, "updateWaitingList succeed");
@@ -348,26 +345,74 @@ public class EchoServer extends AbstractServer {
 					e.printStackTrace(); 
 				}
             	break;
-            case "checkExternalUser":
-            	int externalexist=DbController.checkExternalUser(conn,result[1]);
-            	if(externalexist==1) {
-            		sendToClient(client,"checkExternalUser exist");
-            	}
-            	else {sendToClient(client,"checkExternalUser notExist");}
+            case"requastToChangevisit":
+        		DbController.requastToChangevisit(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"requastToChangeMaxCapcitiy":
+        		DbController.requastToChangeMaxCapcitiy(conn, result[1],result[2]);
+        		client.sendToClient(result[1]);
+        		break;
+            case"parkChangesVisit":
+            	ArrayList<ParkForChange> waitforchange = new ArrayList<>();
+            	waitforchange = DbController.LoadparkForChangevisittime(conn);
+        		Message payloadfordmchange = new Message("updatechangeparkdwelltime", waitforchange);
+        		client.sendToClient(payloadfordmchange);
+        		break;
+            case"parkMaxCap":
+            	ArrayList<ParkForChange> waitforchange1 = new ArrayList<>();
+            	waitforchange1 = DbController.LoadparkForMaxcap(conn);
+        		Message payloadfordmchange1 = new Message("updateparkMaxCap", waitforchange1);
+        		client.sendToClient(payloadfordmchange1);
+        		break;
+            	
+            case"approveVisitTime":
+            	DbController.approveVisitTime(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineVisitTime":
+            	DbController.decline(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"approveMaxCapacity":
+            	DbController.approveMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"declineMaxCapacity":
+            	DbController.declineMaxCap(conn,result[1],result[2]);
+        		client.sendToClient("test");
+        		break;
+            case"amountInPark":
+            	String amountinpark=DbController.getamountinpark(conn,result[1]);
+            	sendToClient(client,"amountInPark " +amountinpark);
             	break;
-            case "addExternalUser":
-            	int addexternal=DbController.addExternalUser(conn,result[1]);
-            	if(addexternal==1) {
-            		sendToClient(client,"addExternalUser succeed");
-            	}
-            	else {sendToClient(client,"addExternalUser failed");}
+            case"orderexistYarden":
+
+            	int Exist=DbController.searchOrder(conn,result[1]);
+            	sendToClient(client,"OrderExistYarden "+ Exist);
             	break;
+            case"checkamountofpeople":
+            	int greatorless =DbController.checkamountofpeople(conn,result[1],result[2]);
+            	sendToClient(client, "checkamountofpeople "+ greatorless);
+            	break;
+            case"UpdateTable":
+            	DbController.updateyardentable(conn,result[1],result[2],result[3]);
+            	sendToClient(client, "test "+ "test11111111111111111111111");
+            	break;
+            	
+
+
+            	
+
+
             	
             default:
                 handleErrorMessage(client, "Invalid command");
-        	}
-    	}
-        }    catch(IOException e) {
+        }//switch end
+        
+        }//else end
+        }  
+        catch(IOException e) {
        	 handleErrorMessage(client, "Invalid command");
        	 e.printStackTrace();
        	}
@@ -418,14 +463,14 @@ public class EchoServer extends AbstractServer {
 	}
 
 	private int saveOrder(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors,String orderId,String totalprice, String typeacc,String reservationtype,String dwelltime,String email) {
-			int saveorder=DbController.saveOrder(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice, typeacc,reservationtype,dwelltime,email);
+			String numberofvisitors,String orderId,String totalprice, String typeacc,String reservationtype,String dwelltime) {
+			int saveorder=DbController.saveOrder(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice, typeacc,reservationtype,dwelltime);
 			return saveorder;
 	}
 
 	private int enterWaitingList(Connection conn, String parkname, String username, String date, String time,
-			String numberofvisitors,String orderId,String totalprice,String email,String typeacc) {
-		int waitinglist=DbController.waitingList(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice,email, typeacc);
+			String numberofvisitors,String orderId,String totalprice) {
+		int waitinglist=DbController.waitingList(conn,parkname,username,date,time,numberofvisitors,orderId,totalprice);
 		return waitinglist;
 	}
 
@@ -541,13 +586,5 @@ public class EchoServer extends AbstractServer {
 	}
 	public static String getClientIp(ConnectionToClient client) {
 	    return client.getInetAddress().getHostAddress();
-	}
-
-	public static void importData() {
-        Connection conn = DbController.createDbConnection();
-		if(importdata==0) {
-			importdata=1;
-			DbController.importData(conn);
-		}
 	}
 }

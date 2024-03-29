@@ -9,12 +9,12 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="341.0" prefWidth="371.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clientGUI.LoginController">
    <children>
-      <TextField fx:id="userID" layoutX="120.0" layoutY="126.0" text="customer" />
+      <TextField fx:id="userID" layoutX="120.0" layoutY="126.0" text="depm" />
       <PasswordField fx:id="password" layoutX="120.0" layoutY="197.0" text="123456" />
       <Label layoutX="33.0" layoutY="130.0" text="User name:" />
       <Label layoutX="33.0" layoutY="201.0" text="Password:" />
-      <Button fx:id="LoginBtn" layoutX="220.0" layoutY="275.0" mnemonicParsing="false" onAction="#ClickOnLoginBtn" text="Login" />
-      <Button fx:id="BackBtn" layoutX="123.0" layoutY="275.0" mnemonicParsing="false" onAction="#ClickOnBackBtn" text="Back" />
+      <Button fx:id="LoginBtn" layoutX="118.0" layoutY="274.0" mnemonicParsing="false" onAction="#ClickOnLoginBtn" text="Login" />
+      <Button fx:id="BackBtn" layoutX="232.0" layoutY="274.0" mnemonicParsing="false" onAction="#ClickOnBackBtn" text="Back" />
       <Label layoutX="33.0" layoutY="72.0" text="Please enter username and password:" />
       <Label fx:id="userNotExist" layoutX="123.0" layoutY="236.0" prefHeight="17.0" prefWidth="239.0" />
    </children>
