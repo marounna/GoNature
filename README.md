@@ -15,7 +15,7 @@ Guides:
 At first, guide users does not defined on DB as guide user.
 Need to call service employee and give him guide ID so he can approve it.
 Logs in the system with user ID and password.
-Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation.
+Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation).
 Can update or cancel existing reservations.
 
 Park employees:
