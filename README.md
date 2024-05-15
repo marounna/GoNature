@@ -1,50 +1,49 @@
 ##Centralized Park Managing System
 
-###This project is built with a FullStack approach. We have a remote server managing a database called GoNature. We also have few types of clients that can connect: Clients, Park employees,Service employees,Guides, Park managers and  Department manager.
+###This project is built with a FullStack approach. We have a remote server 
+managing a database called GoNature. We also have few types of clients that can connect: Clients, Park employees, Service employees, Guides, Park managers and Department manager.
 
 Following are the operations each can perform:
 
 At the beginning you need to click on the import data button on the server's screen.
 
-Clients:
-Logs in the system with ID.
-Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation.
-Can update or cancel existing reservations.
+Clients: 
+  •	Logs in the system with ID. 
+  •	Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation. 
+  •	Can update or cancel existing reservations.
 
-Guides:
-At first, guide users does not defined on DB as guide user.
-Need to call service employee and give him guide ID so he can approve it.
-Logs in the system with user ID and password.
-Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation).
-Can update or cancel existing reservations.
+Guides: 
+  At first, guide users does not defined on DB as guide user. 
+  •	Need to call service employee and give him guide ID so he can approve it. Logs in the system with user ID and password. 
+  •	Can watch theirs old reservations, make new reservations, get into waiting list (if there is no available space for the amount of visitors on the new reservation). Can update or cancel existing reservations.
 
-Park employees:
-Logs in the system with user ID and password.
-Can check the amount of visitors that on the park at any time he want.
-Can make new reservation for client or guide (group reservation).
-Can update amount of visitors that have been arrived from the reservation.
+Park employees: 
+  •	Logs in the system with user ID and password. 
+  •	Can check the amount of visitors that on the park at any time he want. 
+  •	Can make new reservation for client or guide (group reservation). 
+  •	Can update amount of visitors that have been arrived from the reservation.
 
-Service employees:
-logs in the system with user ID and password.
-Can update the guide user permission to guide type of user so the guide will be able to log in his user.
+Service employees: 
+  •	Logs in the system with user ID and password. 
+  •	Can update the guide user permission to guide type of user so the guide will be able to log in his user.
 
-Park managers:
-Logs in the system with user ID and password.
-Can make a request to the department manager about changing dwell time or maximum capacity of the park.
-Can make Usage report (shows dates and hours that the park wasn't on full capacity).
-Can make Total report(shows the amount of groups visitors and individuals visitors on the selected month).
+Park managers: 
+  •	Logs in the system with user ID and password. 
+  •	Can make a request to the department manager about changing dwell time or maximum capacity of the park. 
+  •	Can make Usage report (shows dates and hours that the park wasn't on full capacity). 
+  •	Can make Total report(shows the amount of groups visitors and individuals visitors on the selected month).
 
-Department manager:
-Logs in the system with user ID and password.
-Can watch on the park managers dwell time and maximum capacity requests.
-Can approve or reject requests.
-Can watch Visit report of selected date (shows the amount of groups and individuals visitors and theirs entry time and amount of time they visit on the park).
-Can watch Cancellation report (shows the amount of orders cancellation and the reservation date,  and its cancellation distribution).
+Department manager: 
+  •	Logs in the system with user ID and password.
+  •	Can watch on the park managers dwell time and maximum capacity requests.
+  •	 Can approve or reject requests. 
+  •	Can watch Visit report of selected date (shows the amount of groups and individuals visitors and theirs entry time and amount of time they visit on the park). 
+  •	Can watch Cancellation report (shows the amount of orders cancellation and the reservation date, and its cancellation distribution).
 
-There is an SMS simulation that sends an SMS message to the client when a order has been approved.
-Also, there is a SMS simulation that send the user a notification 24 hours before the reservation date.
+There is an SMS simulation that sends an SMS message to the client when a order has been approved. Also, there is a SMS simulation that send the user a notification 24 hours before the reservation date.
 
 This entire project is built upon an OCSF project, taken from [source]. It utilizes their abstract OCSF Server-Client model and implements our own version.
+
 
 Here are some screens from the project:
 
