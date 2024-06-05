@@ -100,7 +100,7 @@ Park manager total visitors report screen:
 
 ![image](https://github.com/AdarCohen1/GoNature/assets/146540241/9a47932d-eb37-4afa-91e3-65edccba0ca5)
 
-Park manager usage report screen (where there is not red circle means the park was on full capacity at the specific hour):
+Park manager usage report screen (Where there is no red circle means the park was on full capacity at the specific hour):
 
 ![image](https://github.com/AdarCohen1/GoNature/assets/146540241/3cc8c629-d2e7-43b9-b2a2-46ab1bfbade7)
 
